@@ -318,6 +318,115 @@
             grid-column: 1 / -1;
         }
 
+        .contact-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 16px rgba(42, 82, 152, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6em;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .contact-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 24px rgba(42, 82, 152, 0.5);
+        }
+
+        .contact-fab:active {
+            transform: scale(0.95);
+        }
+
+        .contact-tooltip {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: white;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            display: none;
+            z-index: 999;
+            min-width: 200px;
+        }
+
+        .contact-tooltip.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .contact-tooltip h4 {
+            color: #1e3c72;
+            margin-bottom: 12px;
+            font-size: 1em;
+        }
+
+        .contact-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 8px;
+        }
+
+        .contact-option:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-option:hover {
+            background: #f5f7fa;
+        }
+
+        .contact-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f0f4f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+        }
+
+        .contact-text {
+            flex: 1;
+        }
+
+        .contact-text h5 {
+            color: #1e3c72;
+            margin-bottom: 2px;
+            font-size: 0.9em;
+        }
+
+        .contact-text p {
+            color: #6b7280;
+            font-size: 0.8em;
+        }
+
         @media (max-width: 768px) {
             .content-grid {
                 grid-template-columns: 1fr;
@@ -535,8 +644,63 @@
         </div>
     </div>
 
+    <!-- Contact FAB -->
+    <button class="contact-fab" onclick="toggleContactMenu()" aria-label="Contact Support">
+        💬
+    </button>
+
+    <div class="contact-tooltip" id="contactTooltip">
+        <h4>How can we help?</h4>
+        <div class="contact-option" onclick="handleContact('chat')">
+            <div class="contact-icon">💬</div>
+            <div class="contact-text">
+                <h5>Live Chat</h5>
+                <p>Available 24/7</p>
+            </div>
+        </div>
+        <div class="contact-option" onclick="handleContact('phone')">
+            <div class="contact-icon">📞</div>
+            <div class="contact-text">
+                <h5>Call Us</h5>
+                <p>1-800-BANK-123</p>
+            </div>
+        </div>
+        <div class="contact-option" onclick="handleContact('email')">
+            <div class="contact-icon">✉️</div>
+            <div class="contact-text">
+                <h5>Email Support</h5>
+                <p>support@bank.com</p>
+            </div>
+        </div>
+    </div>
+
     <script>
         let selectedContact = null;
+
+        function toggleContactMenu() {
+            const tooltip = document.getElementById('contactTooltip');
+            tooltip.classList.toggle('show');
+        }
+
+        function handleContact(method) {
+            const messages = {
+                'chat': 'Live chat would open here.\n\nThis is a UI prototype - contact features are not implemented.',
+                'phone': 'Phone dialer would open with: 1-800-BANK-123\n\nThis is a UI prototype - contact features are not implemented.',
+                'email': 'Email client would open with: support@bank.com\n\nThis is a UI prototype - contact features are not implemented.'
+            };
+            alert(messages[method]);
+            toggleContactMenu();
+        }
+
+        // Close contact menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const fab = document.querySelector('.contact-fab');
+            const tooltip = document.getElementById('contactTooltip');
+
+            if (!fab.contains(event.target) && !tooltip.contains(event.target)) {
+                tooltip.classList.remove('show');
+            }
+        });
 
         function switchTab(tabName) {
             // Update tab buttons
