@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banking Prototypes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        .info-box {
+            background: #f0f4f8;
+            border-left: 4px solid #2a5298;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+        .info-box h3 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+        .info-box p {
+            color: #555;
+            line-height: 1.6;
+        }
+        .prototypes-list {
+            margin-top: 30px;
+        }
+        .prototypes-list h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .prototype-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        .prototype-card:hover {
+            border-color: #2a5298;
+            box-shadow: 0 4px 12px rgba(42, 82, 152, 0.15);
+            transform: translateY(-2px);
+        }
+        .prototype-card h3 {
+            color: #1e3c72;
+            margin-bottom: 8px;
+        }
+        .prototype-card p {
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .prototype-card a {
+            display: inline-block;
+            background: #2a5298;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        .prototype-card a:hover {
+            background: #1e3c72;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        .empty-state .icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        .agent-badge {
+            display: inline-block;
+            background: #2a5298;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏦 Banking Prototypes <span class="agent-badge">🤖 Agent-Managed</span></h1>
+        <p class="subtitle">Autonomous UI prototype development</p>
+
+        <div class="info-box">
+            <h3>About This Project</h3>
+            <p>This is an autonomous agent-managed repository for banking UI prototypes. The agent runs daily at <strong>9:20 AM</strong> to check for new requests, implement prototypes, and deploy them automatically.</p>
+            <p style="margin-top: 10px;"><strong>To request a new prototype:</strong> Add a task to <code>feedback.json</code> in this directory.</p>
+        </div>
+
+        <div class="prototypes-list">
+            <h2>Available Prototypes</h2>
+            <div id="prototype-container">
+                <div class="empty-state">
+                    <div class="icon">📋</div>
+                    <h3>No prototypes yet</h3>
+                    <p>The agent will create prototypes here based on tasks in feedback.json</p>
+                    <p style="margin-top: 10px; color: #666;">First prototype coming soon!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // This will be enhanced by the agent to dynamically list prototypes
+        // from the prototypes/ directory
+    </script>
+</body>
+</html>
