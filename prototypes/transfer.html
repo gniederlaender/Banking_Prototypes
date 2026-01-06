@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer Money - Banking Prototype</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95em;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-bottom: 12px;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+
+        .card-title {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .balance-display {
+            margin-bottom: 20px;
+        }
+
+        .balance {
+            font-size: 2em;
+            color: #1e3c72;
+            font-weight: 700;
+        }
+
+        .account-number {
+            font-size: 0.85em;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .transfer-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #6b7280;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: #2a5298;
+        }
+
+        .tab-btn.active {
+            color: #1e3c72;
+            border-bottom-color: #2a5298;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+
+        .form-input.error {
+            border-color: #ef4444;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.85em;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .amount-shortcuts {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .shortcut-btn {
+            background: #f0f4f8;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .shortcut-btn:hover {
+            background: #e5e7eb;
+            border-color: #2a5298;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .contact-list {
+            list-style: none;
+        }
+
+        .contact-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .contact-item:hover {
+            border-color: #2a5298;
+            background: #f8fafc;
+        }
+
+        .contact-item.selected {
+            border-color: #2a5298;
+            background: #eff6ff;
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .contact-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            background: #f0f4f8;
+        }
+
+        .contact-details h3 {
+            font-size: 1em;
+            color: #1e3c72;
+            margin-bottom: 4px;
+        }
+
+        .contact-account {
+            font-size: 0.85em;
+            color: #6b7280;
+        }
+
+        .contact-select {
+            color: #2a5298;
+            font-size: 0.9em;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .contact-item:hover .contact-select,
+        .contact-item.selected .contact-select {
+            opacity: 1;
+        }
+
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .success-message.show {
+            display: flex;
+        }
+
+        .full-width-card {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .transfer-tabs {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                text-align: left;
+            }
+
+            .balance {
+                font-size: 1.6em;
+            }
+
+            .amount-shortcuts {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+            <h1>💸 Transfer Money</h1>
+            <p>Send money securely to anyone</p>
+        </div>
+
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Your Account</div>
+                <div class="balance-display">
+                    <div class="balance">$24,582.50</div>
+                    <div class="account-number">Account: ****1234</div>
+                </div>
+            </div>
+
+            <div class="card full-width-card">
+                <div class="success-message" id="successMessage">
+                    <span>✓</span>
+                    <span>Transfer completed successfully!</span>
+                </div>
+
+                <div class="transfer-tabs">
+                    <button class="tab-btn active" onclick="switchTab('manual')">Manual Entry</button>
+                    <button class="tab-btn" onclick="switchTab('addressbook')">Address Book</button>
+                </div>
+
+                <div id="manualTab" class="tab-content active">
+                    <form id="manualTransferForm" onsubmit="handleTransfer(event, 'manual')">
+                        <div class="form-group">
+                            <label class="form-label" for="recipientName">Recipient Name</label>
+                            <input
+                                type="text"
+                                id="recipientName"
+                                class="form-input"
+                                placeholder="Enter recipient name"
+                                required
+                            >
+                            <span class="error-message" id="recipientNameError">Please enter a recipient name</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="accountNumber">Account Number</label>
+                            <input
+                                type="text"
+                                id="accountNumber"
+                                class="form-input"
+                                placeholder="Enter account number"
+                                pattern="[0-9]{8,16}"
+                                required
+                            >
+                            <span class="error-message" id="accountNumberError">Please enter a valid account number (8-16 digits)</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="amount">Amount ($)</label>
+                            <input
+                                type="number"
+                                id="amount"
+                                class="form-input"
+                                placeholder="0.00"
+                                step="0.01"
+                                min="0.01"
+                                max="24582.50"
+                                required
+                            >
+                            <span class="error-message" id="amountError">Please enter a valid amount</span>
+                            <div class="amount-shortcuts">
+                                <button type="button" class="shortcut-btn" onclick="setAmount(50)">$50</button>
+                                <button type="button" class="shortcut-btn" onclick="setAmount(100)">$100</button>
+                                <button type="button" class="shortcut-btn" onclick="setAmount(250)">$250</button>
+                                <button type="button" class="shortcut-btn" onclick="setAmount(500)">$500</button>
+                                <button type="button" class="shortcut-btn" onclick="setAmount(1000)">$1000</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="description">Description (Optional)</label>
+                            <input
+                                type="text"
+                                id="description"
+                                class="form-input"
+                                placeholder="What's this transfer for?"
+                            >
+                        </div>
+
+                        <button type="submit" class="submit-btn">Transfer Money</button>
+                    </form>
+                </div>
+
+                <div id="addressbookTab" class="tab-content">
+                    <div class="card-title" style="margin-bottom: 16px;">Select a Contact</div>
+                    <ul class="contact-list">
+                        <li class="contact-item" onclick="selectContact(this, 'Sarah Johnson', '12345678')">
+                            <div class="contact-info">
+                                <div class="contact-avatar">👩</div>
+                                <div class="contact-details">
+                                    <h3>Sarah Johnson</h3>
+                                    <span class="contact-account">****5678</span>
+                                </div>
+                            </div>
+                            <span class="contact-select">Select →</span>
+                        </li>
+                        <li class="contact-item" onclick="selectContact(this, 'Michael Chen', '23456789')">
+                            <div class="contact-info">
+                                <div class="contact-avatar">👨</div>
+                                <div class="contact-details">
+                                    <h3>Michael Chen</h3>
+                                    <span class="contact-account">****6789</span>
+                                </div>
+                            </div>
+                            <span class="contact-select">Select →</span>
+                        </li>
+                        <li class="contact-item" onclick="selectContact(this, 'Emma Davis', '34567890')">
+                            <div class="contact-info">
+                                <div class="contact-avatar">👩‍💼</div>
+                                <div class="contact-details">
+                                    <h3>Emma Davis</h3>
+                                    <span class="contact-account">****7890</span>
+                                </div>
+                            </div>
+                            <span class="contact-select">Select →</span>
+                        </li>
+                        <li class="contact-item" onclick="selectContact(this, 'David Martinez', '45678901')">
+                            <div class="contact-info">
+                                <div class="contact-avatar">👨‍💻</div>
+                                <div class="contact-details">
+                                    <h3>David Martinez</h3>
+                                    <span class="contact-account">****8901</span>
+                                </div>
+                            </div>
+                            <span class="contact-select">Select →</span>
+                        </li>
+                        <li class="contact-item" onclick="selectContact(this, 'Lisa Anderson', '56789012')">
+                            <div class="contact-info">
+                                <div class="contact-avatar">👩‍🎨</div>
+                                <div class="contact-details">
+                                    <h3>Lisa Anderson</h3>
+                                    <span class="contact-account">****9012</span>
+                                </div>
+                            </div>
+                            <span class="contact-select">Select →</span>
+                        </li>
+                    </ul>
+
+                    <form id="addressbookTransferForm" onsubmit="handleTransfer(event, 'addressbook')" style="margin-top: 20px; display: none;">
+                        <div class="form-group">
+                            <label class="form-label">Selected Contact</label>
+                            <div style="padding: 12px; background: #f0f4f8; border-radius: 8px; margin-bottom: 16px;">
+                                <strong id="selectedContactName">-</strong>
+                                <span id="selectedContactAccount" style="color: #6b7280; font-size: 0.9em; margin-left: 8px;">-</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="amountAddressbook">Amount ($)</label>
+                            <input
+                                type="number"
+                                id="amountAddressbook"
+                                class="form-input"
+                                placeholder="0.00"
+                                step="0.01"
+                                min="0.01"
+                                max="24582.50"
+                                required
+                            >
+                            <span class="error-message" id="amountAddressbookError">Please enter a valid amount</span>
+                            <div class="amount-shortcuts">
+                                <button type="button" class="shortcut-btn" onclick="setAmount(50, 'addressbook')">$50</button>
+                                <button type="button" class="shortcut-btn" onclick="setAmount(100, 'addressbook')">$100</button>
+                                <button type="button" class="shortcut-btn" onclick="setAmount(250, 'addressbook')">$250</button>
+                                <button type="button" class="shortcut-btn" onclick="setAmount(500, 'addressbook')">$500</button>
+                                <button type="button" class="shortcut-btn" onclick="setAmount(1000, 'addressbook')">$1000</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="descriptionAddressbook">Description (Optional)</label>
+                            <input
+                                type="text"
+                                id="descriptionAddressbook"
+                                class="form-input"
+                                placeholder="What's this transfer for?"
+                            >
+                        </div>
+
+                        <button type="submit" class="submit-btn">Transfer Money</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedContact = null;
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.getElementById('manualTab').classList.remove('active');
+            document.getElementById('addressbookTab').classList.remove('active');
+
+            if (tabName === 'manual') {
+                document.getElementById('manualTab').classList.add('active');
+            } else {
+                document.getElementById('addressbookTab').classList.add('active');
+            }
+
+            // Hide success message when switching tabs
+            document.getElementById('successMessage').classList.remove('show');
+        }
+
+        function setAmount(amount, formType = 'manual') {
+            if (formType === 'manual') {
+                document.getElementById('amount').value = amount;
+            } else {
+                document.getElementById('amountAddressbook').value = amount;
+            }
+        }
+
+        function selectContact(element, name, accountNumber) {
+            // Remove selected class from all contacts
+            document.querySelectorAll('.contact-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+
+            // Add selected class to clicked contact
+            element.classList.add('selected');
+
+            // Store selected contact
+            selectedContact = {
+                name: name,
+                accountNumber: accountNumber
+            };
+
+            // Update form display
+            document.getElementById('selectedContactName').textContent = name;
+            document.getElementById('selectedContactAccount').textContent = '****' + accountNumber.slice(-4);
+
+            // Show the transfer form
+            document.getElementById('addressbookTransferForm').style.display = 'block';
+
+            // Scroll to form smoothly
+            setTimeout(() => {
+                document.getElementById('addressbookTransferForm').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest'
+                });
+            }, 100);
+        }
+
+        function handleTransfer(event, formType) {
+            event.preventDefault();
+
+            let isValid = true;
+            let recipientName, accountNumber, amount, description;
+
+            if (formType === 'manual') {
+                recipientName = document.getElementById('recipientName').value.trim();
+                accountNumber = document.getElementById('accountNumber').value.trim();
+                amount = parseFloat(document.getElementById('amount').value);
+                description = document.getElementById('description').value.trim();
+
+                // Validate recipient name
+                if (!recipientName) {
+                    showError('recipientName', 'recipientNameError');
+                    isValid = false;
+                }
+
+                // Validate account number
+                if (!accountNumber || !/^[0-9]{8,16}$/.test(accountNumber)) {
+                    showError('accountNumber', 'accountNumberError');
+                    isValid = false;
+                }
+
+                // Validate amount
+                if (!amount || amount <= 0 || amount > 24582.50) {
+                    showError('amount', 'amountError');
+                    isValid = false;
+                }
+            } else {
+                if (!selectedContact) {
+                    alert('Please select a contact first.');
+                    return;
+                }
+
+                recipientName = selectedContact.name;
+                accountNumber = selectedContact.accountNumber;
+                amount = parseFloat(document.getElementById('amountAddressbook').value);
+                description = document.getElementById('descriptionAddressbook').value.trim();
+
+                // Validate amount
+                if (!amount || amount <= 0 || amount > 24582.50) {
+                    showError('amountAddressbook', 'amountAddressbookError');
+                    isValid = false;
+                }
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+            // Show success message
+            const successMessage = document.getElementById('successMessage');
+            successMessage.classList.add('show');
+
+            // Create confirmation message
+            const confirmMessage = `Transfer Details:\n\nRecipient: ${recipientName}\nAccount: ****${accountNumber.slice(-4)}\nAmount: $${amount.toFixed(2)}${description ? '\nDescription: ' + description : ''}\n\nThis is a UI prototype. In a real application, this would process the transfer securely.`;
+
+            alert(confirmMessage);
+
+            // Reset form
+            if (formType === 'manual') {
+                document.getElementById('manualTransferForm').reset();
+            } else {
+                document.getElementById('addressbookTransferForm').reset();
+                document.getElementById('addressbookTransferForm').style.display = 'none';
+                document.querySelectorAll('.contact-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                selectedContact = null;
+            }
+
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 5000);
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showError(inputId, errorId) {
+            const input = document.getElementById(inputId);
+            const error = document.getElementById(errorId);
+
+            input.classList.add('error');
+            error.classList.add('show');
+
+            // Remove error on input
+            input.addEventListener('input', function() {
+                input.classList.remove('error');
+                error.classList.remove('show');
+            }, { once: true });
+        }
+
+        // Add animation on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s, transform 0.5s';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
