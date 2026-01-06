@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banking Dashboard - Prototype</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95em;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+
+        .card-title {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .balance {
+            font-size: 2.5em;
+            color: #1e3c72;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .balance-change {
+            font-size: 0.9em;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .balance-change.negative {
+            color: #ef4444;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3);
+        }
+
+        .action-btn:active {
+            transform: translateY(0);
+        }
+
+        .action-icon {
+            font-size: 1.5em;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .transactions-card {
+            grid-column: 1 / -1;
+        }
+
+        .transaction-list {
+            list-style: none;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            background: #f0f4f8;
+        }
+
+        .transaction-details h3 {
+            font-size: 1em;
+            color: #1e3c72;
+            margin-bottom: 4px;
+        }
+
+        .transaction-date {
+            font-size: 0.85em;
+            color: #9ca3af;
+        }
+
+        .transaction-amount {
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .transaction-amount.positive {
+            color: #10b981;
+        }
+
+        .transaction-amount.negative {
+            color: #374151;
+        }
+
+        .account-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .account-number {
+            font-size: 0.85em;
+            color: #6b7280;
+        }
+
+        .view-all-link {
+            color: #2a5298;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .view-all-link:hover {
+            color: #1e3c72;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .balance {
+                font-size: 2em;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .transaction-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏦 Welcome back, John</h1>
+            <p>Here's your account overview</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-title">Total Balance</div>
+                <div class="balance">$24,582.50</div>
+                <div class="balance-change">
+                    <span>↑</span>
+                    <span>+2.5% from last month</span>
+                </div>
+                <div class="account-info">
+                    <span class="account-number">Account: ****1234</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Quick Actions</div>
+                <div class="quick-actions">
+                    <button class="action-btn" onclick="showMessage('Transfer')">
+                        <span class="action-icon">💸</span>
+                        Transfer
+                    </button>
+                    <button class="action-btn" onclick="showMessage('Pay Bills')">
+                        <span class="action-icon">📄</span>
+                        Pay Bills
+                    </button>
+                    <button class="action-btn" onclick="showMessage('Deposit')">
+                        <span class="action-icon">💰</span>
+                        Deposit
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card transactions-card">
+            <div class="card-title">Recent Transactions</div>
+            <ul class="transaction-list">
+                <li class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon">🛒</div>
+                        <div class="transaction-details">
+                            <h3>Amazon Purchase</h3>
+                            <span class="transaction-date">Jan 5, 2026</span>
+                        </div>
+                    </div>
+                    <div class="transaction-amount negative">-$127.99</div>
+                </li>
+                <li class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon">💼</div>
+                        <div class="transaction-details">
+                            <h3>Salary Deposit</h3>
+                            <span class="transaction-date">Jan 1, 2026</span>
+                        </div>
+                    </div>
+                    <div class="transaction-amount positive">+$4,500.00</div>
+                </li>
+                <li class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon">☕</div>
+                        <div class="transaction-details">
+                            <h3>Starbucks</h3>
+                            <span class="transaction-date">Dec 31, 2025</span>
+                        </div>
+                    </div>
+                    <div class="transaction-amount negative">-$6.75</div>
+                </li>
+                <li class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon">⚡</div>
+                        <div class="transaction-details">
+                            <h3>Electric Bill</h3>
+                            <span class="transaction-date">Dec 30, 2025</span>
+                        </div>
+                    </div>
+                    <div class="transaction-amount negative">-$89.50</div>
+                </li>
+                <li class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon">🏪</div>
+                        <div class="transaction-details">
+                            <h3>Grocery Store</h3>
+                            <span class="transaction-date">Dec 28, 2025</span>
+                        </div>
+                    </div>
+                    <div class="transaction-amount negative">-$145.32</div>
+                </li>
+            </ul>
+            <div class="account-info">
+                <a href="#" class="view-all-link" onclick="showMessage('View All'); return false;">View all transactions →</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showMessage(action) {
+            alert(`${action} feature would open here in a full application.\n\nThis is a UI prototype demonstrating the dashboard layout and interactions.`);
+        }
+
+        // Add subtle animation on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s, transform 0.5s';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
