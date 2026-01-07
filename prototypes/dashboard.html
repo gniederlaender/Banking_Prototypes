@@ -15,7 +15,172 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: #f5f7fa;
             min-height: 100vh;
+            display: flex;
+        }
+
+        /* Navigation Sidebar */
+        .nav-sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            box-shadow: 4px 0 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .nav-username {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .nav-menu {
+            padding: 20px 0;
+        }
+
+        .nav-section {
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 500;
+            font-size: 0.95em;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            border-left-color: white;
+        }
+
+        .nav-item.active {
+            background: rgba(255,255,255,0.15);
+            border-left-color: white;
+            font-weight: 600;
+        }
+
+        .nav-item.prominent {
+            font-size: 1.05em;
+            font-weight: 600;
+            padding: 16px 20px;
+        }
+
+        .nav-item .nav-icon {
+            margin-right: 12px;
+            font-size: 1.2em;
+        }
+
+        .nav-item-content {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .nav-item .expand-icon {
+            font-size: 0.8em;
+            transition: transform 0.3s;
+        }
+
+        .nav-item.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .nav-submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: rgba(0,0,0,0.1);
+        }
+
+        .nav-submenu.show {
+            max-height: 200px;
+        }
+
+        .nav-subitem {
+            padding: 12px 20px 12px 56px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .nav-subitem:hover {
+            background: rgba(255,255,255,0.05);
+            opacity: 1;
+        }
+
+        .nav-footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 12px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-utility {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            font-size: 0.9em;
+            opacity: 0.85;
+        }
+
+        .nav-utility:hover {
+            background: rgba(255,255,255,0.08);
+            opacity: 1;
+        }
+
+        .nav-utility .nav-icon {
+            margin-right: 12px;
+            font-size: 1.1em;
+        }
+
+        .mobile-nav-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: #1e3c72;
+            color: white;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.4em;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
             padding: 20px;
+            transition: margin-left 0.3s ease;
         }
 
         .header {
@@ -320,7 +485,24 @@
             font-size: 0.8em;
         }
 
+        /* Mobile Responsive */
         @media (max-width: 768px) {
+            .nav-sidebar {
+                transform: translateX(-100%);
+            }
+
+            .nav-sidebar.open {
+                transform: translateX(0);
+            }
+
+            .mobile-nav-toggle {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
@@ -338,10 +520,107 @@
                 align-items: flex-start;
                 gap: 8px;
             }
+
+            .contact-fab {
+                bottom: 20px;
+                right: 20px;
+                width: 56px;
+                height: 56px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Mobile Navigation Toggle -->
+    <button class="mobile-nav-toggle" onclick="toggleNav()">☰</button>
+
+    <!-- Navigation Sidebar -->
+    <nav class="nav-sidebar" id="navSidebar">
+        <div class="nav-header">
+            <div class="nav-logo">MyBank</div>
+            <div class="nav-username">Welcome, John</div>
+        </div>
+
+        <div class="nav-menu">
+            <!-- Overview (Prominent) -->
+            <div class="nav-section">
+                <div class="nav-item prominent active" onclick="navigateTo('overview')">
+                    <div class="nav-item-content">
+                        <span class="nav-icon">🏠</span>
+                        <span>Overview</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Today (Prominent with submenu) -->
+            <div class="nav-section">
+                <div class="nav-item prominent" onclick="toggleSubmenu('today')">
+                    <div class="nav-item-content">
+                        <span class="nav-icon">☀️</span>
+                        <span>Today</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="nav-submenu" id="submenu-today">
+                    <div class="nav-subitem" onclick="navigateTo('accounts-cards')">My Accounts & Cards</div>
+                    <div class="nav-subitem" onclick="navigateTo('budget')">My Budget</div>
+                </div>
+            </div>
+
+            <!-- Rainy Day (Prominent with submenu) -->
+            <div class="nav-section">
+                <div class="nav-item prominent" onclick="toggleSubmenu('rainy-day')">
+                    <div class="nav-item-content">
+                        <span class="nav-icon">☔</span>
+                        <span>Rainy Day</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="nav-submenu" id="submenu-rainy-day">
+                    <div class="nav-subitem" onclick="navigateTo('insurance')">My Insurance</div>
+                    <div class="nav-subitem" onclick="navigateTo('overdraft')">My Overdraft</div>
+                </div>
+            </div>
+
+            <!-- One Day (Prominent with submenu) -->
+            <div class="nav-section">
+                <div class="nav-item prominent" onclick="toggleSubmenu('one-day')">
+                    <div class="nav-item-content">
+                        <span class="nav-icon">🌟</span>
+                        <span>One Day</span>
+                    </div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="nav-submenu" id="submenu-one-day">
+                    <div class="nav-subitem" onclick="navigateTo('investments')">My Investments</div>
+                    <div class="nav-subitem" onclick="navigateTo('housing')">My Housing</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Utilities -->
+        <div class="nav-footer">
+            <div class="nav-utility" onclick="navigateTo('messenger')">
+                <span class="nav-icon">💬</span>
+                <span>Messenger</span>
+            </div>
+            <div class="nav-utility" onclick="navigateTo('language')">
+                <span class="nav-icon">🌐</span>
+                <span>Language</span>
+            </div>
+            <div class="nav-utility" onclick="navigateTo('privacy')">
+                <span class="nav-icon">🔒</span>
+                <span>Privacy</span>
+            </div>
+            <div class="nav-utility" onclick="navigateTo('logout')">
+                <span class="nav-icon">🚪</span>
+                <span>Logout</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
     <div class="container">
         <div class="header">
             <h1>🏦 Welcome back, John</h1>
@@ -469,8 +748,69 @@
             </div>
         </div>
     </div>
+    </div> <!-- End main-content -->
 
     <script>
+        // Navigation Functions
+        function toggleNav() {
+            const sidebar = document.getElementById('navSidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        function toggleSubmenu(menuId) {
+            const submenu = document.getElementById(`submenu-${menuId}`);
+            const parentItem = submenu.previousElementSibling;
+
+            // Toggle the submenu
+            submenu.classList.toggle('show');
+            parentItem.classList.toggle('expanded');
+
+            event.stopPropagation();
+        }
+
+        function navigateTo(section) {
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Define section names for display
+            const sectionNames = {
+                'overview': 'Overview',
+                'accounts-cards': 'My Accounts & Cards',
+                'budget': 'My Budget',
+                'insurance': 'My Insurance',
+                'overdraft': 'My Overdraft',
+                'investments': 'My Investments',
+                'housing': 'My Housing',
+                'messenger': 'Messenger',
+                'language': 'Language Settings',
+                'privacy': 'Privacy Settings',
+                'logout': 'Logout'
+            };
+
+            const sectionName = sectionNames[section] || section;
+
+            // Show placeholder message
+            if (section === 'overview') {
+                // Overview is the current page, just show a message
+                alert(`You are on the ${sectionName} page.\n\nThis is the main dashboard view.`);
+                // Re-add active class to overview
+                document.querySelector('.nav-item.prominent').classList.add('active');
+            } else if (section === 'logout') {
+                if (confirm('Are you sure you want to logout?')) {
+                    alert('Logout functionality would be implemented here.\n\nThis is a UI prototype.');
+                }
+            } else {
+                alert(`Navigating to: ${sectionName}\n\nThis section will be developed later.\n\nThis is a UI prototype demonstrating the navigation structure.`);
+            }
+
+            // Close mobile menu if open
+            if (window.innerWidth <= 768) {
+                toggleNav();
+            }
+        }
+
         function showMessage(action) {
             alert(`${action} feature would open here in a full application.\n\nThis is a UI prototype demonstrating the dashboard layout and interactions.`);
         }
