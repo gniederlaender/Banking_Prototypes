@@ -60,16 +60,29 @@
     {
       "id": "task-20260107-083457",
       "type": "feature",
-      "status": "open",
+      "status": "done",
       "priority": "medium",
       "title": "Main Navigation",
       "description": "Create a main navigation for an innovative retail banking app. Besides the already existing \u201cOverview\u201d the navigation should include the main customer needs structured as following:\n1. Today\n1.1 My Accounts & Cards\n1.2 MY Budget\n2. Rainy Day\n2.1 My Insurance\n2.2 My Overdraft\n3. One Day\n3.1 My Investments\n3.2 My Housing\n\nAlso it should contain the following 4 elements:\n4. Messenger\n5. Language\n6.Privacy \n7. Logout \n\nItems Overview, 1,2 & 3 should be more prominent then the rest. \n\nFor now put a placeholder text upon click on the navigation Item, later we will together develope one section at a time. ",
-      "created_at": "2026-01-07T08:34:57.550801"
+      "created_at": "2026-01-07T08:34:57.550801",
+      "completion_notes": "Completed by agent in run 20260107_092001\n\u2713 Verification: PASSED\nCommit: 2572cb2",
+      "completed_at": "2026-01-07T09:26:00.660365"
+    },
+    {
+      "id": "task-20260107-221435",
+      "type": "feature",
+      "status": "done",
+      "priority": "medium",
+      "title": "Real estate scraper",
+      "description": "Our customers shall have the possibility to send us a link of the real estate, which they want to finance, and we provide them a financing offer, based on the real estate price, mentioned on the platform.\n\nLet us implement a prototype (standalone), which\n-  takes a link to a specific real estste on a 3rd party portal as an input (ask the user).  A link looks like this e.g. (https://immobilien.derstandard.at/detail/15006491)\n- scrapes the most important details of the real estate (the scraping is for real, the functionality shall be implemented)\n- shows the real estate in a nice design to the user and  asks for confirmation \n- if confirmed, a financing offer is presented (with 3,5% fixed interest rate and 30y tenor)\n- the CTA is \u201esend me the offer\u201c (this functionality shall not be implemented)",
+      "created_at": "2026-01-07T22:14:35.403066",
+      "completion_notes": "Completed manually after agent run 20260108_082001 (interrupted by API credits)\n✓ Implementation complete\nCommit: 8df7128",
+      "completed_at": "2026-01-08T09:50:00.000000"
     }
   ],
   "metadata": {
     "project": "Banking_Prototypes",
     "version": "1.0",
-    "last_updated": "2026-01-07T08:34:57.550808"
+    "last_updated": "2026-01-07T22:14:35.403089"
   }
 }
