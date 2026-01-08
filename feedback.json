@@ -76,13 +76,13 @@
       "title": "Real estate scraper",
       "description": "Our customers shall have the possibility to send us a link of the real estate, which they want to finance, and we provide them a financing offer, based on the real estate price, mentioned on the platform.\n\nLet us implement a prototype (standalone), which\n-  takes a link to a specific real estste on a 3rd party portal as an input (ask the user).  A link looks like this e.g. (https://immobilien.derstandard.at/detail/15006491)\n- scrapes the most important details of the real estate (the scraping is for real, the functionality shall be implemented)\n- shows the real estate in a nice design to the user and  asks for confirmation \n- if confirmed, a financing offer is presented (with 3,5% fixed interest rate and 30y tenor)\n- the CTA is \u201esend me the offer\u201c (this functionality shall not be implemented)",
       "created_at": "2026-01-07T22:14:35.403066",
-      "completion_notes": "Completed manually after agent run 20260108_082001 (interrupted by API credits)\n✓ Implementation complete\nCommit: 8df7128",
-      "completed_at": "2026-01-08T09:50:00.000000"
+      "completion_notes": "Completed with CORS proxy fix\nInitial: Commit 8df7128\nFix: Commit eca7b2b - Replaced failing CORS proxy, added demo fallback mode\n✓ Multiple CORS proxies with automatic failover\n✓ Demo mode when scraping unavailable\n✓ User-visible demo notice banner",
+      "completed_at": "2026-01-08T10:10:00.000000"
     }
   ],
   "metadata": {
     "project": "Banking_Prototypes",
     "version": "1.0",
-    "last_updated": "2026-01-07T22:14:35.403089"
+    "last_updated": "2026-01-08T10:05:54.245839"
   }
 }
