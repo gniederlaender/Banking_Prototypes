@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investitionskredit - Antragsprozess</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #135ee2;
+            --success-green: #2ecc71;
+            --warning-orange: #f39c12;
+            --error-red: #e74c3c;
+            --bg-light: #f5f6f8;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            font-size: 14px;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .header .logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .progress-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 0;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            height: 2px;
+            background: var(--primary-blue);
+            z-index: 1;
+            transition: width 0.3s ease;
+        }
+
+        .step {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-circle {
+            background: var(--primary-blue);
+            border-color: var(--primary-blue);
+            color: white;
+        }
+
+        .step.completed .step-circle {
+            background: var(--success-green);
+            border-color: var(--success-green);
+            color: white;
+        }
+
+        .step-label {
+            margin-top: 0.5rem;
+            font-size: 12px;
+            text-align: center;
+            color: var(--text-light);
+            max-width: 120px;
+        }
+
+        .step.active .step-label {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            font-size: 14px;
+        }
+
+        .form-group label .required {
+            color: var(--error-red);
+            margin-left: 2px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(19, 94, 226, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .checkbox-group,
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .checkbox-item,
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .checkbox-item:hover,
+        .radio-item:hover {
+            background: #f8f9fa;
+            border-color: var(--primary-blue);
+        }
+
+        .checkbox-item input[type="checkbox"],
+        .radio-item input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .file-upload {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary-blue);
+            background: #f8f9fa;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-list {
+            margin-top: 1rem;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-item .file-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .file-item .file-remove {
+            color: var(--error-red);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .info-box {
+            background: #e8f4fd;
+            border-left: 4px solid var(--primary-blue);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box.warning {
+            background: #fff3cd;
+            border-left-color: var(--warning-orange);
+        }
+
+        .info-box.success {
+            background: #d4edda;
+            border-left-color: var(--success-green);
+        }
+
+        .info-box.error {
+            background: #f8d7da;
+            border-left-color: var(--error-red);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0f4fc7;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(19, 94, 226, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: #f8f9fa;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .status-badge.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-badge.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-badge.info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: var(--text-light);
+        }
+
+        .summary-value {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .eligibility-result {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .eligibility-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .eligibility-icon.success {
+            background: #d4edda;
+            color: var(--success-green);
+        }
+
+        .eligibility-icon.warning {
+            background: #fff3cd;
+            color: var(--warning-orange);
+        }
+
+        .eligibility-icon.error {
+            background: #f8d7da;
+            color: var(--error-red);
+        }
+
+        @media (max-width: 768px) {
+            .form-row,
+            .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-steps {
+                flex-wrap: wrap;
+            }
+
+            .step-label {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">George Business</div>
+        <h1>Investitionskredit - Antragsprozess</h1>
+        <div style="width: 120px;"></div>
+    </div>
+
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress-steps">
+                <div class="progress-line" id="progressLine"></div>
+                <div class="step active" data-step="0">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Pre-Check</div>
+                </div>
+                <div class="step" data-step="1">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Antrag</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">KYC/AML</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">Dokumente</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-circle">5</div>
+                    <div class="step-label">Sicherheiten</div>
+                </div>
+                <div class="step" data-step="5">
+                    <div class="step-circle">6</div>
+                    <div class="step-label">Prüfung</div>
+                </div>
+                <div class="step" data-step="6">
+                    <div class="step-circle">7</div>
+                    <div class="step-label">Vertrag</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 0: Pre-Check / Eligibility -->
+        <div class="step-content active" id="step0">
+            <div class="card">
+                <div class="card-title">Pre-Check & Vorqualifizierung</div>
+                <div class="info-box">
+                    <strong>Ziel:</strong> Frühzeitige "No-Touch"-Filterung für STP, Minimierung von Abbrüchen. 
+                    Bitte beantworten Sie die folgenden Fragen, um Ihre Förderfähigkeit zu prüfen.
+                </div>
+
+                <div class="form-group">
+                    <label>Kundentyp <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" name="customerType" value="firma" id="typeFirma">
+                            <label for="typeFirma">Firma (KMU)</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="customerType" value="einzelunternehmer" id="typeEinzel">
+                            <label for="typeEinzel">Einzelunternehmer:in</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="customerType" value="freiberufler" id="typeFreiberufler">
+                            <label for="typeFreiberufler">Freiberufler:in</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Investitionszweck <span class="required">*</span></label>
+                    <select id="investmentPurpose" required>
+                        <option value="">Bitte wählen</option>
+                        <option value="maschinen">Maschinen & Anlagen</option>
+                        <option value="fahrzeuge">Fahrzeuge</option>
+                        <option value="immobilien">Immobilien (Geschäftsräume)</option>
+                        <option value="it">IT & Digitalisierung</option>
+                        <option value="umwelt">Umweltschutz & Energieeffizienz</option>
+                        <option value="sonstiges">Sonstiges</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Kreditbetrag (EUR) <span class="required">*</span></label>
+                        <input type="number" id="loanAmount" min="1000" step="1000" placeholder="z.B. 50000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Laufzeit (Jahre) <span class="required">*</span></label>
+                        <select id="loanTerm" required>
+                            <option value="">Bitte wählen</option>
+                            <option value="1">1 Jahr</option>
+                            <option value="2">2 Jahre</option>
+                            <option value="3">3 Jahre</option>
+                            <option value="5">5 Jahre</option>
+                            <option value="7">7 Jahre</option>
+                            <option value="10">10 Jahre</option>
+                            <option value="15">15 Jahre</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Förderwunsch <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" name="fundingWish" value="aws" id="fundingAWS">
+                            <label for="fundingAWS">AWS (Austria Wirtschaftsservice)</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="fundingWish" value="oht" id="fundingOHT">
+                            <label for="fundingOHT">ÖHT (Österreichische Hotel- und Tourismusbank)</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="fundingWish" value="erp" id="fundingERP">
+                            <label for="fundingERP">ERP (Europäischer Wiederaufbauplan)</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="fundingWish" value="nein" id="fundingNein">
+                            <label for="fundingNein">Keine Förderung</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Gewünschte Sicherheitenart</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="securityProperty" value="liegenschaft">
+                            <label for="securityProperty">Liegenschaft</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="securityVehicle" value="fahrzeug">
+                            <label for="securityVehicle">Fahrzeug</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="securityGuarantee" value="bürgschaft">
+                            <label for="securityGuarantee">Bürgschaft</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="securityOther" value="sonstiges">
+                            <label for="securityOther">Sonstiges</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="eligibilityResult" style="display: none;">
+                    <div class="card">
+                        <div class="eligibility-result">
+                            <div class="eligibility-icon success" id="eligibilityIcon">✓</div>
+                            <h2 id="eligibilityTitle">Vorqualifizierung erfolgreich</h2>
+                            <p id="eligibilityMessage" style="color: var(--text-light); margin-top: 1rem;"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="checkEligibility()">Vorqualifizierung prüfen</button>
+                    <button class="btn btn-primary" id="continueFromPreCheck" onclick="nextStep()" disabled>Weiter zum Antrag</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 1: Antrag -->
+        <div class="step-content" id="step1">
+            <div class="card">
+                <div class="card-title">Antragsdaten</div>
+                <div class="info-box">
+                    Ihre Daten werden aus Ihrem George Business Profil vorausgefüllt. Bitte überprüfen und ergänzen Sie die Angaben.
+                </div>
+
+                <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Unternehmensdaten</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Rechtsform <span class="required">*</span></label>
+                        <select id="legalForm" required>
+                            <option value="">Bitte wählen</option>
+                            <option value="gmbh">GmbH</option>
+                            <option value="ag">AG</option>
+                            <option value="og">OG</option>
+                            <option value="kg">KG</option>
+                            <option value="einzelunternehmen">Einzelunternehmen</option>
+                            <option value="freiberufler">Freiberufler:in</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>UID-Nummer <span class="required">*</span></label>
+                        <input type="text" id="uidNumber" placeholder="ATU12345678" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Firmenbuchnummer</label>
+                    <input type="text" id="companyRegister" placeholder="z.B. FN 123456a">
+                </div>
+
+                <div class="form-group">
+                    <label>Branche (NACE) <span class="required">*</span></label>
+                    <select id="naceCode" required>
+                        <option value="">Bitte wählen</option>
+                        <option value="A">A - Land- und Forstwirtschaft</option>
+                        <option value="B">B - Bergbau und Gewinnung von Steinen</option>
+                        <option value="C">C - Verarbeitendes Gewerbe</option>
+                        <option value="D">D - Energieversorgung</option>
+                        <option value="E">E - Wasserversorgung</option>
+                        <option value="F">F - Baugewerbe</option>
+                        <option value="G">G - Handel</option>
+                        <option value="H">H - Verkehr und Lagerei</option>
+                        <option value="I">I - Gastgewerbe</option>
+                        <option value="J">J - Information und Kommunikation</option>
+                        <option value="K">K - Erbringung von Finanzdienstleistungen</option>
+                        <option value="L">L - Grundstücks- und Wohnungswesen</option>
+                        <option value="M">M - Erbringung von freiberuflichen Dienstleistungen</option>
+                        <option value="N">N - Erbringung von sonstigen Dienstleistungen</option>
+                        <option value="O">O - Öffentliche Verwaltung</option>
+                        <option value="P">P - Erziehung und Unterricht</option>
+                        <option value="Q">Q - Gesundheits- und Sozialwesen</option>
+                        <option value="R">R - Kunst, Unterhaltung und Erholung</option>
+                        <option value="S">S - Erbringung von sonstigen Dienstleistungen</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Umsatz (EUR/Jahr) <span class="required">*</span></label>
+                        <input type="number" id="revenue" min="0" step="1000" placeholder="z.B. 500000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Anzahl Mitarbeiter:innen <span class="required">*</span></label>
+                        <input type="number" id="employees" min="1" step="1" placeholder="z.B. 10" required>
+                    </div>
+                </div>
+
+                <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Kreditdetails</div>
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label>Tilgungsmodus <span class="required">*</span></label>
+                        <select id="repaymentMode" required>
+                            <option value="">Bitte wählen</option>
+                            <option value="annuitaetisch">Annuitätisch</option>
+                            <option value="endfaellig">Endfällig</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Zinsart <span class="required">*</span></label>
+                        <select id="interestType" required>
+                            <option value="">Bitte wählen</option>
+                            <option value="fix">Fix</option>
+                            <option value="variabel">Variabel</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Verwendungszweck <span class="required">*</span></label>
+                        <input type="text" id="usagePurpose" placeholder="z.B. Maschinenkauf" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Wirtschaftliche Eigentümer:innen <span class="required">*</span></label>
+                    <div class="info-box warning">
+                        Bitte geben Sie alle wirtschaftlichen Eigentümer:innen mit einem Anteil von mehr als 25% an.
+                    </div>
+                    <textarea id="beneficialOwners" placeholder="Name, Geburtsdatum, Anteil (z.B. Max Mustermann, 01.01.1980, 50%)" required></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="previousStep()">Zurück</button>
+                    <button class="btn btn-primary" onclick="nextStep()">Weiter zu KYC/AML</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: KYC/AML -->
+        <div class="step-content" id="step2">
+            <div class="card">
+                <div class="card-title">Identifikation & KYC/AML-Prüfung</div>
+                <div class="info-box">
+                    <strong>Ziel:</strong> Reibungslose, regelkonforme Kundendatengewinnung mit NFC/OCR, lückenloser AML-Proof.
+                </div>
+
+                <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Digitale Identifikation</div>
+                <div class="form-group">
+                    <label>Ausweis-Scan <span class="required">*</span></label>
+                    <div class="file-upload" onclick="document.getElementById('idScan').click()">
+                        <input type="file" id="idScan" accept="image/*,.pdf" onchange="handleFileUpload(this, 'idScanList')">
+                        <div>
+                            <div style="font-size: 48px; margin-bottom: 0.5rem;">📄</div>
+                            <div>Klicken Sie hier, um Ihren Ausweis zu scannen</div>
+                            <div style="font-size: 12px; color: var(--text-light); margin-top: 0.5rem;">NFC/RFID oder Foto möglich</div>
+                        </div>
+                    </div>
+                    <div id="idScanList" class="file-list"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Selfie & Liveness-Check <span class="required">*</span></label>
+                    <div class="file-upload" onclick="document.getElementById('selfie').click()">
+                        <input type="file" id="selfie" accept="image/*" onchange="handleFileUpload(this, 'selfieList')">
+                        <div>
+                            <div style="font-size: 48px; margin-bottom: 0.5rem;">📷</div>
+                            <div>Selfie für Liveness-Prüfung aufnehmen</div>
+                        </div>
+                    </div>
+                    <div id="selfieList" class="file-list"></div>
+                </div>
+
+                <div class="card-title" style="font-size: 16px; margin-top: 1rem;">AML-Prüfung</div>
+                <div class="form-group">
+                    <label>Österreich-Bezug <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" name="austriaConnection" value="ja" id="austriaJa" required>
+                            <label for="austriaJa">Ja, Hauptsitz in Österreich</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="austriaConnection" value="nein" id="austriaNein">
+                            <label for="austriaNein">Nein</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Mittelherkunft <span class="required">*</span></label>
+                    <textarea id="sourceOfFunds" placeholder="Bitte beschreiben Sie die Herkunft der Mittel für die Investition (z.B. Eigenkapital, bisherige Gewinne, etc.)" required></textarea>
+                    <div class="info-box" style="margin-top: 0.5rem;">
+                        Gemäß AML-Leitfaden müssen alle Mittelherkunftsnachweise dokumentiert werden.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Zahlungsfluss</label>
+                    <textarea id="paymentFlow" placeholder="Beschreiben Sie den erwarteten Zahlungsfluss (z.B. Zahlung an Lieferanten, Rechnungsstellung, etc.)"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Sanktionen-/PEP-Prüfung</label>
+                    <div class="info-box info">
+                        Automatische Prüfung gegen EU-Sanktionslisten (EU-VO 833/2014, 765/2006) und PEP-Listen wird durchgeführt.
+                    </div>
+                    <div id="sanctionsCheck" style="margin-top: 1rem;">
+                        <span class="status-badge info">Prüfung läuft...</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Einwilligungen <span class="required">*</span></label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="consentDataProcessing" required>
+                            <label for="consentDataProcessing">Ich stimme der Datenverarbeitung gemäß DSGVO zu</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="consentDataSharing" required>
+                            <label for="consentDataSharing">Ich stimme der Datenweitergabe an Refinanzierungsbanken zu</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="consentGrundbuch" required>
+                            <label for="consentGrundbuch">Ich ermächtige zur Grundbuch-Einsicht (§ 5 GUG)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="consentKSV" required>
+                            <label for="consentKSV">Ich stimme der Abfrage bei KSV 1870 zu</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="previousStep()">Zurück</button>
+                    <button class="btn btn-primary" onclick="nextStep()">Weiter zu Dokumenten</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Dokumente -->
+        <div class="step-content" id="step3">
+            <div class="card">
+                <div class="card-title">Dokumenten-Upload</div>
+                <div class="info-box">
+                    Bitte laden Sie alle erforderlichen Dokumente hoch. Die Dokumente werden automatisch auf Vollständigkeit geprüft.
+                </div>
+
+                <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Finanzunterlagen <span class="required">*</span></div>
+                <div class="form-group">
+                    <label>Jahresabschlüsse / EÜR (2-3 Jahre) <span class="required">*</span></label>
+                    <div class="file-upload" onclick="document.getElementById('financialStatements').click()">
+                        <input type="file" id="financialStatements" accept=".pdf,.jpg,.jpeg,.png" multiple onchange="handleFileUpload(this, 'financialStatementsList')">
+                        <div>
+                            <div style="font-size: 48px; margin-bottom: 0.5rem;">📊</div>
+                            <div>Jahresabschlüsse oder Einnahmen-Überschuss-Rechnung hochladen</div>
+                        </div>
+                    </div>
+                    <div id="financialStatementsList" class="file-list"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Planrechnung / Cashflow-Plan <span class="required">*</span></label>
+                    <div class="file-upload" onclick="document.getElementById('planCalculation').click()">
+                        <input type="file" id="planCalculation" accept=".pdf,.jpg,.jpeg,.png,.xlsx,.xls" onchange="handleFileUpload(this, 'planCalculationList')">
+                        <div>
+                            <div style="font-size: 48px; margin-bottom: 0.5rem;">📈</div>
+                            <div>Planrechnung oder Liquiditätsplan hochladen</div>
+                        </div>
+                    </div>
+                    <div id="planCalculationList" class="file-list"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>BWA (Betriebswirtschaftliche Auswertung)</label>
+                    <div class="file-upload" onclick="document.getElementById('bwa').click()">
+                        <input type="file" id="bwa" accept=".pdf,.jpg,.jpeg,.png,.xlsx,.xls" onchange="handleFileUpload(this, 'bwaList')">
+                        <div>
+                            <div style="font-size: 48px; margin-bottom: 0.5rem;">📋</div>
+                            <div>BWA hochladen (optional)</div>
+                        </div>
+                    </div>
+                    <div id="bwaList" class="file-list"></div>
+                </div>
+
+                <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Investitionsunterlagen</div>
+                <div class="form-group">
+                    <label>Angebote / Rechnungen <span class="required">*</span></label>
+                    <div class="file-upload" onclick="document.getElementById('offers').click()">
+                        <input type="file" id="offers" accept=".pdf,.jpg,.jpeg,.png" multiple onchange="handleFileUpload(this, 'offersList')">
+                        <div>
+                            <div style="font-size: 48px; margin-bottom: 0.5rem;">💼</div>
+                            <div>Angebote oder Rechnungen für die Investition hochladen</div>
+                        </div>
+                    </div>
+                    <div id="offersList" class="file-list"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Investitionsplan</label>
+                    <div class="file-upload" onclick="document.getElementById('investmentPlan').click()">
+                        <input type="file" id="investmentPlan" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="handleFileUpload(this, 'investmentPlanList')">
+                        <div>
+                            <div style="font-size: 48px; margin-bottom: 0.5rem;">📝</div>
+                            <div>Detaillierter Investitionsplan hochladen (optional)</div>
+                        </div>
+                    </div>
+                    <div id="investmentPlanList" class="file-list"></div>
+                </div>
+
+                <div id="fundingDocumentsSection" style="display: none;">
+                    <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Förderunterlagen <span class="required">*</span></div>
+                    <div class="info-box warning">
+                        Für Förderkredite (AWS/ÖHT/ERP) sind zusätzliche Dokumente erforderlich.
+                    </div>
+                    <div class="form-group">
+                        <label>KZE (Kredit-Zustimmungserklärung) <span class="required">*</span></label>
+                        <div class="file-upload" onclick="document.getElementById('kze').click()">
+                            <input type="file" id="kze" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(this, 'kzeList')">
+                            <div>
+                                <div style="font-size: 48px; margin-bottom: 0.5rem;">📑</div>
+                                <div>KZE-Dokument hochladen</div>
+                            </div>
+                        </div>
+                        <div id="kzeList" class="file-list"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Projektkostengliederung <span class="required">*</span></label>
+                        <div class="file-upload" onclick="document.getElementById('projectCosts').click()">
+                            <input type="file" id="projectCosts" accept=".pdf,.xlsx,.xls" onchange="handleFileUpload(this, 'projectCostsList')">
+                            <div>
+                                <div style="font-size: 48px; margin-bottom: 0.5rem;">💰</div>
+                                <div>Projektkostengliederung hochladen</div>
+                            </div>
+                        </div>
+                        <div id="projectCostsList" class="file-list"></div>
+                    </div>
+                </div>
+
+                <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Sonstige Unterlagen</div>
+                <div class="form-group">
+                    <label>Firmenbuchauszug</label>
+                    <div class="file-upload" onclick="document.getElementById('companyRegisterDoc').click()">
+                        <input type="file" id="companyRegisterDoc" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(this, 'companyRegisterDocList')">
+                        <div>
+                            <div style="font-size: 48px; margin-bottom: 0.5rem;">🏢</div>
+                            <div>Firmenbuchauszug hochladen</div>
+                        </div>
+                    </div>
+                    <div id="companyRegisterDocList" class="file-list"></div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="previousStep()">Zurück</button>
+                    <button class="btn btn-primary" onclick="nextStep()">Weiter zu Sicherheiten</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Sicherheiten -->
+        <div class="step-content" id="step4">
+            <div class="card">
+                <div class="card-title">Sicherheiten-Management</div>
+                <div class="info-box">
+                    <strong>Ziel:</strong> Standardisierte Intake- & Bewertungslogik; vollständige Vertragsmappe inkl. Bürgschaft.
+                </div>
+
+                <div class="form-group">
+                    <label>Sicherheitenart <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" name="securityType" value="liegenschaft" id="secProperty" onchange="toggleSecurityDetails()">
+                            <label for="secProperty">Liegenschaft</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="securityType" value="fahrzeug" id="secVehicle" onchange="toggleSecurityDetails()">
+                            <label for="secVehicle">Fahrzeug</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="securityType" value="bürgschaft" id="secGuarantee" onchange="toggleSecurityDetails()">
+                            <label for="secGuarantee">Bürgschaft / Garantie</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="securityType" value="kontenverpfändung" id="secAccount" onchange="toggleSecurityDetails()">
+                            <label for="secAccount">Kontenverpfändung</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="securityType" value="zession" id="secAssignment" onchange="toggleSecurityDetails()">
+                            <label for="secAssignment">Zession</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="securityType" value="sonstiges" id="secOther" onchange="toggleSecurityDetails()">
+                            <label for="secOther">Sonstiges</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="securityDetails">
+                    <div id="propertyDetails" style="display: none;">
+                        <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Liegenschaftsdetails</div>
+                        <div class="form-group">
+                            <label>Adresse <span class="required">*</span></label>
+                            <input type="text" id="propertyAddress" placeholder="Straße, PLZ, Ort">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Grundbuchnummer <span class="required">*</span></label>
+                                <input type="text" id="propertyGBNumber" placeholder="z.B. GB 12345">
+                            </div>
+                            <div class="form-group">
+                                <label>Beleihungswert (EUR) <span class="required">*</span></label>
+                                <input type="number" id="propertyValue" min="0" step="1000" placeholder="z.B. 200000">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Grundbuchauszug (§ 5 GUG) <span class="required">*</span></label>
+                            <div class="file-upload" onclick="document.getElementById('propertyGBDoc').click()">
+                                <input type="file" id="propertyGBDoc" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(this, 'propertyGBDocList')">
+                                <div>
+                                    <div style="font-size: 48px; margin-bottom: 0.5rem;">🏠</div>
+                                    <div>Grundbuchauszug hochladen</div>
+                                </div>
+                            </div>
+                            <div id="propertyGBDocList" class="file-list"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Bewertungsgutachten</label>
+                            <div class="file-upload" onclick="document.getElementById('propertyAppraisal').click()">
+                                <input type="file" id="propertyAppraisal" accept=".pdf" onchange="handleFileUpload(this, 'propertyAppraisalList')">
+                                <div>
+                                    <div style="font-size: 48px; margin-bottom: 0.5rem;">📊</div>
+                                    <div>Bewertungsgutachten hochladen (optional)</div>
+                                </div>
+                            </div>
+                            <div id="propertyAppraisalList" class="file-list"></div>
+                        </div>
+                    </div>
+
+                    <div id="vehicleDetails" style="display: none;">
+                        <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Fahrzeugdetails</div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Marke & Modell <span class="required">*</span></label>
+                                <input type="text" id="vehicleModel" placeholder="z.B. Mercedes-Benz E-Klasse">
+                            </div>
+                            <div class="form-group">
+                                <label>Kennzeichen <span class="required">*</span></label>
+                                <input type="text" id="vehiclePlate" placeholder="z.B. W-123AB">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Baujahr <span class="required">*</span></label>
+                                <input type="number" id="vehicleYear" min="1900" max="2025" placeholder="z.B. 2020">
+                            </div>
+                            <div class="form-group">
+                                <label>Schätzwert (EUR) <span class="required">*</span></label>
+                                <input type="number" id="vehicleValue" min="0" step="100" placeholder="z.B. 30000">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Eigentumsnachweis <span class="required">*</span></label>
+                            <div class="file-upload" onclick="document.getElementById('vehicleOwnership').click()">
+                                <input type="file" id="vehicleOwnership" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(this, 'vehicleOwnershipList')">
+                                <div>
+                                    <div style="font-size: 48px; margin-bottom: 0.5rem;">🚗</div>
+                                    <div>Eigentumsnachweis hochladen</div>
+                                </div>
+                            </div>
+                            <div id="vehicleOwnershipList" class="file-list"></div>
+                        </div>
+                    </div>
+
+                    <div id="guaranteeDetails" style="display: none;">
+                        <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Bürgschaftsdetails</div>
+                        <div class="form-group">
+                            <label>Bürge / Garantiegeber:in <span class="required">*</span></label>
+                            <input type="text" id="guarantorName" placeholder="Name des Bürgen">
+                        </div>
+                        <div class="form-group">
+                            <label>Bürgschaftsbetrag (EUR) <span class="required">*</span></label>
+                            <input type="number" id="guaranteeAmount" min="0" step="1000" placeholder="z.B. 50000">
+                        </div>
+                        <div class="form-group">
+                            <label>Bürgschaftsvertrag</label>
+                            <div class="file-upload" onclick="document.getElementById('guaranteeContract').click()">
+                                <input type="file" id="guaranteeContract" accept=".pdf" onchange="handleFileUpload(this, 'guaranteeContractList')">
+                                <div>
+                                    <div style="font-size: 48px; margin-bottom: 0.5rem;">📄</div>
+                                    <div>Bürgschaftsvertrag hochladen (wird bei Bedarf generiert)</div>
+                                </div>
+                            </div>
+                            <div id="guaranteeContractList" class="file-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="previousStep()">Zurück</button>
+                    <button class="btn btn-primary" onclick="nextStep()">Weiter zur Prüfung</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Prüfung & Entscheidung -->
+        <div class="step-content" id="step5">
+            <div class="card">
+                <div class="card-title">Risiko- & Bonitätsprüfung</div>
+                <div class="info-box">
+                    <strong>Ziel:</strong> Konsistentes Firmenkunden-Rating, Limitprüfung, ESG-Berücksichtigung gemäß EBA-Leitlinien.
+                </div>
+
+                <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Automatische Prüfung</div>
+                <div class="form-group">
+                    <label>Rating & Bonitätsprüfung</label>
+                    <div id="ratingCheck" style="margin-top: 1rem;">
+                        <span class="status-badge info">Prüfung läuft...</span>
+                    </div>
+                    <div class="info-box" style="margin-top: 1rem;">
+                        <strong>Berechnete Kennzahlen:</strong>
+                        <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                            <li>DSCR (Debt Service Coverage Ratio): Wird berechnet</li>
+                            <li>Verschuldungsgrad: Wird berechnet</li>
+                            <li>Cashflow-Coverage: Wird berechnet</li>
+                            <li>Eigenmittel: Wird berechnet</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>ESG-Screening</label>
+                    <div class="info-box">
+                        ESG-Risiken werden gemäß EBA-Leitlinien in die Risikobereitschaft, Kreditentscheidung und Sicherheitenbewertung einbezogen.
+                    </div>
+                    <div id="esgCheck" style="margin-top: 1rem;">
+                        <span class="status-badge info">ESG-Prüfung läuft...</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Limitprüfung (RICOS)</label>
+                    <div class="info-box">
+                        Prüfung der Kreditlimits gemäß RICOS-System, inkl. Haftungsverbund und Gruppenverbundene Kunden.
+                    </div>
+                    <div id="limitCheck" style="margin-top: 1rem;">
+                        <span class="status-badge info">Limitprüfung läuft...</span>
+                    </div>
+                </div>
+
+                <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Entscheidungsstatus</div>
+                <div id="decisionResult" style="display: none;">
+                    <div class="card">
+                        <div class="eligibility-result">
+                            <div class="eligibility-icon success" id="decisionIcon">✓</div>
+                            <h2 id="decisionTitle">Antrag genehmigt</h2>
+                            <p id="decisionMessage" style="color: var(--text-light); margin-top: 1rem;"></p>
+                            <div id="decisionDetails" style="margin-top: 1.5rem; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
+                                <!-- Details werden dynamisch eingefügt -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="previousStep()">Zurück</button>
+                    <button class="btn btn-primary" id="checkDecisionBtn" onclick="checkDecision()">Prüfung starten</button>
+                    <button class="btn btn-primary" id="continueToContractBtn" onclick="nextStep()" style="display: none;">Weiter zum Vertrag</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 6: Vertrag & Auszahlung -->
+        <div class="step-content" id="step6">
+            <div class="card">
+                <div class="card-title">Vertrag & Auszahlung</div>
+                <div class="info-box success">
+                    <strong>Herzlichen Glückwunsch!</strong> Ihr Antrag wurde genehmigt. Bitte überprüfen Sie die Vertragsdetails und geben Sie Ihre elektronische Signatur ab.
+                </div>
+
+                <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Vertragsübersicht</div>
+                <div class="card" style="background: #f8f9fa;">
+                    <div class="summary-item">
+                        <span class="summary-label">Kreditbetrag:</span>
+                        <span class="summary-value" id="summaryAmount">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Laufzeit:</span>
+                        <span class="summary-value" id="summaryTerm">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Zinssatz:</span>
+                        <span class="summary-value" id="summaryInterest">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Tilgungsmodus:</span>
+                        <span class="summary-value" id="summaryRepayment">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Sicherheiten:</span>
+                        <span class="summary-value" id="summarySecurity">-</span>
+                    </div>
+                </div>
+
+                <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Vertragsunterlagen</div>
+                <div class="info-box">
+                    Die folgenden Verträge werden für Sie generiert:
+                    <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                        <li>ERP-Kreditvertrag / Haftungskreditvertrag</li>
+                        <li>Bürgschaftsvertrag (falls zutreffend)</li>
+                        <li>AGB & Rahmenbedingungen</li>
+                        <li>Datenschutzerklärung</li>
+                    </ul>
+                </div>
+
+                <div class="form-group">
+                    <label>Verträge herunterladen</label>
+                    <button class="btn btn-secondary" onclick="downloadContracts()" style="width: 100%;">
+                        📥 Vertragsmappe herunterladen
+                    </button>
+                </div>
+
+                <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Elektronische Signatur</div>
+                <div class="form-group">
+                    <label>Einwilligung zur eSignatur <span class="required">*</span></label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="consentESign" required>
+                            <label for="consentESign">Ich stimme der elektronischen Signatur zu und bestätige, dass ich alle Vertragsunterlagen gelesen und verstanden habe.</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Signatur-Methode <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" name="signMethod" value="cardTAN" id="signCardTAN" required>
+                            <label for="signCardTAN">cardTAN</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="signMethod" value="mobileTAN" id="signMobileTAN">
+                            <label for="signMobileTAN">Mobile TAN</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="signMethod" value="signApp" id="signApp">
+                            <label for="signApp">Sign-App</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="fundingPayoutSection" style="display: none;">
+                    <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Förderkredit - Verwendungsnachweis</div>
+                    <div class="info-box warning">
+                        Für Förderkredite ist ein Verwendungsnachweis erforderlich. Bitte laden Sie nach der Auszahlung die entsprechenden Rechnungen und Zahlungsbestätigungen hoch.
+                    </div>
+                </div>
+
+                <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Auszahlung</div>
+                <div class="form-group">
+                    <label>Auszahlungskonto <span class="required">*</span></label>
+                    <select id="payoutAccount" required>
+                        <option value="">Bitte wählen</option>
+                        <option value="account1">AT12 3456 7890 1234 5678 (Geschäftskonto)</option>
+                        <option value="account2">AT98 7654 3210 9876 5432 (Anderes Konto)</option>
+                    </select>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="previousStep()">Zurück</button>
+                    <button class="btn btn-primary" onclick="submitApplication()">Antrag abschließen & signieren</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Screen -->
+        <div class="step-content" id="step7" style="display: none;">
+            <div class="card">
+                <div class="eligibility-result">
+                    <div class="eligibility-icon success">✓</div>
+                    <h2>Antrag erfolgreich eingereicht!</h2>
+                    <p style="color: var(--text-light); margin-top: 1rem;">
+                        Ihr Investitionskredit-Antrag wurde erfolgreich eingereicht und signiert.
+                    </p>
+                    <div class="info-box success" style="margin-top: 2rem; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
+                        <strong>Nächste Schritte:</strong>
+                        <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                            <li>Sie erhalten eine Bestätigungs-E-Mail mit allen Details</li>
+                            <li>Die Auszahlung erfolgt nach finaler Prüfung (bei STP: automatisch)</li>
+                            <li>Bei Förderkrediten: Bitte reichen Sie den Verwendungsnachweis nach</li>
+                            <li>Sie können den Status jederzeit in George Business einsehen</li>
+                        </ul>
+                    </div>
+                    <div style="margin-top: 2rem;">
+                        <button class="btn btn-primary" onclick="location.reload()">Neuen Antrag starten</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 7;
+        const uploadedFiles = {};
+
+        function updateProgress() {
+            const progress = (currentStep / (totalSteps - 1)) * 100;
+            document.getElementById('progressLine').style.width = progress + '%';
+
+            document.querySelectorAll('.step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index < currentStep) {
+                    step.classList.add('completed');
+                } else if (index === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+
+            document.querySelectorAll('.step-content').forEach((content, index) => {
+                content.classList.remove('active');
+                if (index === currentStep) {
+                    content.classList.add('active');
+                }
+            });
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps - 1) {
+                currentStep++;
+                updateProgress();
+                
+                // Special handling for step 6 (contract)
+                if (currentStep === 6) {
+                    populateSummary();
+                }
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                updateProgress();
+            }
+        }
+
+        function checkEligibility() {
+            const customerType = document.querySelector('input[name="customerType"]:checked');
+            const investmentPurpose = document.getElementById('investmentPurpose').value;
+            const loanAmount = document.getElementById('loanAmount').value;
+            const loanTerm = document.getElementById('loanTerm').value;
+            const fundingWish = document.querySelector('input[name="fundingWish"]:checked');
+
+            if (!customerType || !investmentPurpose || !loanAmount || !loanTerm || !fundingWish) {
+                alert('Bitte füllen Sie alle Pflichtfelder aus.');
+                return;
+            }
+
+            const resultDiv = document.getElementById('eligibilityResult');
+            const icon = document.getElementById('eligibilityIcon');
+            const title = document.getElementById('eligibilityTitle');
+            const message = document.getElementById('eligibilityMessage');
+
+            // Simulate eligibility check
+            const isEligible = Math.random() > 0.3; // 70% chance of being eligible
+
+            if (isEligible) {
+                icon.className = 'eligibility-icon success';
+                icon.textContent = '✓';
+                title.textContent = 'Vorqualifizierung erfolgreich';
+                message.textContent = 'Sie erfüllen die grundlegenden Voraussetzungen für einen Investitionskredit. Sie können nun mit dem Antragsprozess fortfahren.';
+            } else {
+                icon.className = 'eligibility-icon warning';
+                icon.textContent = '⚠';
+                title.textContent = 'Weitere Prüfung erforderlich';
+                message.textContent = 'Ihr Antrag erfordert eine manuelle Prüfung. Bitte wenden Sie sich an Ihre Filiale oder setzen Sie den Antrag online fort.';
+            }
+
+            resultDiv.style.display = 'block';
+            document.getElementById('continueFromPreCheck').disabled = false;
+        }
+
+        function handleFileUpload(input, listId) {
+            const files = input.files;
+            const list = document.getElementById(listId);
+            list.innerHTML = '';
+
+            if (!uploadedFiles[listId]) {
+                uploadedFiles[listId] = [];
+            }
+
+            Array.from(files).forEach(file => {
+                uploadedFiles[listId].push(file);
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div class="file-name">
+                        <span>📄</span>
+                        <span>${file.name}</span>
+                    </div>
+                    <span class="file-remove" onclick="removeFile('${listId}', '${file.name}')">✕</span>
+                `;
+                list.appendChild(fileItem);
+            });
+        }
+
+        function removeFile(listId, fileName) {
+            if (uploadedFiles[listId]) {
+                uploadedFiles[listId] = uploadedFiles[listId].filter(f => f.name !== fileName);
+                const list = document.getElementById(listId);
+                const items = list.querySelectorAll('.file-item');
+                items.forEach(item => {
+                    if (item.querySelector('.file-name span:last-child').textContent === fileName) {
+                        item.remove();
+                    }
+                });
+            }
+        }
+
+        function toggleSecurityDetails() {
+            const selected = document.querySelector('input[name="securityType"]:checked');
+            if (!selected) return;
+
+            // Hide all detail sections
+            document.getElementById('propertyDetails').style.display = 'none';
+            document.getElementById('vehicleDetails').style.display = 'none';
+            document.getElementById('guaranteeDetails').style.display = 'none';
+
+            // Show selected detail section
+            if (selected.value === 'liegenschaft') {
+                document.getElementById('propertyDetails').style.display = 'block';
+            } else if (selected.value === 'fahrzeug') {
+                document.getElementById('vehicleDetails').style.display = 'block';
+            } else if (selected.value === 'bürgschaft') {
+                document.getElementById('guaranteeDetails').style.display = 'block';
+            }
+        }
+
+        function checkDecision() {
+            const ratingCheck = document.getElementById('ratingCheck');
+            const esgCheck = document.getElementById('esgCheck');
+            const limitCheck = document.getElementById('limitCheck');
+            const decisionResult = document.getElementById('decisionResult');
+            const checkBtn = document.getElementById('checkDecisionBtn');
+            const continueBtn = document.getElementById('continueToContractBtn');
+
+            // Simulate checks
+            setTimeout(() => {
+                ratingCheck.innerHTML = '<span class="status-badge success">✓ Rating: B+ (Genehmigt)</span>';
+            }, 1000);
+
+            setTimeout(() => {
+                esgCheck.innerHTML = '<span class="status-badge success">✓ ESG-Prüfung: Bestanden</span>';
+            }, 1500);
+
+            setTimeout(() => {
+                limitCheck.innerHTML = '<span class="status-badge success">✓ Limitprüfung: OK</span>';
+            }, 2000);
+
+            setTimeout(() => {
+                const icon = document.getElementById('decisionIcon');
+                const title = document.getElementById('decisionTitle');
+                const message = document.getElementById('decisionMessage');
+                const details = document.getElementById('decisionDetails');
+
+                icon.className = 'eligibility-icon success';
+                icon.textContent = '✓';
+                title.textContent = 'Antrag genehmigt (STP)';
+                message.textContent = 'Ihr Antrag wurde automatisch genehmigt. Sie können nun mit der Vertragsunterzeichnung fortfahren.';
+                details.innerHTML = `
+                    <div class="summary-item">
+                        <span class="summary-label">Entscheidungsweg:</span>
+                        <span class="summary-value">Straight Through Processing (STP)</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Rating:</span>
+                        <span class="summary-value">B+</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">DSCR:</span>
+                        <span class="summary-value">1.35 (≥ 1.2)</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Sicherheiten-Deckung:</span>
+                        <span class="summary-value">120%</span>
+                    </div>
+                `;
+
+                decisionResult.style.display = 'block';
+                checkBtn.style.display = 'none';
+                continueBtn.style.display = 'inline-block';
+            }, 2500);
+        }
+
+        function populateSummary() {
+            const amount = document.getElementById('loanAmount')?.value || '50.000';
+            const term = document.getElementById('loanTerm')?.value || '5';
+            const repayment = document.getElementById('repaymentMode')?.value || 'annuitätisch';
+            const security = document.querySelector('input[name="securityType"]:checked')?.value || 'Liegenschaft';
+
+            document.getElementById('summaryAmount').textContent = new Intl.NumberFormat('de-AT', { style: 'currency', currency: 'EUR' }).format(amount);
+            document.getElementById('summaryTerm').textContent = term + ' Jahre';
+            document.getElementById('summaryInterest').textContent = '3,5% p.a. (fix)';
+            document.getElementById('summaryRepayment').textContent = repayment.charAt(0).toUpperCase() + repayment.slice(1);
+            document.getElementById('summarySecurity').textContent = security.charAt(0).toUpperCase() + security.slice(1);
+
+            // Show funding section if funding was selected
+            const fundingWish = document.querySelector('input[name="fundingWish"]:checked');
+            if (fundingWish && fundingWish.value !== 'nein') {
+                document.getElementById('fundingPayoutSection').style.display = 'block';
+            }
+        }
+
+        function downloadContracts() {
+            alert('Vertragsmappe wird generiert... (Demo)');
+        }
+
+        function submitApplication() {
+            const consent = document.getElementById('consentESign');
+            const signMethod = document.querySelector('input[name="signMethod"]:checked');
+            const account = document.getElementById('payoutAccount').value;
+
+            if (!consent.checked || !signMethod || !account) {
+                alert('Bitte füllen Sie alle Pflichtfelder aus.');
+                return;
+            }
+
+            // Simulate submission
+            alert('Antrag wird eingereicht und signiert... (Demo)');
+            
+            setTimeout(() => {
+                currentStep = 7;
+                updateProgress();
+                document.getElementById('step7').style.display = 'block';
+                document.getElementById('step7').classList.add('active');
+            }, 1000);
+        }
+
+        // Initialize
+        updateProgress();
+
+        // Show funding documents section if funding is selected in step 0
+        document.querySelectorAll('input[name="fundingWish"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value !== 'nein') {
+                    document.getElementById('fundingDocumentsSection').style.display = 'block';
+                } else {
+                    document.getElementById('fundingDocumentsSection').style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
