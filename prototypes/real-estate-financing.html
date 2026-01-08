@@ -501,6 +501,32 @@
             line-height: 1.6;
         }
 
+        .demo-notice {
+            display: none;
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .demo-notice.active {
+            display: block;
+        }
+
+        .demo-notice h4 {
+            color: #1e40af;
+            margin-bottom: 6px;
+            font-size: 1em;
+        }
+
+        .demo-notice p {
+            color: #1e3a8a;
+            line-height: 1.5;
+            font-size: 0.9em;
+            margin: 0;
+        }
+
         .back-link {
             display: inline-block;
             color: #2a5298;
@@ -614,6 +640,11 @@
                 <p style="color: #666; margin-bottom: 24px;">
                     Please review the property information and confirm to proceed with the financing offer.
                 </p>
+
+                <div class="demo-notice" id="demo-notice">
+                    <h4>ℹ️ Demo Mode</h4>
+                    <p>Unable to scrape the property URL. Displaying demo property data for demonstration purposes. In a production environment, real property data would be extracted from the provided URL.</p>
+                </div>
 
                 <div class="property-display" id="property-display">
                     <img src="" alt="Property" class="property-image" id="property-image">
@@ -808,15 +839,36 @@
 
         async function scrapeProperty(url) {
             try {
-                // Use a CORS proxy to fetch the page
-                const proxyUrl = 'https://api.allorigins.win/raw?url=';
-                const response = await fetch(proxyUrl + encodeURIComponent(url));
+                // Try multiple CORS proxies in sequence
+                const proxies = [
+                    'https://corsproxy.io/?',
+                    'https://api.codetabs.com/v1/proxy?quest='
+                ];
 
-                if (!response.ok) {
-                    throw new Error('Failed to fetch property data');
+                let html = null;
+                let lastError = null;
+
+                for (const proxyUrl of proxies) {
+                    try {
+                        const response = await fetch(proxyUrl + encodeURIComponent(url), {
+                            timeout: 10000
+                        });
+
+                        if (response.ok) {
+                            html = await response.text();
+                            break;
+                        }
+                    } catch (error) {
+                        lastError = error;
+                        console.log(`Proxy ${proxyUrl} failed, trying next...`);
+                    }
                 }
 
-                const html = await response.text();
+                // If all proxies failed, use demo data
+                if (!html) {
+                    console.log('All proxies failed, using demo data');
+                    return getDemoPropertyData();
+                }
 
                 // Parse the HTML
                 const parser = new DOMParser();
@@ -836,14 +888,30 @@
 
                 // Validate that we got at least a title and price
                 if (!data.title || !data.price) {
-                    return null;
+                    console.log('Incomplete data, using demo data');
+                    return getDemoPropertyData();
                 }
 
                 return data;
             } catch (error) {
                 console.error('Scraping error:', error);
-                return null;
+                // Return demo data as fallback
+                return getDemoPropertyData();
             }
+        }
+
+        function getDemoPropertyData() {
+            return {
+                title: 'Moderne 3-Zimmer Wohnung mit Balkon in 1010 Wien',
+                location: '1010 Wien, Innere Stadt',
+                price: 450000,
+                livingArea: '85 m²',
+                rooms: '3 Zimmer',
+                type: 'Eigentumswohnung',
+                description: 'Exklusive 3-Zimmer Wohnung in bester Innenstadtlage. Die Wohnung befindet sich im 4. Stock eines gepflegten Altbaus und überzeugt durch hohe Räume, großzügige Fensterflächen und einen sonnigen Balkon. Die moderne Ausstattung umfasst eine voll ausgestattete Küche, Parkettböden und ein elegantes Badezimmer. Perfekt für Singles oder Paare, die das urbane Leben schätzen. Öffentliche Verkehrsmittel, Einkaufsmöglichkeiten und Restaurants in unmittelbarer Nähe.',
+                image: 'https://via.placeholder.com/800x400/1e3c72/ffffff?text=Demo+Property+-+Vienna+Apartment',
+                isDemo: true
+            };
         }
 
         function extractText(doc, selector) {
@@ -930,6 +998,14 @@
         }
 
         function displayPropertyData(data) {
+            // Show demo notice if using demo data
+            const demoNotice = document.getElementById('demo-notice');
+            if (data.isDemo) {
+                demoNotice.classList.add('active');
+            } else {
+                demoNotice.classList.remove('active');
+            }
+
             // Set title and location
             document.getElementById('property-title').textContent = data.title || 'Property Title';
             document.getElementById('property-location').textContent = data.location || 'Location not available';
@@ -1033,6 +1109,7 @@
             propertyData = null;
             document.getElementById('property-url').value = '';
             document.getElementById('error-message').classList.remove('active');
+            document.getElementById('demo-notice').classList.remove('active');
             goToStep(1);
         }
 
