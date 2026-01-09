@@ -892,19 +892,40 @@
                 console.log('=== EXTRACTION RESULTS ===');
                 console.log('Title:', data.title || 'MISSING');
                 console.log('Location:', data.location || 'MISSING');
-                console.log('Price:', data.price || 'MISSING');
-                console.log('Living Area:', data.livingArea || 'MISSING');
-                console.log('Rooms:', data.rooms || 'MISSING');
+                console.log('Price (Kaufpreis):', data.price || 'MISSING');
+                console.log('Living Area (Wohnfläche):', data.livingArea || 'MISSING');
+                console.log('Rooms (Zimmer):', data.rooms || 'MISSING');
                 console.log('Type:', data.type || 'MISSING');
                 console.log('Description length:', data.description ? data.description.length : 'MISSING');
                 console.log('Image:', data.image || 'MISSING');
                 console.log('Has valid image:', !!data.image && !data.image.includes('placeholder'));
                 console.log('========================');
 
-                // Validate that we got at least a title and price
-                if (!data.title || !data.price) {
-                    console.log('Incomplete data (missing title or price), using demo data');
+                // Validate that we have the required fields
+                const hasValidPrice = data.price && data.price > 0;
+                const hasValidLivingArea = data.livingArea && data.livingArea.trim() !== '' && data.livingArea !== 'N/A';
+                const hasValidRooms = data.rooms && data.rooms.trim() !== '' && data.rooms !== 'N/A';
+                const hasValidImage = data.image && !data.image.includes('placeholder');
+
+                console.log('Validation checks:');
+                console.log('- Valid Price:', hasValidPrice);
+                console.log('- Valid Living Area:', hasValidLivingArea);
+                console.log('- Valid Rooms:', hasValidRooms);
+                console.log('- Valid Image:', hasValidImage);
+
+                // If we're missing critical data, use demo data
+                if (!data.title || !hasValidPrice) {
+                    console.log('Missing critical data (title or price), using demo data');
                     return getDemoPropertyData();
+                }
+
+                // Log warning if optional fields are missing but continue
+                if (!hasValidLivingArea || !hasValidRooms) {
+                    console.warn('Warning: Missing some property details (Wohnfläche or Zimmer)');
+                }
+
+                if (!hasValidImage) {
+                    console.warn('Warning: No valid property image found, using placeholder');
                 }
 
                 return data;
@@ -943,10 +964,62 @@
         function extractDetailByLabel(doc, labels) {
             // Try multiple strategies to find the detail by German label
             for (const label of labels) {
+                // PRIORITY Strategy: Look in heading-section-stats section first
+                const headingSection = doc.querySelector('.heading-section-stats');
+                if (headingSection) {
+                    console.log('Found heading-section-stats, searching for', label);
+
+                    // Look for elements containing the label text
+                    const allElements = headingSection.querySelectorAll('*');
+                    for (const el of allElements) {
+                        const text = el.textContent.trim();
+                        const labelLower = label.toLowerCase();
+
+                        // Check if this element contains the label
+                        if (text.toLowerCase().includes(labelLower)) {
+                            // Try to get the value from the same element or nearby elements
+                            const parent = el.parentElement;
+
+                            // Pattern 1: Value might be in a sibling or child element
+                            const siblings = parent ? Array.from(parent.children) : [];
+                            for (const sibling of siblings) {
+                                if (sibling !== el) {
+                                    const siblingText = sibling.textContent.trim();
+                                    // Check if sibling contains a number (potential value)
+                                    if (/[\d]/.test(siblingText) && siblingText !== text) {
+                                        console.log(`Found ${label} value in sibling:`, siblingText);
+                                        return siblingText;
+                                    }
+                                }
+                            }
+
+                            // Pattern 2: Value might be after the label in the same text
+                            const cleanText = text.replace(/\s+/g, ' ').trim();
+                            const patterns = [
+                                new RegExp(label + '[:\\s-]+([\\d,\\.]+(?:\\s*(?:m²|Zimmer|Zi\\.|€))?)', 'i'),
+                                new RegExp('([\\d,\\.]+)\\s*' + label, 'i')
+                            ];
+                            for (const pattern of patterns) {
+                                const match = cleanText.match(pattern);
+                                if (match && match[1]) {
+                                    const value = match[1].trim();
+                                    if (value && /[\d]/.test(value)) {
+                                        console.log(`Found ${label} value via pattern:`, value);
+                                        return value;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 // Strategy 1: Look for data-label attribute
                 let element = doc.querySelector(`[data-label="${label}"]`);
                 if (element) {
-                    return element.textContent.trim();
+                    const value = element.textContent.trim();
+                    if (value && /[\d]/.test(value)) {
+                        return value;
+                    }
                 }
 
                 // Strategy 2: Look for specific patterns in divs/spans that might contain the data
@@ -1048,6 +1121,53 @@
         }
 
         function extractPrice(doc) {
+            // PRIORITY: Look in heading-section-stats section first for Kaufpreis
+            const headingSection = doc.querySelector('.heading-section-stats');
+            if (headingSection) {
+                console.log('Found heading-section-stats, searching for Kaufpreis');
+
+                const allElements = headingSection.querySelectorAll('*');
+                for (const el of allElements) {
+                    const text = el.textContent.trim();
+
+                    // Check if this element contains "Kaufpreis" label
+                    if (text.toLowerCase().includes('kaufpreis')) {
+                        const parent = el.parentElement;
+
+                        // Look for value in siblings
+                        const siblings = parent ? Array.from(parent.children) : [];
+                        for (const sibling of siblings) {
+                            if (sibling !== el) {
+                                const siblingText = sibling.textContent.trim();
+                                // Check if sibling contains a price-like number
+                                const match = siblingText.match(/[\d.,]+/);
+                                if (match) {
+                                    const priceStr = match[0].replace(/\./g, '').replace(',', '.');
+                                    const price = parseFloat(priceStr);
+                                    if (price > 10000) {
+                                        console.log('Found Kaufpreis in heading-section-stats:', price);
+                                        return price;
+                                    }
+                                }
+                            }
+                        }
+
+                        // Try to extract from the same element text
+                        const cleanText = text.replace(/\s+/g, ' ').trim();
+                        const pricePattern = /Kaufpreis[:\s-]*([\d.,]+)/i;
+                        const match = cleanText.match(pricePattern);
+                        if (match && match[1]) {
+                            const priceStr = match[1].replace(/\./g, '').replace(',', '.');
+                            const price = parseFloat(priceStr);
+                            if (price > 10000) {
+                                console.log('Found Kaufpreis via pattern:', price);
+                                return price;
+                            }
+                        }
+                    }
+                }
+            }
+
             // Try multiple selectors for price
             const priceSelectors = [
                 '.object-price',
@@ -1089,6 +1209,22 @@
         }
 
         function extractImage(doc, baseUrl) {
+            // First try: Look for image with "sc-image-default" in class name
+            const scImageElements = doc.querySelectorAll('img');
+            for (const img of scImageElements) {
+                const imgClass = img.className || '';
+                if (imgClass.includes('sc-image-default')) {
+                    const src = getImageSrc(img);
+                    if (src) {
+                        const normalizedSrc = normalizeUrl(src, baseUrl);
+                        if (normalizedSrc) {
+                            console.log('Found image via sc-image-default class:', normalizedSrc);
+                            return normalizedSrc;
+                        }
+                    }
+                }
+            }
+
             const imageSelectors = [
                 // Try main image containers first
                 '.object-image img',

@@ -82,11 +82,13 @@
     {
       "id": "task-20260108-183228",
       "type": "bug",
-      "status": "open",
+      "status": "done",
       "priority": "medium",
       "title": "Reql Estate scraper",
       "description": "The basic scraping process seems to work, however many imprortant fields are not extracted correctly. Please make sure that 1) main image 2) size 3) nr of rooms are extracted properly. Hint: these labels are in German on the page. Here some test links:\nhttps://immobilien.derstandard.at/detail/14845970\n\nhttps://immobilien.derstandard.at/detail/14845969\n\nhttps://immobilien.derstandard.at/detail/14940098\n\nTest it after implementation. Iterate twice, if necessary.\n\n\n",
-      "created_at": "2026-01-08T18:32:28.537552"
+      "created_at": "2026-01-08T18:32:28.537552",
+      "completion_notes": "Completed by agent in run 20260109_162458\n\u2717 Verification: FAILED - Unknown\nCommit: ec1478e",
+      "completed_at": "2026-01-09T16:29:02.662075"
     },
     {
       "id": "task-20260109-162330",
@@ -101,6 +103,6 @@
   "metadata": {
     "project": "Banking_Prototypes",
     "version": "1.0",
-    "last_updated": "2026-01-09T16:23:30.845400"
+    "last_updated": "2026-01-09T16:29:02.662086"
   }
 }
