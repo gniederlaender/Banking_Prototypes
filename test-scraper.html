@@ -234,9 +234,22 @@
                             for (const sibling of siblings) {
                                 if (sibling !== el) {
                                     const siblingText = sibling.textContent.trim();
+
+                                    // Validate: not empty before processing
+                                    if (!siblingText || siblingText === '') {
+                                        console.log(`${label} sibling is empty, continuing iteration...`);
+                                        continue;
+                                    }
+
                                     if (/[\d]/.test(siblingText) && siblingText !== text) {
-                                        console.log(`Found ${label} value in sibling:`, siblingText);
-                                        return siblingText;
+                                        // Additional validation: ensure it's a meaningful value
+                                        const value = siblingText.trim();
+                                        if (value && value !== '' && value.length > 0) {
+                                            console.log(`Found valid ${label} value in sibling:`, value);
+                                            return value;
+                                        } else {
+                                            console.log(`${label} sibling value invalid, continuing iteration...`);
+                                        }
                                     }
                                 }
                             }
@@ -251,14 +264,18 @@
                                 const match = cleanText.match(pattern);
                                 if (match && match[1]) {
                                     const value = match[1].trim();
-                                    if (value && /[\d]/.test(value)) {
-                                        console.log(`Found ${label} value via pattern:`, value);
+                                    // Validate: not empty and contains digit
+                                    if (value && value !== '' && /[\d]/.test(value)) {
+                                        console.log(`Found valid ${label} value via pattern:`, value);
                                         return value;
+                                    } else {
+                                        console.log(`${label} pattern match invalid, continuing iteration...`);
                                     }
                                 }
                             }
                         }
                     }
+                    console.log(`No valid ${label} found in heading-section-stats, trying other methods...`);
                 }
 
                 let element = doc.querySelector(`[data-label="${label}"]`);
@@ -366,13 +383,23 @@
                         for (const sibling of siblings) {
                             if (sibling !== el) {
                                 const siblingText = sibling.textContent.trim();
+
+                                // Validate: not empty before processing
+                                if (!siblingText || siblingText === '') {
+                                    console.log('Kaufpreis sibling is empty, continuing iteration...');
+                                    continue;
+                                }
+
                                 const match = siblingText.match(/[\d.,]+/);
                                 if (match) {
                                     const priceStr = match[0].replace(/\./g, '').replace(',', '.');
                                     const price = parseFloat(priceStr);
-                                    if (price > 10000) {
-                                        console.log('Found Kaufpreis in heading-section-stats:', price);
+                                    // Validate: must be a valid number and > 10000
+                                    if (!isNaN(price) && price > 10000) {
+                                        console.log('Found valid Kaufpreis in heading-section-stats:', price);
                                         return price;
+                                    } else {
+                                        console.log('Kaufpreis value invalid (NaN or < 10000), continuing iteration...');
                                     }
                                 }
                             }
@@ -384,13 +411,17 @@
                         if (match && match[1]) {
                             const priceStr = match[1].replace(/\./g, '').replace(',', '.');
                             const price = parseFloat(priceStr);
-                            if (price > 10000) {
-                                console.log('Found Kaufpreis via pattern:', price);
+                            // Validate: must be a valid number and > 10000
+                            if (!isNaN(price) && price > 10000) {
+                                console.log('Found valid Kaufpreis via pattern:', price);
                                 return price;
+                            } else {
+                                console.log('Kaufpreis pattern match invalid, continuing iteration...');
                             }
                         }
                     }
                 }
+                console.log('No valid Kaufpreis found in heading-section-stats, trying other methods...');
             }
 
             const priceSelectors = [
@@ -430,21 +461,28 @@
         }
 
         function extractImage(doc, baseUrl) {
-            // First try: Look for image with "sc-image-default" in class name
+            // PRIORITY: Look for image with "sc-image-default" in class name
             const scImageElements = doc.querySelectorAll('img');
             for (const img of scImageElements) {
                 const imgClass = img.className || '';
                 if (imgClass.includes('sc-image-default')) {
                     const src = getImageSrc(img);
-                    if (src) {
+                    if (src && src.trim() !== '') {
                         const normalizedSrc = normalizeUrl(src, baseUrl);
-                        if (normalizedSrc) {
-                            console.log('Found image via sc-image-default class:', normalizedSrc);
+                        // Validate that we got a proper URL, not empty or placeholder
+                        if (normalizedSrc &&
+                            normalizedSrc.trim() !== '' &&
+                            !normalizedSrc.includes('placeholder') &&
+                            (normalizedSrc.startsWith('http://') || normalizedSrc.startsWith('https://'))) {
+                            console.log('Found valid image via sc-image-default class:', normalizedSrc);
                             return normalizedSrc;
+                        } else {
+                            console.log('Found sc-image-default but src invalid, continuing iteration...');
                         }
                     }
                 }
             }
+            console.log('No valid sc-image-default image found, trying other methods...');
 
             const imageSelectors = [
                 '.object-image img',
