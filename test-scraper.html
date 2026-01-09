@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scraper Test</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-url {
+            color: #0066cc;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-left: 4px solid #4caf50;
+        }
+        .error {
+            border-left-color: #f44336;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0052a3;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+        .status.pending { background: #ffc107; color: black; }
+        .status.testing { background: #2196f3; color: white; }
+        .status.success { background: #4caf50; color: white; }
+        .status.failed { background: #f44336; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Real Estate Scraper Test</h1>
+    <p>Testing extraction of: main image, size (Wohnfläche), and rooms (Zimmer)</p>
+
+    <button onclick="testAll()">Test All URLs</button>
+    <button onclick="clearResults()">Clear Results</button>
+
+    <div id="test-results"></div>
+
+    <script>
+        const testUrls = [
+            'https://immobilien.derstandard.at/detail/14845970',
+            'https://immobilien.derstandard.at/detail/14845969',
+            'https://immobilien.derstandard.at/detail/14940098'
+        ];
+
+        async function testAll() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '';
+
+            for (const url of testUrls) {
+                await testUrl(url);
+            }
+        }
+
+        async function testUrl(url) {
+            const resultsDiv = document.getElementById('test-results');
+            const testSection = document.createElement('div');
+            testSection.className = 'test-section';
+            testSection.innerHTML = `
+                <div class="test-url">${url} <span class="status testing">Testing...</span></div>
+                <div class="result" id="result-${testUrls.indexOf(url)}">
+                    Fetching data...
+                </div>
+            `;
+            resultsDiv.appendChild(testSection);
+
+            try {
+                const data = await scrapeProperty(url);
+                const resultDiv = document.getElementById(`result-${testUrls.indexOf(url)}`);
+                const statusSpan = testSection.querySelector('.status');
+
+                if (data) {
+                    const allFieldsPresent = data.image && !data.image.includes('placeholder') &&
+                                            data.livingArea && data.livingArea !== 'N/A' &&
+                                            data.rooms && data.rooms !== 'N/A';
+
+                    statusSpan.textContent = allFieldsPresent ? 'SUCCESS' : 'PARTIAL';
+                    statusSpan.className = 'status ' + (allFieldsPresent ? 'success' : 'failed');
+
+                    resultDiv.innerHTML = `
+                        <strong>Title:</strong> ${data.title || 'MISSING'}<br>
+                        <strong>Location:</strong> ${data.location || 'MISSING'}<br>
+                        <strong>Price:</strong> €${data.price ? data.price.toLocaleString() : 'MISSING'}<br>
+                        <strong>Living Area (Wohnfläche):</strong> <span style="background: ${data.livingArea ? '#d4edda' : '#f8d7da'}; padding: 2px 6px;">${data.livingArea || 'MISSING ❌'}</span><br>
+                        <strong>Rooms (Zimmer):</strong> <span style="background: ${data.rooms ? '#d4edda' : '#f8d7da'}; padding: 2px 6px;">${data.rooms || 'MISSING ❌'}</span><br>
+                        <strong>Type:</strong> ${data.type || 'MISSING'}<br>
+                        <strong>Image:</strong> <span style="background: ${data.image && !data.image.includes('placeholder') ? '#d4edda' : '#f8d7da'}; padding: 2px 6px;">${data.image && !data.image.includes('placeholder') ? 'Found ✓' : 'MISSING ❌'}</span><br>
+                        ${data.image && !data.image.includes('placeholder') ? `<img src="${data.image}" style="max-width: 300px; margin-top: 10px;" onerror="this.style.display='none'">` : ''}
+                        <details style="margin-top: 10px;">
+                            <summary>View Full Data</summary>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </details>
+                    `;
+                } else {
+                    statusSpan.textContent = 'FAILED';
+                    statusSpan.className = 'status failed';
+                    resultDiv.classList.add('error');
+                    resultDiv.textContent = 'Failed to scrape data';
+                }
+            } catch (error) {
+                const resultDiv = document.getElementById(`result-${testUrls.indexOf(url)}`);
+                const statusSpan = testSection.querySelector('.status');
+                statusSpan.textContent = 'ERROR';
+                statusSpan.className = 'status failed';
+                resultDiv.classList.add('error');
+                resultDiv.textContent = 'Error: ' + error.message;
+            }
+        }
+
+        function clearResults() {
+            document.getElementById('test-results').innerHTML = '';
+        }
+
+        // Copy the scraping functions from the main file
+        async function scrapeProperty(url) {
+            try {
+                const proxies = [
+                    'https://corsproxy.io/?',
+                    'https://api.codetabs.com/v1/proxy?quest='
+                ];
+
+                let html = null;
+                let lastError = null;
+
+                for (const proxyUrl of proxies) {
+                    try {
+                        const response = await fetch(proxyUrl + encodeURIComponent(url), {
+                            timeout: 10000
+                        });
+
+                        if (response.ok) {
+                            html = await response.text();
+                            console.log('Successfully fetched HTML from', proxyUrl);
+                            break;
+                        }
+                    } catch (error) {
+                        lastError = error;
+                        console.log(`Proxy ${proxyUrl} failed, trying next...`);
+                    }
+                }
+
+                if (!html) {
+                    console.log('All proxies failed');
+                    return null;
+                }
+
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                const data = {
+                    title: extractText(doc, 'h1.object-title, h1[itemprop="name"], .detail-title, h1'),
+                    location: extractText(doc, '.object-location, [itemprop="address"], .location, .address'),
+                    price: extractPrice(doc),
+                    livingArea: extractDetailByLabel(doc, ['Wohnfläche', 'Nutzfläche', 'Fläche', 'Größe']),
+                    rooms: extractDetailByLabel(doc, ['Zimmer', 'Anzahl Zimmer', 'Zi.']),
+                    type: extractDetailByLabel(doc, ['Objekttyp', 'Immobilientyp', 'Art', 'Typ']),
+                    description: extractText(doc, '.object-description, [itemprop="description"], .description'),
+                    image: extractImage(doc, url)
+                };
+
+                console.log('Extracted data:', data);
+
+                if (!data.title || !data.price) {
+                    console.log('Incomplete data (missing title or price)');
+                    return null;
+                }
+
+                return data;
+            } catch (error) {
+                console.error('Scraping error:', error);
+                return null;
+            }
+        }
+
+        function extractText(doc, selector) {
+            const selectors = selector.split(', ');
+            for (const sel of selectors) {
+                const element = doc.querySelector(sel.trim());
+                if (element) {
+                    return element.textContent.trim();
+                }
+            }
+            return '';
+        }
+
+        function extractDetailByLabel(doc, labels) {
+            for (const label of labels) {
+                let element = doc.querySelector(`[data-label="${label}"]`);
+                if (element) {
+                    return element.textContent.trim();
+                }
+
+                const factElements = doc.querySelectorAll('.fact, .detail, .property-fact, .attribute, .feature, li, tr, .spec-item');
+                for (const factEl of factElements) {
+                    const factText = factEl.textContent.toLowerCase();
+                    if (factText.includes(label.toLowerCase())) {
+                        const valueEl = factEl.querySelector('.value, .fact-value, .detail-value, dd, td:last-child, span:last-child');
+                        if (valueEl && valueEl.textContent.trim() !== factEl.textContent.trim()) {
+                            const value = valueEl.textContent.trim();
+                            if (value && value !== label && /[\d]/.test(value)) {
+                                return value;
+                            }
+                        }
+
+                        const cleanText = factEl.textContent.replace(/\s+/g, ' ').trim();
+                        const patterns = [
+                            new RegExp(label + '[:\\s-]+([\\d,\\.]+(?:\\s*(?:m²|Zimmer|Zi\\.))?)', 'i'),
+                            new RegExp('([\\d,\\.]+)\\s*' + label, 'i')
+                        ];
+                        for (const pattern of patterns) {
+                            const match = cleanText.match(pattern);
+                            if (match && match[1]) {
+                                return match[1].trim();
+                            }
+                        }
+                    }
+                }
+
+                const allElements = doc.querySelectorAll('dt, th, .label, .detail-label, .fact-label, span, div, strong, b, p');
+                for (const el of allElements) {
+                    const text = el.textContent.trim().toLowerCase();
+                    const labelLower = label.toLowerCase();
+
+                    if (text === labelLower || text.startsWith(labelLower + ':') || text.startsWith(labelLower + ' ')) {
+                        let valueElement = el.nextElementSibling;
+                        if (valueElement && (valueElement.tagName === 'DD' || valueElement.classList.contains('value') || valueElement.classList.contains('detail-value'))) {
+                            const value = valueElement.textContent.trim();
+                            if (value && /[\d]/.test(value)) {
+                                return value;
+                            }
+                        }
+
+                        const parent = el.parentElement;
+                        if (parent) {
+                            const valueInParent = parent.querySelector('.value, dd, .detail-value, .fact-value');
+                            if (valueInParent && valueInParent !== el) {
+                                const value = valueInParent.textContent.trim();
+                                if (value && /[\d]/.test(value)) {
+                                    return value;
+                                }
+                            }
+
+                            const parentText = parent.textContent.trim();
+                            const valueMatch = parentText.match(new RegExp(label + '[:\\s-]+([\\d,\\.]+(?:\\s*(?:m²|Zimmer|Zi\\.))?)', 'i'));
+                            if (valueMatch && valueMatch[1]) {
+                                return valueMatch[1].trim();
+                            }
+                        }
+                    }
+                }
+
+                const bodyText = doc.body.textContent;
+                const patterns = [
+                    new RegExp(label + '[:\\s-]+([\\d,\\.]+(?:\\s*(?:m²|Zimmer|Zi\\.))?)', 'i'),
+                    new RegExp('([\\d,\\.]+)\\s*' + label, 'i'),
+                    new RegExp(label + '\\s*[:\\-]?\\s*([\\d,\\.]+(?:\\s*(?:m²|Zimmer|Zi\\.))?)', 'i')
+                ];
+
+                for (const pattern of patterns) {
+                    const match = bodyText.match(pattern);
+                    if (match && match[1]) {
+                        const value = match[1].trim();
+                        if (value && /[\d]/.test(value)) {
+                            return value;
+                        }
+                    }
+                }
+            }
+
+            return '';
+        }
+
+        function extractPrice(doc) {
+            const priceSelectors = [
+                '.object-price',
+                '[itemprop="price"]',
+                '.price',
+                '.kaufpreis',
+                '[data-label="Kaufpreis"]',
+                '.detail-price'
+            ];
+
+            for (const selector of priceSelectors) {
+                const element = doc.querySelector(selector);
+                if (element) {
+                    const text = element.textContent.trim();
+                    const match = text.match(/[\d.,]+/);
+                    if (match) {
+                        const priceStr = match[0].replace(/\./g, '').replace(',', '.');
+                        return parseFloat(priceStr);
+                    }
+                }
+            }
+
+            const bodyText = doc.body.textContent;
+            const pricePattern = /(?:€|EUR)\s*([\d.,]+)|Kaufpreis[:\s]*([\d.,]+)/gi;
+            const matches = bodyText.matchAll(pricePattern);
+
+            for (const match of matches) {
+                const priceStr = (match[1] || match[2]).replace(/\./g, '').replace(',', '.');
+                const price = parseFloat(priceStr);
+                if (price > 10000) {
+                    return price;
+                }
+            }
+
+            return null;
+        }
+
+        function extractImage(doc, baseUrl) {
+            const imageSelectors = [
+                '.object-image img',
+                '.gallery-main img',
+                '[itemprop="image"]',
+                '.detail-image img',
+                '.property-image img',
+                '.image-gallery img',
+                '.main-image img',
+                '.hero-image img',
+                '.slider img',
+                '.carousel img',
+                '.swiper-slide img',
+                '.gallery img',
+                'picture img',
+                'figure img',
+                'img[src*="immobilien"]',
+                'img[src*="derstandard"]',
+                'img[data-src*="immobilien"]',
+                'img[data-src*="derstandard"]'
+            ];
+
+            function getImageSrc(element) {
+                let src = element.getAttribute('src') ||
+                         element.getAttribute('data-src') ||
+                         element.getAttribute('data-lazy-src') ||
+                         element.dataset.src ||
+                         element.dataset.lazySrc;
+
+                if (!src) {
+                    const srcset = element.getAttribute('srcset');
+                    if (srcset) {
+                        const sources = srcset.split(',').map(s => s.trim());
+                        if (sources.length > 0) {
+                            src = sources[sources.length - 1].split(' ')[0];
+                        }
+                    }
+                }
+
+                return src;
+            }
+
+            function normalizeUrl(src, baseUrl) {
+                if (!src) return null;
+
+                if (src.startsWith('//')) {
+                    return 'https:' + src;
+                } else if (src.startsWith('/')) {
+                    const urlObj = new URL(baseUrl);
+                    return urlObj.origin + src;
+                } else if (!src.startsWith('http')) {
+                    const urlObj = new URL(baseUrl);
+                    return urlObj.origin + '/' + src;
+                }
+
+                return src;
+            }
+
+            function isValidPropertyImage(src, element) {
+                if (!src) return false;
+
+                const srcLower = src.toLowerCase();
+                if (srcLower.includes('icon') ||
+                    srcLower.includes('logo') ||
+                    srcLower.includes('avatar') ||
+                    srcLower.includes('placeholder') ||
+                    srcLower.includes('button') ||
+                    srcLower.includes('badge')) {
+                    return false;
+                }
+
+                const alt = (element.alt || '').toLowerCase();
+                if (alt.includes('logo') || alt.includes('icon')) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            for (const selector of imageSelectors) {
+                const element = doc.querySelector(selector);
+                if (element) {
+                    let src = getImageSrc(element);
+                    if (src && isValidPropertyImage(src, element)) {
+                        const normalizedSrc = normalizeUrl(src, baseUrl);
+                        if (normalizedSrc) {
+                            console.log('Found image via selector:', selector);
+                            return normalizedSrc;
+                        }
+                    }
+                }
+            }
+
+            console.log('Trying fallback: searching all images');
+            const allImages = doc.querySelectorAll('img');
+            let bestImage = null;
+            let bestScore = 0;
+
+            for (const img of allImages) {
+                let src = getImageSrc(img);
+                if (!src || !isValidPropertyImage(src, img)) {
+                    continue;
+                }
+
+                let score = 0;
+
+                const width = parseInt(img.getAttribute('width')) || img.naturalWidth || 0;
+                const height = parseInt(img.getAttribute('height')) || img.naturalHeight || 0;
+                score += (width * height) / 10000;
+
+                const parent = img.closest('.gallery, .slider, .carousel, .images, .photos, main, article, .content');
+                if (parent) score += 50;
+
+                const className = img.className || '';
+                if (className.includes('main') || className.includes('hero') || className.includes('primary')) {
+                    score += 100;
+                }
+
+                const srcLower = src.toLowerCase();
+                if (srcLower.includes('immobilien') || srcLower.includes('property') || srcLower.includes('photo')) {
+                    score += 30;
+                }
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestImage = normalizeUrl(src, baseUrl);
+                }
+            }
+
+            if (bestImage) {
+                console.log('Found image via fallback, score:', bestScore);
+                return bestImage;
+            }
+
+            const ogImage = doc.querySelector('meta[property="og:image"]');
+            if (ogImage) {
+                const ogSrc = ogImage.getAttribute('content');
+                if (ogSrc) {
+                    const normalizedSrc = normalizeUrl(ogSrc, baseUrl);
+                    if (normalizedSrc) {
+                        console.log('Found image via og:image');
+                        return normalizedSrc;
+                    }
+                }
+            }
+
+            console.log('No image found, using placeholder');
+            return 'https://via.placeholder.com/800x400/1e3c72/ffffff?text=Property+Image';
+        }
+    </script>
+</body>
+</html>

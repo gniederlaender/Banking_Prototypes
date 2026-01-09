@@ -875,20 +875,35 @@
                 const doc = parser.parseFromString(html, 'text/html');
 
                 // Extract property details (adjust selectors based on actual website structure)
+                console.log('Starting property extraction...');
+
                 const data = {
                     title: extractText(doc, 'h1.object-title, h1[itemprop="name"], .detail-title, h1'),
                     location: extractText(doc, '.object-location, [itemprop="address"], .location, .address'),
                     price: extractPrice(doc),
-                    livingArea: extractText(doc, '[data-label="Wohnfläche"], .living-area, .area'),
-                    rooms: extractText(doc, '[data-label="Zimmer"], .rooms, .room-count'),
-                    type: extractText(doc, '[data-label="Objekttyp"], .property-type, .type'),
+                    livingArea: extractDetailByLabel(doc, ['Wohnfläche', 'Nutzfläche', 'Fläche', 'Größe']),
+                    rooms: extractDetailByLabel(doc, ['Zimmer', 'Anzahl Zimmer', 'Zi.']),
+                    type: extractDetailByLabel(doc, ['Objekttyp', 'Immobilientyp', 'Art', 'Typ']),
                     description: extractText(doc, '.object-description, [itemprop="description"], .description'),
                     image: extractImage(doc, url)
                 };
 
+                // Log extracted data for debugging
+                console.log('=== EXTRACTION RESULTS ===');
+                console.log('Title:', data.title || 'MISSING');
+                console.log('Location:', data.location || 'MISSING');
+                console.log('Price:', data.price || 'MISSING');
+                console.log('Living Area:', data.livingArea || 'MISSING');
+                console.log('Rooms:', data.rooms || 'MISSING');
+                console.log('Type:', data.type || 'MISSING');
+                console.log('Description length:', data.description ? data.description.length : 'MISSING');
+                console.log('Image:', data.image || 'MISSING');
+                console.log('Has valid image:', !!data.image && !data.image.includes('placeholder'));
+                console.log('========================');
+
                 // Validate that we got at least a title and price
                 if (!data.title || !data.price) {
-                    console.log('Incomplete data, using demo data');
+                    console.log('Incomplete data (missing title or price), using demo data');
                     return getDemoPropertyData();
                 }
 
@@ -922,6 +937,113 @@
                     return element.textContent.trim();
                 }
             }
+            return '';
+        }
+
+        function extractDetailByLabel(doc, labels) {
+            // Try multiple strategies to find the detail by German label
+            for (const label of labels) {
+                // Strategy 1: Look for data-label attribute
+                let element = doc.querySelector(`[data-label="${label}"]`);
+                if (element) {
+                    return element.textContent.trim();
+                }
+
+                // Strategy 2: Look for specific patterns in divs/spans that might contain the data
+                // Common patterns: <div class="fact"><span class="label">Zimmer</span><span class="value">3</span></div>
+                const factElements = doc.querySelectorAll('.fact, .detail, .property-fact, .attribute, .feature, li, tr, .spec-item');
+                for (const factEl of factElements) {
+                    const factText = factEl.textContent.toLowerCase();
+                    if (factText.includes(label.toLowerCase())) {
+                        // Try to find a value element within this fact
+                        const valueEl = factEl.querySelector('.value, .fact-value, .detail-value, dd, td:last-child, span:last-child');
+                        if (valueEl && valueEl.textContent.trim() !== factEl.textContent.trim()) {
+                            const value = valueEl.textContent.trim();
+                            // Make sure we got a meaningful value
+                            if (value && value !== label && /[\d]/.test(value)) {
+                                return value;
+                            }
+                        }
+
+                        // Try extracting from the text content
+                        const cleanText = factEl.textContent.replace(/\s+/g, ' ').trim();
+                        // Pattern like "Zimmer: 3" or "Zimmer 3" or "3 Zimmer"
+                        const patterns = [
+                            new RegExp(label + '[:\\s-]+([\\d,\\.]+(?:\\s*(?:m²|Zimmer|Zi\\.))?)', 'i'),
+                            new RegExp('([\\d,\\.]+)\\s*' + label, 'i')
+                        ];
+                        for (const pattern of patterns) {
+                            const match = cleanText.match(pattern);
+                            if (match && match[1]) {
+                                return match[1].trim();
+                            }
+                        }
+                    }
+                }
+
+                // Strategy 3: Look for elements containing the label text (broader search)
+                const allElements = doc.querySelectorAll('dt, th, .label, .detail-label, .fact-label, span, div, strong, b, p');
+                for (const el of allElements) {
+                    const text = el.textContent.trim().toLowerCase();
+                    const labelLower = label.toLowerCase();
+
+                    // Check if the element text matches the label
+                    if (text === labelLower || text.startsWith(labelLower + ':') || text.startsWith(labelLower + ' ')) {
+                        // Look for the value in next sibling
+                        let valueElement = el.nextElementSibling;
+                        if (valueElement && (valueElement.tagName === 'DD' || valueElement.classList.contains('value') || valueElement.classList.contains('detail-value'))) {
+                            const value = valueElement.textContent.trim();
+                            if (value && /[\d]/.test(value)) {
+                                return value;
+                            }
+                        }
+
+                        // Try finding in the same row or parent
+                        const parent = el.parentElement;
+                        if (parent) {
+                            // Look for a value element in the parent
+                            const valueInParent = parent.querySelector('.value, dd, .detail-value, .fact-value');
+                            if (valueInParent && valueInParent !== el) {
+                                const value = valueInParent.textContent.trim();
+                                if (value && /[\d]/.test(value)) {
+                                    return value;
+                                }
+                            }
+
+                            // Extract value from parent text
+                            const parentText = parent.textContent.trim();
+                            // Try to extract value after the label
+                            const valueMatch = parentText.match(new RegExp(label + '[:\\s-]+([\\d,\\.]+(?:\\s*(?:m²|Zimmer|Zi\\.))?)', 'i'));
+                            if (valueMatch && valueMatch[1]) {
+                                return valueMatch[1].trim();
+                            }
+                        }
+                    }
+                }
+
+                // Strategy 4: Global text search with improved pattern matching
+                const bodyText = doc.body.textContent;
+                const patterns = [
+                    // "Zimmer: 3" or "Zimmer 3"
+                    new RegExp(label + '[:\\s-]+([\\d,\\.]+(?:\\s*(?:m²|Zimmer|Zi\\.))?)', 'i'),
+                    // "3 Zimmer"
+                    new RegExp('([\\d,\\.]+)\\s*' + label, 'i'),
+                    // With newlines or multiple spaces
+                    new RegExp(label + '\\s*[:\\-]?\\s*([\\d,\\.]+(?:\\s*(?:m²|Zimmer|Zi\\.))?)', 'i')
+                ];
+
+                for (const pattern of patterns) {
+                    const match = bodyText.match(pattern);
+                    if (match && match[1]) {
+                        const value = match[1].trim();
+                        // Validate the value makes sense
+                        if (value && /[\d]/.test(value)) {
+                            return value;
+                        }
+                    }
+                }
+            }
+
             return '';
         }
 
@@ -968,31 +1090,173 @@
 
         function extractImage(doc, baseUrl) {
             const imageSelectors = [
+                // Try main image containers first
                 '.object-image img',
                 '.gallery-main img',
                 '[itemprop="image"]',
                 '.detail-image img',
                 '.property-image img',
-                'img[src*="immobilien"]'
+                '.image-gallery img',
+                '.main-image img',
+                '.hero-image img',
+                // Gallery and slider images
+                '.slider img',
+                '.carousel img',
+                '.swiper-slide img',
+                '.gallery img',
+                // Generic containers
+                'picture img',
+                'figure img',
+                // Images with specific attributes
+                'img[src*="immobilien"]',
+                'img[src*="derstandard"]',
+                'img[data-src*="immobilien"]',
+                'img[data-src*="derstandard"]'
             ];
 
+            // Helper function to get the best image source
+            function getImageSrc(element) {
+                // Try multiple attributes
+                let src = element.getAttribute('src') ||
+                         element.getAttribute('data-src') ||
+                         element.getAttribute('data-lazy-src') ||
+                         element.dataset.src ||
+                         element.dataset.lazySrc;
+
+                // Try srcset if no src found
+                if (!src) {
+                    const srcset = element.getAttribute('srcset');
+                    if (srcset) {
+                        // Get the largest image from srcset
+                        const sources = srcset.split(',').map(s => s.trim());
+                        if (sources.length > 0) {
+                            // Take the last one (usually largest)
+                            src = sources[sources.length - 1].split(' ')[0];
+                        }
+                    }
+                }
+
+                return src;
+            }
+
+            // Helper function to normalize URL
+            function normalizeUrl(src, baseUrl) {
+                if (!src) return null;
+
+                // Convert relative URLs to absolute
+                if (src.startsWith('//')) {
+                    return 'https:' + src;
+                } else if (src.startsWith('/')) {
+                    const urlObj = new URL(baseUrl);
+                    return urlObj.origin + src;
+                } else if (!src.startsWith('http')) {
+                    const urlObj = new URL(baseUrl);
+                    return urlObj.origin + '/' + src;
+                }
+
+                return src;
+            }
+
+            // Helper function to check if image is valid (not icon/logo)
+            function isValidPropertyImage(src, element) {
+                if (!src) return false;
+
+                const srcLower = src.toLowerCase();
+                // Filter out common non-property images
+                if (srcLower.includes('icon') ||
+                    srcLower.includes('logo') ||
+                    srcLower.includes('avatar') ||
+                    srcLower.includes('placeholder') ||
+                    srcLower.includes('button') ||
+                    srcLower.includes('badge')) {
+                    return false;
+                }
+
+                // Check alt text for hints
+                const alt = (element.alt || '').toLowerCase();
+                if (alt.includes('logo') || alt.includes('icon')) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            // First try standard selectors
             for (const selector of imageSelectors) {
                 const element = doc.querySelector(selector);
                 if (element) {
-                    let src = element.src || element.getAttribute('data-src') || element.dataset.src;
-                    if (src) {
-                        // Convert relative URLs to absolute
-                        if (src.startsWith('//')) {
-                            src = 'https:' + src;
-                        } else if (src.startsWith('/')) {
-                            const urlObj = new URL(baseUrl);
-                            src = urlObj.origin + src;
+                    let src = getImageSrc(element);
+                    if (src && isValidPropertyImage(src, element)) {
+                        const normalizedSrc = normalizeUrl(src, baseUrl);
+                        if (normalizedSrc) {
+                            console.log('Found image via selector:', selector, normalizedSrc);
+                            return normalizedSrc;
                         }
-                        return src;
                     }
                 }
             }
 
+            // Fallback: Find the largest image on the page
+            console.log('Trying fallback: searching all images');
+            const allImages = doc.querySelectorAll('img');
+            let bestImage = null;
+            let bestScore = 0;
+
+            for (const img of allImages) {
+                let src = getImageSrc(img);
+                if (!src || !isValidPropertyImage(src, img)) {
+                    continue;
+                }
+
+                // Score the image based on various factors
+                let score = 0;
+
+                // Check dimensions
+                const width = parseInt(img.getAttribute('width')) || img.naturalWidth || 0;
+                const height = parseInt(img.getAttribute('height')) || img.naturalHeight || 0;
+                score += (width * height) / 10000; // Larger images get higher scores
+
+                // Check if it's in a gallery or main content area
+                const parent = img.closest('.gallery, .slider, .carousel, .images, .photos, main, article, .content');
+                if (parent) score += 50;
+
+                // Check class names
+                const className = img.className || '';
+                if (className.includes('main') || className.includes('hero') || className.includes('primary')) {
+                    score += 100;
+                }
+
+                // Prefer images with "immobilien" or property-related keywords in the path
+                const srcLower = src.toLowerCase();
+                if (srcLower.includes('immobilien') || srcLower.includes('property') || srcLower.includes('photo')) {
+                    score += 30;
+                }
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestImage = normalizeUrl(src, baseUrl);
+                }
+            }
+
+            if (bestImage) {
+                console.log('Found image via fallback, score:', bestScore, bestImage);
+                return bestImage;
+            }
+
+            // Last resort: Check for og:image meta tag
+            const ogImage = doc.querySelector('meta[property="og:image"]');
+            if (ogImage) {
+                const ogSrc = ogImage.getAttribute('content');
+                if (ogSrc) {
+                    const normalizedSrc = normalizeUrl(ogSrc, baseUrl);
+                    if (normalizedSrc) {
+                        console.log('Found image via og:image', normalizedSrc);
+                        return normalizedSrc;
+                    }
+                }
+            }
+
+            console.log('No image found, using placeholder');
             // Fallback to placeholder
             return 'https://via.placeholder.com/800x400/1e3c72/ffffff?text=Property+Image';
         }
