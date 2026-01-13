@@ -104,16 +104,27 @@
     {
       "id": "task-20260113-112024",
       "type": "feature",
-      "status": "open",
+      "status": "done",
       "priority": "medium",
       "title": "Create know-how Boerse Prototyp",
       "description": "Please review our discussion with Kurt about the Know-How Boerse:\n\n/var/www/smartprototypes.net/public_html/UI_Prototypes/Banking_Prototypes/Know_how_Boerse.txt\n\nDerive a specification for a Know-How Boerse. Create a phased approach in terms of functionalities.\n\nDevelop a ui click-dummy for Phase 1.\n\nAnd create a fully\n",
-      "created_at": "2026-01-13T11:20:24.565275"
+      "created_at": "2026-01-13T11:20:24.565275",
+      "completion_notes": "Completed by agent in run 20260113_112057\n\u2717 Verification: FAILED - Unknown\nCommit: da82587",
+      "completed_at": "2026-01-13T11:25:59.864296"
+    },
+    {
+      "id": "task-20260113-140208",
+      "type": "feature",
+      "status": "open",
+      "priority": "medium",
+      "title": "Know-how Boerse Phase 2 Prototyp ",
+      "description": "Please create a click-dummy prototype for the Phase 2 of the Know-How platform (based on the specification done: KNOW_HOW_BOERSE_SPEC.md).\nPlease leave the version 1 unchanged (know-how-boerse.html), develop a version 2 (know-how-boerse_2.html)",
+      "created_at": "2026-01-13T14:02:08.580820"
     }
   ],
   "metadata": {
     "project": "Banking_Prototypes",
     "version": "1.0",
-    "last_updated": "2026-01-13T11:20:24.565284"
+    "last_updated": "2026-01-13T14:02:08.580827"
   }
 }
