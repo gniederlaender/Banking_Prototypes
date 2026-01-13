@@ -708,6 +708,98 @@
             opacity: 0.3;
         }
 
+        .contribution-form {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid #e8f0fe;
+        }
+
+        .contribution-form h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-instructions {
+            background: #e8f0fe;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            color: #1e3c72;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1em;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+
+        .char-counter {
+            text-align: right;
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .char-counter.warning {
+            color: #ff9800;
+        }
+
+        .char-counter.error {
+            color: #f44336;
+        }
+
+        .button-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .status-banner {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-banner.active {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+        }
+
+        .status-banner .icon {
+            font-size: 1.3em;
+        }
+
         @media (max-width: 1200px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -814,9 +906,9 @@
                 description: "Sammlung und Prüfung aller erforderlichen Unterlagen",
                 status: "active",
                 subChapters: [
-                    { id: "4.1", title: "Unterlagen anfordern", contributions: 5 },
-                    { id: "4.2", title: "Vollständigkeit prüfen", contributions: 4 },
-                    { id: "4.3", title: "Dokumente verifizieren", contributions: 3 }
+                    { id: "4.1", title: "Unterlagen anfordern", contributions: 3, userContribution: null },
+                    { id: "4.2", title: "Vollständigkeit prüfen", contributions: 2, userContribution: null },
+                    { id: "4.3", title: "Dokumente verifizieren", contributions: 2, userContribution: null }
                 ]
             },
             5: {
@@ -932,11 +1024,73 @@
                     edited: false,
                     versions: []
                 }
+            ],
+            "4.1": [
+                {
+                    id: 10,
+                    userId: 2,
+                    text: "Checkliste mit allen benötigten Dokumenten erstellen. Email an Kunden mit detaillierter Auflistung. Frist setzen.",
+                    timestamp: "2026-01-12 09:15",
+                    edited: false,
+                    versions: []
+                },
+                {
+                    id: 11,
+                    userId: 3,
+                    text: "Standardformular verwenden für Dokumentenanforderung. Persönlich durchgehen was fehlt. Nachfasstermine direkt vereinbaren.",
+                    timestamp: "2026-01-12 10:30",
+                    edited: false,
+                    versions: []
+                },
+                {
+                    id: 12,
+                    userId: 5,
+                    text: "Priorität auf kritische Dokumente legen. Kunde klar kommunizieren was sofort benötigt wird. Rest kann nachgereicht werden.",
+                    timestamp: "2026-01-12 11:45",
+                    edited: false,
+                    versions: []
+                }
+            ],
+            "4.2": [
+                {
+                    id: 13,
+                    userId: 4,
+                    text: "Systematisch gegen Checkliste prüfen. Fehlende Dokumente rot markieren. Sofort Nachforderung auslösen.",
+                    timestamp: "2026-01-12 14:20",
+                    edited: false,
+                    versions: []
+                },
+                {
+                    id: 14,
+                    userId: 6,
+                    text: "Digitale Ablage nutzen für besseren Überblick. Statusampel verwenden. Bei Unvollständigkeit sofort Kunde kontaktieren.",
+                    timestamp: "2026-01-12 15:10",
+                    edited: false,
+                    versions: []
+                }
+            ],
+            "4.3": [
+                {
+                    id: 15,
+                    userId: 7,
+                    text: "Echtheit der Dokumente prüfen. Bei Zweifeln Rückfrage direkt bei ausstellender Stelle. Besonders bei Einkommensnachweisen genau hinschauen.",
+                    timestamp: "2026-01-12 16:30",
+                    edited: false,
+                    versions: []
+                },
+                {
+                    id: 16,
+                    userId: 2,
+                    text: "Plausibilitätsprüfung durchführen. Zahlen müssen zusammenpassen. Bei Unstimmigkeiten sofort klären.",
+                    timestamp: "2026-01-13 08:45",
+                    edited: false,
+                    versions: []
+                }
             ]
         };
 
-        let currentChapter = 1;
-        let currentSubChapter = "1.1";
+        let currentChapter = 4;
+        let currentSubChapter = "4.1";
         let currentUser = teamMembers[0];
         let filters = {
             search: "",
@@ -947,7 +1101,7 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             renderChapterList();
-            loadSubChapter("1.1");
+            loadSubChapter("4.1");
         });
 
         function renderChapterList() {
@@ -1026,48 +1180,149 @@
                         <p class="chapter-description">${chapter.description}</p>
                     </div>
                 </div>
-
-                <div class="filter-bar">
-                    <h3>🔍 Suchen & Filtern</h3>
-                    <div class="search-box-main">
-                        <input type="text" id="searchInput" placeholder="Durchsuchen Sie alle Beiträge..."
-                               oninput="applyFilters()" value="${filters.search}">
-                    </div>
-                    <div class="filter-controls">
-                        <div class="filter-group">
-                            <label>Mitwirkende</label>
-                            <select id="contributorFilter" onchange="applyFilters()">
-                                <option value="all">Alle Mitwirkende</option>
-                                ${teamMembers.map(m =>
-                                    `<option value="${m.id}" ${filters.contributor == m.id ? 'selected' : ''}>${m.name}</option>`
-                                ).join('')}
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label>Erfahrungslevel</label>
-                            <select id="experienceFilter" onchange="applyFilters()">
-                                <option value="all">Alle Level</option>
-                                <option value="Senior" ${filters.experience === 'Senior' ? 'selected' : ''}>Senior</option>
-                                <option value="Mittel" ${filters.experience === 'Mittel' ? 'selected' : ''}>Mittel</option>
-                                <option value="Junior" ${filters.experience === 'Junior' ? 'selected' : ''}>Junior</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label>Sortierung</label>
-                            <select id="sortOrder" onchange="applyFilters()">
-                                <option value="newest">Neueste zuerst</option>
-                                <option value="oldest">Älteste zuerst</option>
-                                <option value="edited">Bearbeitet</option>
-                            </select>
-                        </div>
-                    </div>
-                    ${renderActiveFilters()}
-                </div>
-
-                ${renderContributions(subChapterId)}
             `;
 
+            // Show contribution form for active chapter subchapters if user hasn't contributed
+            if (chapter.status === 'active' && !subChapter.userContribution) {
+                html += `
+                    <div class="status-banner active">
+                        <span class="icon">⏰</span>
+                        <div>
+                            <strong>Aktive Aufgabe:</strong> Bitte teilen Sie Ihre Erfahrung zu diesem Thema.
+                            Sie haben bis Montag, 8:30 Uhr Zeit.
+                        </div>
+                    </div>
+                    ${renderContributionForm(subChapterId, subChapter.title)}
+                `;
+            }
+
+            // Show filter bar if there are contributions
+            const hasContributions = contributions[subChapterId] && contributions[subChapterId].length > 0;
+            if (hasContributions || chapter.status !== 'active') {
+                html += `
+                    <div class="filter-bar">
+                        <h3>🔍 Suchen & Filtern</h3>
+                        <div class="search-box-main">
+                            <input type="text" id="searchInput" placeholder="Durchsuchen Sie alle Beiträge..."
+                                   oninput="applyFilters()" value="${filters.search}">
+                        </div>
+                        <div class="filter-controls">
+                            <div class="filter-group">
+                                <label>Mitwirkende</label>
+                                <select id="contributorFilter" onchange="applyFilters()">
+                                    <option value="all">Alle Mitwirkende</option>
+                                    ${teamMembers.map(m =>
+                                        `<option value="${m.id}" ${filters.contributor == m.id ? 'selected' : ''}>${m.name}</option>`
+                                    ).join('')}
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>Erfahrungslevel</label>
+                                <select id="experienceFilter" onchange="applyFilters()">
+                                    <option value="all">Alle Level</option>
+                                    <option value="Senior" ${filters.experience === 'Senior' ? 'selected' : ''}>Senior</option>
+                                    <option value="Mittel" ${filters.experience === 'Mittel' ? 'selected' : ''}>Mittel</option>
+                                    <option value="Junior" ${filters.experience === 'Junior' ? 'selected' : ''}>Junior</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>Sortierung</label>
+                                <select id="sortOrder" onchange="applyFilters()">
+                                    <option value="newest">Neueste zuerst</option>
+                                    <option value="oldest">Älteste zuerst</option>
+                                    <option value="edited">Bearbeitet</option>
+                                </select>
+                            </div>
+                        </div>
+                        ${renderActiveFilters()}
+                    </div>
+                `;
+            }
+
+            html += renderContributions(subChapterId);
+
             contentArea.innerHTML = html;
+        }
+
+        function renderContributionForm(subChapterId, subChapterTitle) {
+            return `
+                <div class="contribution-form">
+                    <h3>📝 Ihr Beitrag</h3>
+                    <div class="form-instructions">
+                        Bitte teilen Sie Ihre Erfahrungen: <strong>mindestens 3 Wörter, maximal 3 Sätze</strong>
+                    </div>
+                    <div class="form-group">
+                        <label>Was sind Ihre Erfahrungen zu "${subChapterTitle}"?</label>
+                        <textarea id="contributionText_${subChapterId}" placeholder="Teilen Sie Ihre Vorgehensweise..."
+                            oninput="updateCharCounter('${subChapterId}')"></textarea>
+                        <div class="char-counter" id="charCounter_${subChapterId}">0 Zeichen | 0 Wörter | 0 Sätze</div>
+                    </div>
+                    <button class="button button-primary" onclick="submitContribution('${subChapterId}')"
+                        id="submitBtn_${subChapterId}" disabled>
+                        Beitrag einreichen
+                    </button>
+                </div>
+            `;
+        }
+
+        function updateCharCounter(subChapterId) {
+            const text = document.getElementById(`contributionText_${subChapterId}`).value;
+            const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+            const chars = text.length;
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
+
+            const counter = document.getElementById(`charCounter_${subChapterId}`);
+            counter.textContent = `${chars} Zeichen | ${words} Wörter | ${sentences} Sätze`;
+
+            const submitBtn = document.getElementById(`submitBtn_${subChapterId}`);
+
+            // Validation: min 3 words, max 3 sentences
+            if (words >= 3 && sentences <= 3 && chars > 0) {
+                submitBtn.disabled = false;
+                counter.classList.remove('error', 'warning');
+            } else {
+                submitBtn.disabled = true;
+                if (sentences > 3) {
+                    counter.classList.add('error');
+                    counter.textContent += ' | ⚠️ Maximal 3 Sätze erlaubt!';
+                } else if (words < 3) {
+                    counter.classList.add('warning');
+                    counter.textContent += ' | ⚠️ Mindestens 3 Wörter erforderlich';
+                }
+            }
+        }
+
+        function submitContribution(subChapterId) {
+            const text = document.getElementById(`contributionText_${subChapterId}`).value;
+            const [chapterId, subId] = subChapterId.split('.');
+            const chapter = chapters[chapterId];
+            const subChapter = chapter.subChapters.find(s => s.id === subChapterId);
+
+            // Save user contribution
+            subChapter.userContribution = text;
+
+            // Add to contributions list
+            if (!contributions[subChapterId]) {
+                contributions[subChapterId] = [];
+            }
+
+            const newContribution = {
+                id: Date.now(),
+                userId: currentUser.id,
+                text: text,
+                timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
+                edited: false,
+                versions: []
+            };
+
+            contributions[subChapterId].push(newContribution);
+            subChapter.contributions = contributions[subChapterId].length;
+
+            // Show success message
+            alert('✓ Beitrag erfolgreich eingereicht!\n\nVielen Dank für Ihren Beitrag. Die Beiträge werden freigeschalten, sobald alle Teammitglieder ihre Eingaben gemacht haben.');
+
+            // Reload sub-chapter to show new state
+            loadSubChapter(subChapterId);
         }
 
         function renderActiveFilters() {

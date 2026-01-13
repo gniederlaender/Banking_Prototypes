@@ -115,16 +115,27 @@
     {
       "id": "task-20260113-140208",
       "type": "feature",
-      "status": "open",
+      "status": "done",
       "priority": "medium",
       "title": "Know-how Boerse Phase 2 Prototyp ",
       "description": "Please create a click-dummy prototype for the Phase 2 of the Know-How platform (based on the specification done: KNOW_HOW_BOERSE_SPEC.md).\nPlease leave the version 1 unchanged (know-how-boerse.html), develop a version 2 (know-how-boerse_2.html)",
-      "created_at": "2026-01-13T14:02:08.580820"
+      "created_at": "2026-01-13T14:02:08.580820",
+      "completion_notes": "Completed by agent in run 20260113_140232\n\u2717 Verification: FAILED - Unknown\nCommit: 9b0544a",
+      "completed_at": "2026-01-13T14:06:30.286651"
+    },
+    {
+      "id": "task-20260113-141828",
+      "type": "feature",
+      "status": "open",
+      "priority": "medium",
+      "title": "Know-how Boerse Phase 2 Prototyp - add Data-entry functionality from Phase 1",
+      "description": "Please add the Data entry functionality to the Phase 2 Prototyp. In the active chapter (Dokumentation) - in all 3 subchapters the user shall be able to add new entries (Ihr Beitrag -  Bitte teilen Sie Ihre Erfahrungen: mindestens 3 W\u00f6rter, maximal 3 S\u00e4tze). This should be possible in the click-dummy prototype.",
+      "created_at": "2026-01-13T14:18:28.641520"
     }
   ],
   "metadata": {
     "project": "Banking_Prototypes",
     "version": "1.0",
-    "last_updated": "2026-01-13T14:02:08.580827"
+    "last_updated": "2026-01-13T14:18:28.641528"
   }
 }
