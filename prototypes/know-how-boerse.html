@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Know-How Börse - Phase 1 Prototype</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            color: #1e3c72;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .user-info .left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #2a5298;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .team-badge {
+            background: #e8f0fe;
+            color: #1e3c72;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar h2 {
+            color: #1e3c72;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .chapter-list {
+            list-style: none;
+        }
+
+        .chapter-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chapter-item:hover {
+            background: #f0f4f8;
+        }
+
+        .chapter-item.active {
+            background: #e8f0fe;
+            border-left-color: #2a5298;
+            font-weight: 600;
+        }
+
+        .chapter-item .badge {
+            background: #2a5298;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: bold;
+        }
+
+        .chapter-item .badge.pending {
+            background: #ff9800;
+        }
+
+        .chapter-item .badge.completed {
+            background: #4caf50;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 12px;
+            padding: 35px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            min-height: 600px;
+        }
+
+        .chapter-header {
+            margin-bottom: 30px;
+        }
+
+        .chapter-header h2 {
+            color: #1e3c72;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .chapter-header .description {
+            color: #666;
+            font-size: 1.05em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .status-banner {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-banner.active {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+        }
+
+        .status-banner.locked {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .status-banner.completed {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .status-banner .icon {
+            font-size: 1.3em;
+        }
+
+        .contribution-form {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .contribution-form h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+        }
+
+        .form-instructions {
+            background: #e8f0fe;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            color: #1e3c72;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1em;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+
+        .char-counter {
+            text-align: right;
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .char-counter.warning {
+            color: #ff9800;
+        }
+
+        .char-counter.error {
+            color: #f44336;
+        }
+
+        .button {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .button-primary {
+            background: #2a5298;
+            color: white;
+        }
+
+        .button-primary:hover:not(:disabled) {
+            background: #1e3c72;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3);
+        }
+
+        .button-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .button-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .button-secondary:hover {
+            background: #5a6268;
+        }
+
+        .contributions-view {
+            margin-top: 30px;
+        }
+
+        .contributions-view h3 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .contribution-card {
+            background: #f8f9fa;
+            border-left: 4px solid #2a5298;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .contribution-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .contribution-card.own {
+            background: #e8f0fe;
+            border-left-color: #ff9800;
+        }
+
+        .contributor-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .contributor-avatar {
+            width: 36px;
+            height: 36px;
+            background: #2a5298;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .contributor-name {
+            font-weight: 600;
+            color: #1e3c72;
+        }
+
+        .contributor-role {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .contribution-text {
+            color: #333;
+            line-height: 1.6;
+            padding-left: 48px;
+        }
+
+        .contribution-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 12px;
+            padding-left: 48px;
+            font-size: 0.85em;
+            color: #888;
+        }
+
+        .edit-link {
+            color: #2a5298;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .edit-link:hover {
+            color: #1e3c72;
+        }
+
+        .locked-overlay {
+            text-align: center;
+            padding: 60px 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+
+        .locked-overlay .icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .locked-overlay h3 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .locked-overlay p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            align-items: center;
+            font-size: 0.95em;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: #2a5298;
+            transition: width 0.3s;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state .icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal h3 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💡 Know-How Börse</h1>
+            <p class="subtitle">Wissensaustausch im Finanzierungsteam</p>
+            <div class="user-info">
+                <div class="left">
+                    <div class="user-avatar">GN</div>
+                    <div>
+                        <strong>Gabor Niederländer</strong>
+                        <div style="font-size: 0.9em; color: #666;">Spezialist Wohnbaufinanzierung</div>
+                    </div>
+                </div>
+                <div class="team-badge">Team Kurt - 13 Mitarbeiter</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <h2>Verkaufsprozess</h2>
+                <div class="search-box">
+                    <input type="text" placeholder="Kapitel suchen..." id="chapterSearch">
+                </div>
+                <ul class="chapter-list" id="chapterList">
+                    <li class="chapter-item active" data-chapter="1">
+                        <span>1. Überleitung</span>
+                        <span class="badge pending">Aktiv</span>
+                    </li>
+                    <li class="chapter-item" data-chapter="2">
+                        <span>2. Erstangebot</span>
+                        <span class="badge">Gesperrt</span>
+                    </li>
+                    <li class="chapter-item" data-chapter="3">
+                        <span>3. Konditionen verhandeln</span>
+                        <span class="badge">Gesperrt</span>
+                    </li>
+                    <li class="chapter-item" data-chapter="4">
+                        <span>4. Dokumentation</span>
+                        <span class="badge">Gesperrt</span>
+                    </li>
+                    <li class="chapter-item" data-chapter="5">
+                        <span>5. Prüfung & Genehmigung</span>
+                        <span class="badge">Gesperrt</span>
+                    </li>
+                    <li class="chapter-item" data-chapter="6">
+                        <span>6. Vertragsabschluss</span>
+                        <span class="badge">Gesperrt</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="content-area" id="contentArea">
+                <!-- Content will be dynamically loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <h3>Beitrag bearbeiten</h3>
+            <div class="form-group">
+                <label>Ihr Beitrag:</label>
+                <textarea id="editTextarea" rows="5"></textarea>
+                <div class="char-counter" id="editCharCounter">0 Zeichen</div>
+            </div>
+            <div class="modal-buttons">
+                <button class="button button-secondary" onclick="closeEditModal()">Abbrechen</button>
+                <button class="button button-primary" onclick="saveEdit()">Speichern</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chapter data structure
+        const chapters = {
+            1: {
+                title: "Überleitung",
+                description: "Erste Schritte bei der Übernahme eines neuen Kunden oder Projekts. Was tun Sie als Erstes, wenn Sie eine Überleitung erhalten?",
+                status: "active", // active, locked, completed
+                contributions: [],
+                userContribution: null
+            },
+            2: {
+                title: "Erstangebot",
+                description: "Erstellung und Präsentation des ersten Finanzierungsangebots für den Kunden.",
+                status: "locked",
+                contributions: [],
+                userContribution: null
+            },
+            3: {
+                title: "Konditionen verhandeln",
+                description: "Strategien und Techniken zur Konditionenverhandlung mit dem Kunden.",
+                status: "locked",
+                contributions: [],
+                userContribution: null
+            },
+            4: {
+                title: "Dokumentation",
+                description: "Sammlung und Prüfung aller erforderlichen Unterlagen und Dokumente.",
+                status: "locked",
+                contributions: [],
+                userContribution: null
+            },
+            5: {
+                title: "Prüfung & Genehmigung",
+                description: "Interne Prüfung und Genehmigungsprozess der Finanzierung.",
+                status: "locked",
+                contributions: [],
+                userContribution: null
+            },
+            6: {
+                title: "Vertragsabschluss",
+                description: "Finaler Vertragsabschluss und Unterschrift mit dem Kunden.",
+                status: "locked",
+                contributions: [],
+                userContribution: null
+            }
+        };
+
+        // Sample team members for demo
+        const teamMembers = [
+            { id: 1, name: "Gabor Niederländer", initials: "GN", role: "Spezialist", experience: "Senior" },
+            { id: 2, name: "Maria Schmidt", initials: "MS", role: "Teamleiterin", experience: "Senior" },
+            { id: 3, name: "Thomas Weber", initials: "TW", role: "Spezialist", experience: "Mittel" },
+            { id: 4, name: "Anna Huber", initials: "AH", role: "Spezialistin", experience: "Junior" },
+            { id: 5, name: "Peter Gruber", initials: "PG", role: "Spezialist", experience: "Senior" }
+        ];
+
+        let currentChapter = 1;
+        let currentUser = teamMembers[0];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadChapter(1);
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Chapter selection
+            document.querySelectorAll('.chapter-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const chapterId = parseInt(this.getAttribute('data-chapter'));
+                    if (chapters[chapterId].status !== 'locked') {
+                        loadChapter(chapterId);
+                    }
+                });
+            });
+
+            // Search functionality
+            document.getElementById('chapterSearch').addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                document.querySelectorAll('.chapter-item').forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(searchTerm) ? 'flex' : 'none';
+                });
+            });
+        }
+
+        function loadChapter(chapterId) {
+            currentChapter = chapterId;
+            const chapter = chapters[chapterId];
+
+            // Update sidebar
+            document.querySelectorAll('.chapter-item').forEach(item => {
+                item.classList.remove('active');
+                if (parseInt(item.getAttribute('data-chapter')) === chapterId) {
+                    item.classList.add('active');
+                }
+            });
+
+            // Render chapter content
+            renderChapterContent(chapter);
+        }
+
+        function renderChapterContent(chapter) {
+            const contentArea = document.getElementById('contentArea');
+
+            let html = `
+                <div class="chapter-header">
+                    <h2>${chapter.title}</h2>
+                    <p class="description">${chapter.description}</p>
+                </div>
+            `;
+
+            if (chapter.status === 'active') {
+                // Show contribution form if user hasn't contributed yet
+                if (!chapter.userContribution) {
+                    html += `
+                        <div class="status-banner active">
+                            <span class="icon">⏰</span>
+                            <div>
+                                <strong>Aktive Aufgabe:</strong> Bitte teilen Sie Ihre Erfahrung zu diesem Kapitel.
+                                Sie haben bis Montag, 8:30 Uhr Zeit.
+                            </div>
+                        </div>
+                        ${renderContributionForm()}
+                    `;
+                } else {
+                    // User has contributed, show waiting state
+                    html += `
+                        <div class="status-banner completed">
+                            <span class="icon">✓</span>
+                            <div>
+                                <strong>Beitrag eingereicht!</strong> Vielen Dank für Ihren Beitrag.
+                                Die Beiträge werden am Montag um 9:00 Uhr freigeschalten.
+                            </div>
+                        </div>
+                        ${renderOwnContribution(chapter.userContribution)}
+                        ${renderLockedState(7, 13)}
+                    `;
+                }
+            } else if (chapter.status === 'completed') {
+                // Show all contributions
+                html += `
+                    <div class="status-banner completed">
+                        <span class="icon">✓</span>
+                        <div>
+                            <strong>Kapitel abgeschlossen!</strong> Alle Teammitglieder haben ihre Beiträge geteilt.
+                        </div>
+                    </div>
+                    ${renderAllContributions(chapter.contributions)}
+                `;
+            } else {
+                // Locked state
+                html += `
+                    <div class="status-banner locked">
+                        <span class="icon">🔒</span>
+                        <div>
+                            <strong>Kapitel noch nicht freigeschalten.</strong>
+                            Dieses Kapitel wird freigeschalten, sobald das vorherige Kapitel abgeschlossen ist.
+                        </div>
+                    </div>
+                    <div class="empty-state">
+                        <div class="icon">🔒</div>
+                        <h3>Noch nicht verfügbar</h3>
+                        <p>Dieses Kapitel wird in Kürze freigeschalten.</p>
+                    </div>
+                `;
+            }
+
+            contentArea.innerHTML = html;
+        }
+
+        function renderContributionForm() {
+            return `
+                <div class="contribution-form">
+                    <h3>Ihr Beitrag</h3>
+                    <div class="form-instructions">
+                        📝 Bitte teilen Sie Ihre Erfahrungen: <strong>mindestens 3 Wörter, maximal 3 Sätze</strong>
+                    </div>
+                    <div class="form-group">
+                        <label>Was sind Ihre ersten Schritte bei der Überleitung?</label>
+                        <textarea id="contributionText" placeholder="Teilen Sie Ihre Vorgehensweise..."
+                            oninput="updateCharCounter()"></textarea>
+                        <div class="char-counter" id="charCounter">0 Zeichen | 0 Wörter</div>
+                    </div>
+                    <button class="button button-primary" onclick="submitContribution()" id="submitBtn" disabled>
+                        Beitrag einreichen
+                    </button>
+                </div>
+            `;
+        }
+
+        function renderOwnContribution(text) {
+            return `
+                <div class="contributions-view">
+                    <h3>Ihr Beitrag</h3>
+                    <div class="contribution-card own">
+                        <div class="contributor-info">
+                            <div class="contributor-avatar">${currentUser.initials}</div>
+                            <div>
+                                <div class="contributor-name">${currentUser.name}</div>
+                                <div class="contributor-role">${currentUser.role} • ${currentUser.experience}</div>
+                            </div>
+                        </div>
+                        <div class="contribution-text">${text}</div>
+                        <div class="contribution-meta">
+                            <span>Eingereicht: vor 2 Stunden</span>
+                            <span class="edit-link" onclick="editContribution()">Bearbeiten</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderLockedState(submitted, total) {
+            const percentage = (submitted / total) * 100;
+            return `
+                <div class="locked-overlay">
+                    <div class="icon">🔒</div>
+                    <h3>Beiträge noch gesperrt</h3>
+                    <p>Die Beiträge werden freigeschalten, sobald alle Teammitglieder ihren Beitrag eingereicht haben.</p>
+                    <div class="progress-info">
+                        <span>${submitted} von ${total} eingereicht</span>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAllContributions(contributions) {
+            // For demo purposes, generate sample contributions
+            const sampleContributions = [
+                {
+                    user: teamMembers[1],
+                    text: "Erste Kontrolle der Datenqualität. Vollständigkeit prüfen. Bei Unklarheiten sofort Rückfrage beim Berater."
+                },
+                {
+                    user: teamMembers[2],
+                    text: "Kundenakte im System öffnen, bisherige Geschäftsbeziehung checken. Schneller Anruf beim Kunden zur Terminvereinbarung."
+                },
+                {
+                    user: teamMembers[0],
+                    text: "Überleitung durchsehen, Priorität einschätzen. Kalender checken und binnen 24h Erstkontakt zum Kunden herstellen."
+                },
+                {
+                    user: teamMembers[3],
+                    text: "Unterlagen sortieren und digitalisieren. Checkliste erstellen was noch fehlt. Mentor informieren wenn etwas unklar ist."
+                },
+                {
+                    user: teamMembers[4],
+                    text: "Bonitätsprüfung vorbereiten. Objektdaten recherchieren. Bei gutem Lead sofort persönlichen Termin vereinbaren, nicht nur Telefon."
+                }
+            ];
+
+            let html = '<div class="contributions-view"><h3>Beiträge des Teams (5 von 13)</h3>';
+
+            sampleContributions.forEach(contrib => {
+                const isOwn = contrib.user.id === currentUser.id;
+                html += `
+                    <div class="contribution-card ${isOwn ? 'own' : ''}">
+                        <div class="contributor-info">
+                            <div class="contributor-avatar">${contrib.user.initials}</div>
+                            <div>
+                                <div class="contributor-name">${contrib.user.name}</div>
+                                <div class="contributor-role">${contrib.user.role} • ${contrib.user.experience}</div>
+                            </div>
+                        </div>
+                        <div class="contribution-text">${contrib.text}</div>
+                        <div class="contribution-meta">
+                            <span>Eingereicht: vor ${Math.floor(Math.random() * 5) + 1} Stunden</span>
+                            ${isOwn ? '<span class="edit-link" onclick="editContribution()">Bearbeiten</span>' : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            return html;
+        }
+
+        function updateCharCounter() {
+            const text = document.getElementById('contributionText').value;
+            const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+            const chars = text.length;
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
+
+            const counter = document.getElementById('charCounter');
+            counter.textContent = `${chars} Zeichen | ${words} Wörter | ${sentences} Sätze`;
+
+            const submitBtn = document.getElementById('submitBtn');
+
+            // Validation: min 3 words, max 3 sentences
+            if (words >= 3 && sentences <= 3 && chars > 0) {
+                submitBtn.disabled = false;
+                counter.classList.remove('error', 'warning');
+            } else {
+                submitBtn.disabled = true;
+                if (sentences > 3) {
+                    counter.classList.add('error');
+                    counter.textContent += ' | ⚠️ Maximal 3 Sätze erlaubt!';
+                } else if (words < 3) {
+                    counter.classList.add('warning');
+                    counter.textContent += ' | ⚠️ Mindestens 3 Wörter erforderlich';
+                }
+            }
+        }
+
+        function submitContribution() {
+            const text = document.getElementById('contributionText').value;
+            const chapter = chapters[currentChapter];
+
+            // Save user contribution
+            chapter.userContribution = text;
+
+            // Show success message and update view
+            alert('✓ Beitrag erfolgreich eingereicht!\n\nVielen Dank für Ihren Beitrag. Die Beiträge werden freigeschalten, sobald alle Teammitglieder ihre Eingaben gemacht haben.');
+
+            // Reload chapter to show new state
+            loadChapter(currentChapter);
+        }
+
+        function editContribution() {
+            const modal = document.getElementById('editModal');
+            const textarea = document.getElementById('editTextarea');
+            const chapter = chapters[currentChapter];
+
+            textarea.value = chapter.userContribution;
+            modal.classList.add('active');
+
+            updateEditCharCounter();
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        function saveEdit() {
+            const text = document.getElementById('editTextarea').value;
+            chapters[currentChapter].userContribution = text;
+
+            closeEditModal();
+            loadChapter(currentChapter);
+
+            alert('✓ Beitrag erfolgreich aktualisiert!');
+        }
+
+        function updateEditCharCounter() {
+            const text = document.getElementById('editTextarea').value;
+            const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+            const chars = text.length;
+
+            document.getElementById('editCharCounter').textContent = `${chars} Zeichen | ${words} Wörter`;
+        }
+
+        document.getElementById('editTextarea')?.addEventListener('input', updateEditCharCounter);
+
+        // Demo: Simulate unlocking all contributions after a few seconds (for testing)
+        function demoUnlockChapter() {
+            const chapter = chapters[1];
+            chapter.status = 'completed';
+            chapter.contributions = []; // Would be populated with all team contributions
+            loadChapter(1);
+        }
+
+        // Add a demo button in console
+        console.log('💡 Demo Tipp: Führen Sie demoUnlockChapter() in der Konsole aus, um alle Beiträge freizuschalten.');
+    </script>
+</body>
+</html>

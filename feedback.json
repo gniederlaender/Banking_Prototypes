@@ -93,16 +93,27 @@
     {
       "id": "task-20260109-163644",
       "type": "feature",
-      "status": "open",
+      "status": "done",
       "priority": "critical",
       "title": "Improve scraping",
       "description": "We need to scrape the following data explicitely:\n1) Main picture - recognizable with \"sc-image-default\" included in img class.\n\nAll in the section \"heading-section-stats\"\n2) Kaufpreis - recognizable as the value after the label Kaufpreis\n3) Wohnfl\u00e4che - recognizable as the value after the label Wohnfl\u00e4che\n4) Zimmer - recognizable as the value after the label Zimmer\n\nLet's see, if you find them. Try to test, whether the scraped value is not empty. If empty, iterate.",
-      "created_at": "2026-01-09T16:36:44.729300"
+      "created_at": "2026-01-09T16:36:44.729300",
+      "completion_notes": "Completed by agent in run 20260109_163723\n\u2713 Verification: PASSED\nCommit: 7e107bd",
+      "completed_at": "2026-01-09T16:44:41.634609"
+    },
+    {
+      "id": "task-20260113-112024",
+      "type": "feature",
+      "status": "open",
+      "priority": "medium",
+      "title": "Create know-how Boerse Prototyp",
+      "description": "Please review our discussion with Kurt about the Know-How Boerse:\n\n/var/www/smartprototypes.net/public_html/UI_Prototypes/Banking_Prototypes/Know_how_Boerse.txt\n\nDerive a specification for a Know-How Boerse. Create a phased approach in terms of functionalities.\n\nDevelop a ui click-dummy for Phase 1.\n\nAnd create a fully\n",
+      "created_at": "2026-01-13T11:20:24.565275"
     }
   ],
   "metadata": {
     "project": "Banking_Prototypes",
     "version": "1.0",
-    "last_updated": "2026-01-09T16:36:44.729308"
+    "last_updated": "2026-01-13T11:20:24.565284"
   }
 }
