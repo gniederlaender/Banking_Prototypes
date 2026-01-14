@@ -1239,7 +1239,7 @@
                 `;
             }
 
-            html += renderContributions(subChapterId);
+            html += '<div id="contributionsContainer">' + renderContributions(subChapterId) + '</div>';
 
             contentArea.innerHTML = html;
         }
@@ -1449,12 +1449,47 @@
             filters.contributor = document.getElementById('contributorFilter')?.value || 'all';
             filters.experience = document.getElementById('experienceFilter')?.value || 'all';
 
-            renderSubChapterContent(currentSubChapter);
+            // Only update the contributions container to preserve search input focus
+            const contributionsContainer = document.getElementById('contributionsContainer');
+            if (contributionsContainer) {
+                contributionsContainer.innerHTML = renderContributions(currentSubChapter);
+            }
+
+            // Update active filters display
+            const filterBar = document.querySelector('.filter-bar');
+            if (filterBar) {
+                const activeFiltersHtml = renderActiveFilters();
+                const existingActiveFilters = filterBar.querySelector('.active-filters');
+                if (activeFiltersHtml && !existingActiveFilters) {
+                    // Add active filters if they don't exist
+                    filterBar.insertAdjacentHTML('beforeend', activeFiltersHtml);
+                } else if (activeFiltersHtml && existingActiveFilters) {
+                    // Update existing active filters
+                    existingActiveFilters.outerHTML = activeFiltersHtml;
+                } else if (!activeFiltersHtml && existingActiveFilters) {
+                    // Remove active filters if there are none
+                    existingActiveFilters.remove();
+                }
+            }
         }
 
         function clearFilter(filterName) {
             filters[filterName] = filterName === 'search' ? '' : 'all';
-            renderSubChapterContent(currentSubChapter);
+
+            // Update the corresponding form element
+            if (filterName === 'search') {
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) searchInput.value = '';
+            } else if (filterName === 'contributor') {
+                const contributorFilter = document.getElementById('contributorFilter');
+                if (contributorFilter) contributorFilter.value = 'all';
+            } else if (filterName === 'experience') {
+                const experienceFilter = document.getElementById('experienceFilter');
+                if (experienceFilter) experienceFilter.value = 'all';
+            }
+
+            // Apply filters without re-rendering entire content
+            applyFilters();
         }
 
         function getTimeAgo(date) {

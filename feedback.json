@@ -126,16 +126,27 @@
     {
       "id": "task-20260113-141828",
       "type": "feature",
-      "status": "open",
+      "status": "done",
       "priority": "medium",
       "title": "Know-how Boerse Phase 2 Prototyp - add Data-entry functionality from Phase 1",
       "description": "Please add the Data entry functionality to the Phase 2 Prototyp. In the active chapter (Dokumentation) - in all 3 subchapters the user shall be able to add new entries (Ihr Beitrag -  Bitte teilen Sie Ihre Erfahrungen: mindestens 3 W\u00f6rter, maximal 3 S\u00e4tze). This should be possible in the click-dummy prototype.",
-      "created_at": "2026-01-13T14:18:28.641520"
+      "created_at": "2026-01-13T14:18:28.641520",
+      "completion_notes": "Completed by agent in run 20260113_141850\n\u2717 Verification: FAILED - Unknown\nCommit: 6dbd256",
+      "completed_at": "2026-01-13T14:22:26.343217"
+    },
+    {
+      "id": "task-20260113-142652",
+      "type": "bug",
+      "status": "open",
+      "priority": "medium",
+      "title": "Know-how Boerse Phase 2 Prototyp - Fix data entry in Search field",
+      "description": "Please check the data entry in the search input field (Suchen & Filtern), after every character it is losing focus, so I have to click into it again. Please make sure that the focus remains.\n",
+      "created_at": "2026-01-13T14:26:52.065971"
     }
   ],
   "metadata": {
     "project": "Banking_Prototypes",
     "version": "1.0",
-    "last_updated": "2026-01-13T14:18:28.641528"
+    "last_updated": "2026-01-13T14:26:52.065979"
   }
 }
