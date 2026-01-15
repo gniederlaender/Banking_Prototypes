@@ -170,16 +170,27 @@
     {
       "id": "task-20260115-091714",
       "type": "feature",
-      "status": "open",
+      "status": "done",
       "priority": "medium",
       "title": "George Stylesheets",
       "description": "Here are some stylesheets, used by my favorite application, George:\nExternal Stylesheets (5):\n\njQuery UI CSS - https://george.sparkasse.at/css/ui-1-12/jquery-ui.min.css (media: all)\nBootstrap CSS - https://george.sparkasse.at/css/bootstrap.min.css (media: screen)\njQuery UI Custom Theme - https://george.sparkasse.at/css/uitheme/jquery-ui-1.10.3.custom.css (media: all)\nLoader CSS - https://george.sparkasse.at/styles/loader.css?v=1764320310817 (media: all)\nMain Application Styles - https://george.sparkasse.at/styles.d1cd9d41d7.css (media: all)\n\nPlease add this stylesheets to our Know-how Boerse version 2 (know-how-boerse_2.html)",
-      "created_at": "2026-01-15T09:17:14.089157"
+      "created_at": "2026-01-15T09:17:14.089157",
+      "completion_notes": "Completed by agent in run 20260115_091804\n\u2717 Verification: FAILED - Unknown\nCommit: ad6de2a",
+      "completed_at": "2026-01-15T09:19:02.538713"
+    },
+    {
+      "id": "task-20260115-092122",
+      "type": "feature",
+      "status": "open",
+      "priority": "medium",
+      "title": "Remove George Stylesheets",
+      "description": "Please remove the stylesheets, we added within the run before",
+      "created_at": "2026-01-15T09:21:22.687401"
     }
   ],
   "metadata": {
     "project": "Banking_Prototypes",
     "version": "1.0",
-    "last_updated": "2026-01-15T09:17:14.089165"
+    "last_updated": "2026-01-15T09:21:22.687407"
   }
 }
