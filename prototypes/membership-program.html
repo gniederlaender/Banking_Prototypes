@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Program - Banking Prototype</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-bottom: 16px;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1em;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Current Status Section */
+        .status-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            border: 3px solid #d4af37;
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .current-tier {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 24px;
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 12px;
+        }
+
+        .tier-badge.gold {
+            background: linear-gradient(135deg, #d4af37 0%, #f4e4a6 100%);
+            color: #5d4e00;
+        }
+
+        .tier-name {
+            font-size: 2em;
+            color: #1e3c72;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .tier-description {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .points-display {
+            text-align: right;
+        }
+
+        .points-label {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .points-value {
+            font-size: 3em;
+            font-weight: 700;
+            color: #1e3c72;
+            line-height: 1;
+        }
+
+        .points-subtext {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        /* Progress Bar */
+        .progress-section {
+            margin-top: 24px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .progress-label {
+            font-weight: 600;
+            color: #1e3c72;
+            font-size: 0.95em;
+        }
+
+        .progress-points {
+            font-weight: 600;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #d4af37 0%, #f4e4a6 100%);
+            border-radius: 6px;
+            transition: width 1s ease-out;
+        }
+
+        /* Points Earning Categories */
+        .earning-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .earning-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .earning-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+
+        .earning-icon {
+            font-size: 3em;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .earning-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 8px;
+        }
+
+        .earning-description {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .earning-points {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .earning-points .icon {
+            font-size: 1.2em;
+        }
+
+        /* Tier Comparison Section */
+        .tiers-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #1e3c72;
+            margin-bottom: 24px;
+            font-weight: 700;
+        }
+
+        .tiers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .tier-card {
+            background: white;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            border: 2px solid transparent;
+        }
+
+        .tier-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .tier-card.active {
+            border-color: #d4af37;
+            box-shadow: 0 6px 24px rgba(212, 175, 55, 0.3);
+        }
+
+        .tier-card.active::before {
+            content: "✓ Current Tier";
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: #d4af37;
+            color: #5d4e00;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 700;
+        }
+
+        .tier-card-header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .tier-icon {
+            font-size: 3.5em;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .tier-card-name {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .tier-card.bronze .tier-card-name { color: #cd7f32; }
+        .tier-card.silver .tier-card-name { color: #c0c0c0; }
+        .tier-card.gold .tier-card-name { color: #d4af37; }
+        .tier-card.platinum .tier-card-name { color: #1e3c72; }
+
+        .tier-requirements {
+            font-size: 0.85em;
+            color: #666;
+            background: #f5f7fa;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+        }
+
+        .benefits-list {
+            list-style: none;
+            margin-bottom: 16px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            font-size: 0.9em;
+            color: #444;
+        }
+
+        .benefit-check {
+            color: #10b981;
+            font-weight: 700;
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+
+        .benefit-text {
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .benefit-highlight {
+            font-weight: 600;
+            color: #1e3c72;
+        }
+
+        /* Active Benefits Section */
+        .active-benefits-section {
+            margin-bottom: 30px;
+        }
+
+        .benefits-selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .benefit-selection-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .benefit-selection-card:hover {
+            border-color: #2a5298;
+            box-shadow: 0 4px 16px rgba(42, 82, 152, 0.15);
+        }
+
+        .benefit-selection-card.selected {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+
+        .benefit-selection-card.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .benefit-selection-card.selected::before {
+            content: "✓ Active";
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 700;
+        }
+
+        .benefit-selection-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .benefit-selection-icon {
+            font-size: 2.5em;
+        }
+
+        .benefit-tier-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 700;
+        }
+
+        .benefit-tier-badge.bronze { background: #cd7f32; color: white; }
+        .benefit-tier-badge.silver { background: #c0c0c0; color: #333; }
+        .benefit-tier-badge.gold { background: #d4af37; color: #5d4e00; }
+        .benefit-tier-badge.platinum { background: #1e3c72; color: white; }
+
+        .benefit-selection-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 8px;
+        }
+
+        .benefit-selection-description {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .benefit-value {
+            display: inline-block;
+            background: #f0f4f8;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            color: #1e3c72;
+            font-size: 0.95em;
+        }
+
+        .select-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .select-btn.primary {
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            color: white;
+        }
+
+        .select-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3);
+        }
+
+        .select-btn.selected {
+            background: #10b981;
+            color: white;
+        }
+
+        .select-btn.locked {
+            background: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .lock-icon {
+            margin-right: 6px;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: 700;
+            margin: 0 auto 16px;
+        }
+
+        .step-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 8px;
+        }
+
+        .step-description {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .modal-icon {
+            font-size: 4em;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: #1e3c72;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .modal-text {
+            color: #666;
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.6em;
+            }
+
+            .status-header {
+                flex-direction: column;
+            }
+
+            .points-display {
+                text-align: left;
+            }
+
+            .points-value {
+                font-size: 2.5em;
+            }
+
+            .tier-name {
+                font-size: 1.6em;
+            }
+
+            .section-title {
+                font-size: 1.4em;
+            }
+
+            .tiers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .earning-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-selection-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <a href="../index.html" class="back-link">← Back to Dashboard</a>
+            <h1>⭐ Membership Rewards Program</h1>
+            <p>Earn points, unlock tiers, and enjoy exclusive banking benefits</p>
+        </div>
+
+        <!-- Current Status Card -->
+        <div class="status-card">
+            <div class="status-header">
+                <div class="current-tier">
+                    <span class="tier-badge gold">★ GOLD MEMBER</span>
+                    <div class="tier-name">Gold Tier</div>
+                    <p class="tier-description">You're enjoying premium benefits! Keep up the great banking habits to reach Platinum.</p>
+                </div>
+                <div class="points-display">
+                    <div class="points-label">Your Points</div>
+                    <div class="points-value">4,750</div>
+                    <div class="points-subtext">Lifetime earned: 8,420</div>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span class="progress-label">Progress to Platinum Tier</span>
+                    <span class="progress-points">4,750 / 7,500 points</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: 63.3%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How You Earn Points -->
+        <h2 class="section-title">💎 How You Earn Points</h2>
+        <div class="earning-grid">
+            <div class="earning-card">
+                <span class="earning-icon">🏦</span>
+                <div class="earning-title">Product Holdings</div>
+                <p class="earning-description">Earn points for each active product: checking accounts, savings accounts, credit cards, investments, and loans.</p>
+                <div class="earning-points">
+                    <span class="icon">+</span>
+                    <span>You've earned: 1,850 points</span>
+                </div>
+            </div>
+
+            <div class="earning-card">
+                <span class="earning-icon">📱</span>
+                <div class="earning-title">Digital Usage</div>
+                <p class="earning-description">Get rewarded for using mobile banking, online transfers, contactless payments, and digital statements.</p>
+                <div class="earning-points">
+                    <span class="icon">+</span>
+                    <span>You've earned: 1,520 points</span>
+                </div>
+            </div>
+
+            <div class="earning-card">
+                <span class="earning-icon">💚</span>
+                <div class="earning-title">Financial Health</div>
+                <p class="earning-description">Maintain positive balances, consistent savings, on-time payments, and responsible credit usage for bonus points.</p>
+                <div class="earning-points">
+                    <span class="icon">+</span>
+                    <span>You've earned: 1,380 points</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Membership Tiers -->
+        <h2 class="section-title">🎯 Membership Tiers</h2>
+        <div class="tiers-grid">
+            <!-- Bronze Tier -->
+            <div class="tier-card bronze">
+                <div class="tier-card-header">
+                    <span class="tier-icon">🥉</span>
+                    <div class="tier-card-name">Bronze</div>
+                    <div class="tier-requirements">0 - 1,500 points</div>
+                </div>
+                <ul class="benefits-list">
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text"><span class="benefit-highlight">Basic rewards:</span> 1 benefit selection</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">Standard customer support</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">Quarterly account review</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">Financial education resources</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Silver Tier -->
+            <div class="tier-card silver">
+                <div class="tier-card-header">
+                    <span class="tier-icon">🥈</span>
+                    <div class="tier-card-name">Silver</div>
+                    <div class="tier-requirements">1,501 - 3,500 points</div>
+                </div>
+                <ul class="benefits-list">
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text"><span class="benefit-highlight">Enhanced rewards:</span> 2 benefit selections</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">Priority email support</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">Reduced ATM fees worldwide</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">Free wire transfers (2/month)</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">Exclusive webinar access</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Gold Tier -->
+            <div class="tier-card gold active">
+                <div class="tier-card-header">
+                    <span class="tier-icon">🥇</span>
+                    <div class="tier-card-name">Gold</div>
+                    <div class="tier-requirements">3,501 - 7,500 points</div>
+                </div>
+                <ul class="benefits-list">
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text"><span class="benefit-highlight">Premium rewards:</span> 3 benefit selections</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">Dedicated relationship manager</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">Higher interest rates on savings</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">Waived account maintenance fees</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">Travel insurance coverage</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">Investment advisory sessions</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Platinum Tier -->
+            <div class="tier-card platinum">
+                <div class="tier-card-header">
+                    <span class="tier-icon">💎</span>
+                    <div class="tier-card-name">Platinum</div>
+                    <div class="tier-requirements">7,501+ points</div>
+                </div>
+                <ul class="benefits-list">
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text"><span class="benefit-highlight">Elite rewards:</span> 5 benefit selections</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">24/7 concierge service</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">Free bank shares (annual)</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">Premium loan rates</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">Priority support tickets</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">Airport lounge access</span>
+                    </li>
+                    <li class="benefit-item">
+                        <span class="benefit-check">✓</span>
+                        <span class="benefit-text">Exclusive investment opportunities</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Your Active Benefits -->
+        <h2 class="section-title">🎁 Select Your Benefits (3 of 3 selected)</h2>
+        <div class="benefits-selection-grid">
+            <!-- Benefit 1 - Selected -->
+            <div class="benefit-selection-card selected" onclick="toggleBenefit(this, 'gold')">
+                <div class="benefit-selection-header">
+                    <span class="benefit-selection-icon">📈</span>
+                    <span class="benefit-tier-badge gold">Gold+</span>
+                </div>
+                <div class="benefit-selection-title">Enhanced Savings Rate</div>
+                <p class="benefit-selection-description">Boost your savings with an additional interest rate bonus on all savings accounts and fixed deposits.</p>
+                <div class="benefit-value">+0.75% APY Bonus</div>
+                <button class="select-btn selected">✓ Selected</button>
+            </div>
+
+            <!-- Benefit 2 - Selected -->
+            <div class="benefit-selection-card selected" onclick="toggleBenefit(this, 'gold')">
+                <div class="benefit-selection-header">
+                    <span class="benefit-selection-icon">💰</span>
+                    <span class="benefit-tier-badge gold">Gold+</span>
+                </div>
+                <div class="benefit-selection-title">Zero Account Fees</div>
+                <p class="benefit-selection-description">All monthly maintenance fees waived on checking and savings accounts, plus free checkbooks.</p>
+                <div class="benefit-value">Save $25/month</div>
+                <button class="select-btn selected">✓ Selected</button>
+            </div>
+
+            <!-- Benefit 3 - Selected -->
+            <div class="benefit-selection-card selected" onclick="toggleBenefit(this, 'gold')">
+                <div class="benefit-selection-header">
+                    <span class="benefit-selection-icon">✈️</span>
+                    <span class="benefit-tier-badge gold">Gold+</span>
+                </div>
+                <div class="benefit-selection-title">Travel Insurance</div>
+                <p class="benefit-selection-description">Comprehensive travel insurance coverage including trip cancellation, medical emergencies, and lost luggage.</p>
+                <div class="benefit-value">Up to $100K coverage</div>
+                <button class="select-btn selected">✓ Selected</button>
+            </div>
+
+            <!-- Benefit 4 - Available -->
+            <div class="benefit-selection-card" onclick="toggleBenefit(this, 'gold')">
+                <div class="benefit-selection-header">
+                    <span class="benefit-selection-icon">💳</span>
+                    <span class="benefit-tier-badge gold">Gold+</span>
+                </div>
+                <div class="benefit-selection-title">Cashback Rewards</div>
+                <p class="benefit-selection-description">Earn cashback on all debit card purchases and bill payments through our banking platform.</p>
+                <div class="benefit-value">2% on all purchases</div>
+                <button class="select-btn primary">Select Benefit</button>
+            </div>
+
+            <!-- Benefit 5 - Available -->
+            <div class="benefit-selection-card" onclick="toggleBenefit(this, 'gold')">
+                <div class="benefit-selection-header">
+                    <span class="benefit-selection-icon">🎓</span>
+                    <span class="benefit-tier-badge gold">Gold+</span>
+                </div>
+                <div class="benefit-selection-title">Financial Advisory</div>
+                <p class="benefit-selection-description">Quarterly one-on-one sessions with certified financial planners to help you reach your financial goals.</p>
+                <div class="benefit-value">4 sessions/year</div>
+                <button class="select-btn primary">Select Benefit</button>
+            </div>
+
+            <!-- Benefit 6 - Locked (Platinum only) -->
+            <div class="benefit-selection-card locked">
+                <div class="benefit-selection-header">
+                    <span class="benefit-selection-icon">📊</span>
+                    <span class="benefit-tier-badge platinum">Platinum</span>
+                </div>
+                <div class="benefit-selection-title">Free Bank Shares</div>
+                <p class="benefit-selection-description">Receive complimentary bank shares annually as a valued Platinum member and shareholder.</p>
+                <div class="benefit-value">$500 in shares/year</div>
+                <button class="select-btn locked"><span class="lock-icon">🔒</span> Requires Platinum</button>
+            </div>
+
+            <!-- Benefit 7 - Locked (Platinum only) -->
+            <div class="benefit-selection-card locked">
+                <div class="benefit-selection-header">
+                    <span class="benefit-selection-icon">🎫</span>
+                    <span class="benefit-tier-badge platinum">Platinum</span>
+                </div>
+                <div class="benefit-selection-title">Priority Support Access</div>
+                <p class="benefit-selection-description">Jump to the front of the queue with express ticket handling and dedicated support channels.</p>
+                <div class="benefit-value">24/7 VIP support</div>
+                <button class="select-btn locked"><span class="lock-icon">🔒</span> Requires Platinum</button>
+            </div>
+
+            <!-- Benefit 8 - Locked (Platinum only) -->
+            <div class="benefit-selection-card locked">
+                <div class="benefit-selection-header">
+                    <span class="benefit-selection-icon">💼</span>
+                    <span class="benefit-tier-badge platinum">Platinum</span>
+                </div>
+                <div class="benefit-selection-title">Premium Loan Rates</div>
+                <p class="benefit-selection-description">Access exclusive loan rates with reduced APR on mortgages, auto loans, and personal loans.</p>
+                <div class="benefit-value">-1.5% rate reduction</div>
+                <button class="select-btn locked"><span class="lock-icon">🔒</span> Requires Platinum</button>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="how-it-works">
+            <h2 class="section-title">🎯 How It Works</h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Bank & Earn</div>
+                    <p class="step-description">Use your accounts, make digital transactions, and maintain healthy financial habits to automatically earn points.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Unlock Tiers</div>
+                    <p class="step-description">As you accumulate points, you'll progress through Bronze, Silver, Gold, and Platinum tiers with increasing benefits.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Choose Benefits</div>
+                    <p class="step-description">Select from a variety of exclusive benefits available at your tier level. Higher tiers = more choices!</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Enjoy Rewards</div>
+                    <p class="step-description">Your selected benefits activate immediately and renew annually as long as you maintain your tier status.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div class="modal-icon">✓</div>
+            <h3 class="modal-title">Benefit Updated!</h3>
+            <p class="modal-text" id="modalText">Your benefit selection has been updated successfully. Changes will take effect immediately.</p>
+            <button class="modal-btn" onclick="closeModal()">Got it!</button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize progress bar animation on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBar = document.querySelector('.progress-bar-fill');
+            setTimeout(() => {
+                progressBar.style.width = '63.3%';
+            }, 300);
+        });
+
+        // Track selected benefits count
+        let selectedCount = 3;
+        const maxSelections = 3; // Gold tier allows 3 selections
+
+        function toggleBenefit(card, requiredTier) {
+            // Don't allow interaction with locked benefits
+            if (card.classList.contains('locked')) {
+                showModal('🔒 Tier Requirement', `This benefit requires ${requiredTier.charAt(0).toUpperCase() + requiredTier.slice(1)} tier or higher. Keep earning points to unlock it!`);
+                return;
+            }
+
+            const isSelected = card.classList.contains('selected');
+            const btn = card.querySelector('.select-btn');
+
+            if (isSelected) {
+                // Deselect
+                card.classList.remove('selected');
+                btn.textContent = 'Select Benefit';
+                btn.className = 'select-btn primary';
+                selectedCount--;
+                updateSelectionTitle();
+            } else {
+                // Check if we've reached the max
+                if (selectedCount >= maxSelections) {
+                    showModal('⚠️ Selection Limit Reached', `You can select up to ${maxSelections} benefits with your Gold tier. Deselect another benefit first, or upgrade to Platinum for more selections!`);
+                    return;
+                }
+
+                // Select
+                card.classList.add('selected');
+                btn.textContent = '✓ Selected';
+                btn.className = 'select-btn selected';
+                selectedCount++;
+                updateSelectionTitle();
+
+                showModal('✓ Benefit Activated!', 'Your new benefit has been activated and will be available immediately. Enjoy your reward!');
+            }
+        }
+
+        function updateSelectionTitle() {
+            const title = document.querySelector('.active-benefits-section .section-title');
+            if (title) {
+                title.textContent = `🎁 Select Your Benefits (${selectedCount} of ${maxSelections} selected)`;
+            } else {
+                // Update the existing section title
+                const sectionTitles = document.querySelectorAll('.section-title');
+                sectionTitles.forEach(title => {
+                    if (title.textContent.includes('Select Your Benefits')) {
+                        title.textContent = `🎁 Select Your Benefits (${selectedCount} of ${maxSelections} selected)`;
+                    }
+                });
+            }
+        }
+
+        function showModal(title, message) {
+            const modal = document.getElementById('confirmationModal');
+            const modalTitle = modal.querySelector('.modal-title');
+            const modalText = modal.querySelector('.modal-text');
+
+            modalTitle.textContent = title;
+            modalText.textContent = message;
+            modal.classList.add('show');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('confirmationModal');
+            modal.classList.remove('show');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('confirmationModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Simulate real-time points update (demo purposes)
+        let currentPoints = 4750;
+        function simulatePointsEarning() {
+            setInterval(() => {
+                const randomIncrease = Math.floor(Math.random() * 3);
+                if (randomIncrease > 0) {
+                    currentPoints += randomIncrease;
+                    document.querySelector('.points-value').textContent = currentPoints.toLocaleString();
+
+                    // Update progress bar
+                    const percentage = (currentPoints / 7500) * 100;
+                    const progressBar = document.querySelector('.progress-bar-fill');
+                    progressBar.style.width = `${Math.min(percentage, 100)}%`;
+
+                    // Update progress text
+                    document.querySelector('.progress-points').textContent = `${currentPoints.toLocaleString()} / 7,500 points`;
+
+                    // Check if reached Platinum
+                    if (currentPoints >= 7500) {
+                        showModal('🎉 Congratulations!', 'You\'ve reached Platinum tier! You can now select up to 5 benefits and unlock exclusive rewards.');
+                    }
+                }
+            }, 30000); // Every 30 seconds for demo
+        }
+
+        // Uncomment to enable points simulation
+        // simulatePointsEarning();
+    </script>
+</body>
+</html>

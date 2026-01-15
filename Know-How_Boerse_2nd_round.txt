@@ -1,0 +1,113 @@
+Transkript
+14. Januar 2026, 10:49AM
+
+Niederlaender Gabor 0405 EB Transkription gestartet
+
+Niederlaender Gabor 0405 EB   0:03
+Wie er das gemacht hat und wie genau er auf diese diese Bedürfnisse einfach eingegangen ist. Also, es es ist wirklich stark. So, lieber Kurt, wir haben die Version 2, also die Phase 2 vom Prototypen.
+Angeschaut und der Kurt hat das wirklich großartig gefunden.
+
+Krystof Kurt 0445 EB   0:24
+Ja, kann ich bestätigen.
+
+Niederlaender Gabor 0405 EB   0:26
+Folgende folgende Veränderungswünsche oder folgende folgende Themen müssen wir noch ein bisschen schärfen. Erstens einmal haben wir gesagt, dass die.
+dass die dass der Status abgeschlossen oder aktiv nicht nur auf der Ebene der der der Kapiteln gesetzt werden muss, sondern auf der der einzelnen Subkapiteln.
+Nämlich, wir werden oder nämlich, wir haben die Idee, dass wir, dass wir einzelne Subkapitel an die Mitarbeiterinnen ausspielen. Für eine gewisse Zeit wird dieses Subkapitel aktiv, dann dann müssen sie ihre Beiträge liefern und und dann wird.
+Das Kapitel oder das Subkapitel halt abgeschlossen, das heißt ja.
+
+Krystof Kurt 0445 EB   1:17
+Und während dies wegen dieser Phase sieht der Mitarbeiter aber auch nur seine Erfassung, seine Eingabe und nicht schon eventuell von anderen Mitarbeitern gepostete oder erfasste Beiträge.
+
+Niederlaender Gabor 0405 EB   1:32
+Um die Kreativität anzuregen, damit man quasi nicht andere Beiträge abliest, sondern selbst Gedanken macht, was man da für wichtig hält.
+Natürlich nur in diesem Subkapitel. Also, andere abgeschlossene Kapitel werden vollständig angezeigt, aber nur in diesem aktiven Subkapitel sieht man quasi nur seinen eigenen Beitrag. Was auch interessant wär oder was wir auch gesprochen haben mit dem Kurt.
+ist, dass dass es eine gewisse Adminrolle geben soll und die Adminrolle wird die Möglichkeit haben, Subkapitel anzulegen mit so einem Pluszeichen oder so. Aber andere ganz normale User sehen das natürlich nicht und sie sehen die die Struktur auf der linken Seite so wie
+Wie das vom Admin definiert wurde.
+Und gleichzeitig möchte ich noch noch zur Vollständigkeit dazu sagen, dass wir diesen Status abgeschlossen oder aktiv auf der Ebene der der Kapitel gar nicht brauchen, weil, weil, weil, weil es jederzeit weitere Subkapitel entstehen können.
+Und deswegen wird quasi ein Kapitel nie vollständig abgeschlossen oder nicht. Das ist nicht notwendig, aber auf der Ebene der Subkapitels schon abgeschlossen und aktiv.
+So, was mir eigentlich noch ein Anliegen ist oder was mir gerade noch aufgefallen ist in dem Gespräch, sind diese ganzen Suchfeldern. Die Suchfelder finde ich super gut, aber.
+Aber die Frage ist, ob die ob die Suche nur in dem jeweiligen Subkapitel erfolgen soll, oder oder soll es eine globale Suche geben? Und wenn ich schreib Risikomanagement, dann soll vielleicht in alle Kapitel reinschauen.
+
+Krystof Kurt 0445 EB   3:24
+Ja, ja, wäre absolut von Vorteil, weil manche Unterkapiteln sich jetzt nicht.
+Trennscharf in das in das Hauptkapitel zuordnen lassen können, sondern die, die, die kann ich in jeden einzelnen Finanzierungskonzept, in jeden einzelnen Abwicklungsprozess, einmal dort haben oder einmal da haben, ja.
+
+Niederlaender Gabor 0405 EB   3:47
+Genau, finde ich auch.
+Find ich auch.
+
+Krystof Kurt 0445 EB   3:50
+Ja, und ein Punkt wäre noch die eine Idee, die der Gabor das letzte Mal aufgegriffen hat oder eingebracht hat, dass wenn ein ein Unterkapitel abgeschlossen ist.
+Dann die die Möglichkeit besteht, den den einzelnen Beitrag zu liken.
+
+Niederlaender Gabor 0405 EB   4:07
+Mhm.
+
+Krystof Kurt 0445 EB   4:07
+Sprich, um daraus dann noch zu sagen, es gibt jetzt 7 Beiträge und der Beitrag von Michael Bauer, den den sein Input hat, irgendwie der findet den größten Anklang. Das wäre dann noch die die Grundlage dafür, wenn sich jemand anderer das anschaut oder oder jemand wieder in ein Unterkapitel.
+Einsteigt, einen schnellen Überblick zu haben. Hey, dieser Beitrag, dieser Zugang ist eigentlich irgendwie schon von anderen referenziert worden. Den haben sie am hilfreichsten, am besten oder am am stärksten gefunden.
+
+Niederlaender Gabor 0405 EB   4:40
+Mhm, genau. Und noch einen letzten Punkt, haben wir, glaube ich, angesprochen, war, wie wir mit neuen Beiträgen umgehen, wie wir sicherstellen, dass dass das neue Beiträge nicht untergehen.
+Vor allem in abgeschlossenen Kapiteln. Weil wir ja gesagt haben, dass auch in abgeschlossenen Kapiteln Beiträge möglich sind, um weitere Ideen richtig zu erfassen. Und als Lösung haben wir gesagt, es könnte ein Landing Page geben.
+Wo, wo der wo der User als erst der Landing Page, die der User beim Einsteigen als erstes sieht, und da könnte man immer die die neuesten X Beiträge immer gesammelt anzeigen, unabhängig vom Kapitel und unter Kapitel.
+
+Krystof Kurt 0445 EB   5:31
+Yeah.
+
+Niederlaender Gabor 0405 EB   5:34
+That's it. Das werden wir in die Spezifikation einarbeiten und es kommt die nächste Variante, wie gesagt, in 20 Minuten.
+
+Krystof Kurt 0445 EB   5:42
+Das Nein, aber.
+Hört sich echt das schon echt schon stark aus. Wie, Wie schaut denn das eigentlich aus? Können wir das in in unserer Copilot Welt, K.I. Welt?
+Verwenden schon oder implementieren oder hast du es du auf einem anderen? Weil es wären natürlich schon Spezifikationen drinnen sein, vielleicht irgendwann mal, wenn ich sag unsere Konditionen Kalkulation oder dergleichen, wo ich sag, das sollte in in unserem geschützten K. I. Bereich unter Umständen sein.
+
+Niederlaender Gabor 0405 EB   6:12
+Absolut, nein, nein, das da, da, da kümmere ich mich drum. Natürlich, für mich ist einfacher, diese ganzen Prototypen außerhalb zu machen, aber aber es ist, es ist auch für die User Verwaltung, damit wir wissen, wer das ist und und wer da rein gibt.
+
+Krystof Kurt 0445 EB   6:16
+Gut.
+Ja.
+Mhm.
+
+Niederlaender Gabor 0405 EB   6:27
+Das muss innen drinnen sein.
+
+Krystof Kurt 0445 EB   6:28
+Aber siehst du das in unserer KI?
+Erste Group Welt auch auch schon schon abbildbar.
+
+Niederlaender Gabor 0405 EB   6:37
+Absolut, absolut. Das ist nur die.
+
+Krystof Kurt 0445 EB   6:38
+Das Gute wäre, da braucht man keine Schnittstellen zu anderen Systemen, eigentlich, ne?
+
+Niederlaender Gabor 0405 EB   6:42
+Genau, nein, nein, das ist absolut möglich. Ich muss nur eine Lösung finden, wo wir das genau einbauen. In mein, ja, also lass es mein Problem sein.
+
+Krystof Kurt 0445 EB   6:52
+Aber okay, aber.
+Super schnell.
+
+Niederlaender Gabor 0405 EB   6:57
+Ja.
+
+Krystof Kurt 0445 EB   6:57
+Von dir und von der KI mit dem Anwenden der KI, ja.
+
+Niederlaender Gabor 0405 EB   7:03
+Ich lass dich, ich halt dich am Laufenden, okay.
+
+Krystof Kurt 0445 EB   7:05
+Super, danke Gabor. Gefällt mir sehr gut.
+
+Niederlaender Gabor 0405 EB   7:06
+Gut, super. Freut mich. Mach's gut. Ciao.
+
+Krystof Kurt 0445 EB   7:08
+Tschüss.
+
+Niederlaender Gabor 0405 EB Transkription beendet

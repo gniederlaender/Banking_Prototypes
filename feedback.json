@@ -137,16 +137,36 @@
     {
       "id": "task-20260113-142652",
       "type": "bug",
-      "status": "open",
+      "status": "done",
       "priority": "medium",
       "title": "Know-how Boerse Phase 2 Prototyp - Fix data entry in Search field",
       "description": "Please check the data entry in the search input field (Suchen & Filtern), after every character it is losing focus, so I have to click into it again. Please make sure that the focus remains.\n",
-      "created_at": "2026-01-13T14:26:52.065971"
+      "created_at": "2026-01-13T14:26:52.065971",
+      "completion_notes": "Completed by agent in run 20260114_082001\n\u2717 Verification: FAILED - Unknown\nCommit: 6821917",
+      "completed_at": "2026-01-14T08:22:03.806436"
+    },
+    {
+      "id": "task-20260114-225500",
+      "type": "feature",
+      "status": "open",
+      "priority": "medium",
+      "title": "Membership Program",
+      "description": "Create a own prominent section for the banks membership program where clients based on their product holdings, degree of digital usage and financially healthy behavior are granted points and can progress along 4 tiers. Each tier grants access to certain benefits such as free bank share, better interest rates, erste open tickets. User can choose among those benefits whereas the higher the tier the more attractive it gets. Iterate the concept and design several times with a group of senior consultants and designers bevor implementing a functional html5 prototype. Think hard and long ",
+      "created_at": "2026-01-14T22:55:00.607303"
+    },
+    {
+      "id": "task-20260115-080139",
+      "type": "feature",
+      "status": "open",
+      "priority": "medium",
+      "title": "Know how Boerse phase 2 version 2",
+      "description": "We had another discussion with Kurt (transkript: Know-How_Boerse_2nd_round.txt) please consider this inputs and create an updated version. Do not overwrite know-how-boerse_2.html, create a know-how-boerse_3.html",
+      "created_at": "2026-01-15T08:01:39.308996"
     }
   ],
   "metadata": {
     "project": "Banking_Prototypes",
     "version": "1.0",
-    "last_updated": "2026-01-13T14:26:52.065979"
+    "last_updated": "2026-01-15T08:01:39.309005"
   }
 }
