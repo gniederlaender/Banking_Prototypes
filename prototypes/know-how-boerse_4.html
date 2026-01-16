@@ -98,6 +98,43 @@
             font-weight: 500;
         }
 
+        .dashboard-link {
+            background: #2a5298;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: background 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dashboard-link:hover {
+            background: #1e3c72;
+        }
+
+        .change-user-btn {
+            background: #ff9800;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            font-size: 0.9em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .change-user-btn:hover {
+            background: #f57c00;
+        }
+
         .admin-badge {
             background: #9c27b0;
             color: white;
@@ -936,14 +973,18 @@
             <p class="subtitle">Wissensaustausch im Finanzierungsteam - Complete Experience (V2 + V3 Features)</p>
             <div class="user-info">
                 <div class="left">
-                    <div class="user-avatar" onclick="showUserProfile(1)">GN</div>
+                    <div class="user-avatar" onclick="showUserProfile(currentUser.id)"><span id="userInitials">GN</span></div>
                     <div>
-                        <strong>Gabor Niederländer</strong>
-                        <span class="admin-badge">ADMIN</span>
-                        <div style="font-size: 0.9em; color: #666;">Spezialist Wohnbaufinanzierung</div>
+                        <strong id="userName">Gabor Niederländer</strong>
+                        <span class="admin-badge" id="adminBadge">ADMIN</span>
+                        <div style="font-size: 0.9em; color: #666;" id="userRole">Spezialist Wohnbaufinanzierung</div>
                     </div>
                 </div>
-                <div class="team-badge">Team Kurt - 13 Mitarbeiter</div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <a href="#" onclick="event.preventDefault(); showLandingPage();" class="dashboard-link">🏠 Dashboard</a>
+                    <button onclick="changeUser()" class="change-user-btn">🔄 Benutzer wechseln</button>
+                    <div class="team-badge">Team Kurt - 13 Mitarbeiter</div>
+                </div>
             </div>
         </div>
 
@@ -1117,6 +1158,7 @@
 
         let currentUser = teamMembers[0];
         let currentView = 'landing';
+        let currentChapter = null;
         let currentSubChapter = null;
         let globalSearchTerm = '';
         let filters = {
@@ -1136,7 +1178,7 @@
             let html = '';
 
             Object.entries(chapters).forEach(([id, chapter]) => {
-                const isExpanded = currentView === 'subchapter' && currentSubChapter && currentSubChapter.startsWith(id + '.');
+                const isExpanded = (id == currentChapter);
 
                 html += `
                     <li class="chapter-item">
@@ -1175,6 +1217,12 @@
         }
 
         function toggleChapter(chapterId) {
+            // Toggle the chapter: if already expanded, collapse it; otherwise expand it
+            if (currentChapter == chapterId) {
+                currentChapter = null;
+            } else {
+                currentChapter = chapterId;
+            }
             renderChapterList();
         }
 
@@ -1348,6 +1396,8 @@
         function loadSubChapter(subChapterId) {
             currentView = 'subchapter';
             currentSubChapter = subChapterId;
+            const [chapterId] = subChapterId.split('.');
+            currentChapter = parseInt(chapterId);
             renderChapterList();
             renderSubChapterContent(subChapterId);
         }
@@ -1845,6 +1895,41 @@
             if (days > 0) return `vor ${days} Tag${days > 1 ? 'en' : ''}`;
             if (hours > 0) return `vor ${hours} Stunde${hours > 1 ? 'n' : ''}`;
             return 'vor wenigen Minuten';
+        }
+
+        function changeUser() {
+            // Filter out admin users (only non-admin users)
+            const nonAdminUsers = teamMembers.filter(m => !m.isAdmin);
+
+            // Pick a random non-admin user
+            const randomIndex = Math.floor(Math.random() * nonAdminUsers.length);
+            currentUser = nonAdminUsers[randomIndex];
+
+            // Update the UI
+            updateUserDisplay();
+
+            // Refresh the current view
+            if (currentView === 'landing') {
+                showLandingPage();
+            } else if (currentView === 'subchapter' && currentSubChapter) {
+                loadSubChapter(currentSubChapter);
+            }
+        }
+
+        function updateUserDisplay() {
+            document.getElementById('userInitials').textContent = currentUser.initials;
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userRole').textContent = currentUser.role;
+
+            // Show/hide admin badge
+            const adminBadge = document.getElementById('adminBadge');
+            if (currentUser.isAdmin) {
+                adminBadge.style.display = 'inline';
+            } else {
+                adminBadge.style.display = 'none';
+            }
+
+            renderChapterList();
         }
 
         function showAddSubChapterModal(chapterId) {

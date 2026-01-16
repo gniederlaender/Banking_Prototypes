@@ -216,15 +216,24 @@
           "original_name": "IMG_3229.png"
         }
       ],
-      "completed_at": "2026-01-16T08:30:00.000000",
+      "completed_at": "2026-01-16T08:31:16.083289",
       "implementation": "prototypes/UI_Investkredit.html",
-      "completion_notes": "Successfully applied George/Erste Bank design system:\n- Updated color palette (Erste blue #0057A0, signature yellow #FFD200)\n- Applied Noto Sans typography\n- Enhanced UI components with George styling\n- Updated buttons, forms, cards with brand-consistent design\n- Improved interactive states and transitions",
+      "completion_notes": "Completed by agent in run 20260116_082001\n\u2717 Verification: FAILED - Unknown\nCommit: 1954e66",
       "updated_at": "2026-01-16T08:30:00.000000"
+    },
+    {
+      "id": "task-20260116-091914",
+      "type": "bug",
+      "status": "open",
+      "priority": "medium",
+      "title": "Fix bugs Know-How B\u00f6rse",
+      "description": "In https://smartprototypes.net/UI_Prototypes/Banking_Prototypes/prototypes/know-how-boerse_4.html please fix the following bugs:\n- The menu items shall expand and collapse (revealing the sub chapters) (this does not work in _4, but it worked in _2).\n- The sub chapters shall be also clickable revealing the items (this does not work in _4, but it worked in _2)\n- I am missing a link, which is bringing me back to the dashboard\n\nAnd I would like to have a \"change user\" button, which changes \"Gabor Niederl\u00e4nder\" to another random (non-admin) user",
+      "created_at": "2026-01-16T09:19:14.612275"
     }
   ],
   "metadata": {
     "project": "Banking_Prototypes",
     "version": "1.0",
-    "last_updated": "2026-01-16T08:30:00.000000"
+    "last_updated": "2026-01-16T09:19:14.612284"
   }
 }
