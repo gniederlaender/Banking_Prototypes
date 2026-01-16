@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Know-How Börse - Phase 2 Version 4</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            color: #1e3c72;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .phase-badge {
+            background: #ff9800;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.4em;
+            font-weight: 600;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .user-info .left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #2a5298;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        .team-badge {
+            background: #e8f0fe;
+            color: #1e3c72;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .admin-badge {
+            background: #9c27b0;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            color: #1e3c72;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .chapter-list {
+            list-style: none;
+        }
+
+        .chapter-item {
+            margin-bottom: 5px;
+        }
+
+        .chapter-header {
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .chapter-header:hover {
+            background: #f0f4f8;
+        }
+
+        .chapter-header.active {
+            background: #e8f0fe;
+            border-left-color: #2a5298;
+        }
+
+        .chapter-header .expand-icon {
+            transition: transform 0.3s;
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .chapter-header.expanded .expand-icon {
+            transform: rotate(90deg);
+        }
+
+        .sub-chapter-list {
+            list-style: none;
+            padding-left: 20px;
+            margin-top: 5px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .sub-chapter-list.expanded {
+            max-height: 1000px;
+        }
+
+        .sub-chapter-item {
+            padding: 8px 12px;
+            margin: 3px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sub-chapter-item:hover {
+            background: #f0f4f8;
+        }
+
+        .sub-chapter-item.active {
+            background: #d0e3f8;
+            font-weight: 600;
+        }
+
+        .sub-chapter-badges {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .badge {
+            background: #2a5298;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: bold;
+        }
+
+        .badge.active {
+            background: #ff9800;
+        }
+
+        .badge.completed {
+            background: #4caf50;
+        }
+
+        .badge.contributions {
+            background: #9c27b0;
+        }
+
+        .add-subchapter-btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+            margin-top: 8px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: background 0.3s;
+        }
+
+        .add-subchapter-btn:hover {
+            background: #45a049;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 12px;
+            padding: 35px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            min-height: 600px;
+        }
+
+        .breadcrumb {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .breadcrumb a {
+            color: #2a5298;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .chapter-title {
+            color: #1e3c72;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .chapter-description {
+            color: #666;
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+
+        .global-search-bar {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .global-search-bar h3 {
+            color: #1e3c72;
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-box-main input {
+            width: 100%;
+            padding: 12px 15px;
+            padding-left: 40px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+            background: white url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>') no-repeat 12px center;
+            background-size: 20px;
+        }
+
+        .search-box-main input:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+
+        .search-results-summary {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e8f0fe;
+            border-radius: 6px;
+            font-size: 0.9em;
+            color: #1e3c72;
+        }
+
+        .filter-bar {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .filter-bar h3 {
+            color: #1e3c72;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-group label {
+            font-size: 0.85em;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95em;
+            transition: border-color 0.3s;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+
+        .active-filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tag {
+            background: #e8f0fe;
+            color: #1e3c72;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-tag .remove {
+            cursor: pointer;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .filter-tag .remove:hover {
+            color: #f44336;
+        }
+
+        .contribution-card {
+            background: #f8f9fa;
+            border-left: 4px solid #2a5298;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .contribution-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .contribution-card.own {
+            background: #e8f0fe;
+            border-left-color: #ff9800;
+        }
+
+        .contribution-card.top-liked {
+            border-left-width: 6px;
+            border-left-color: #ffd700;
+        }
+
+        .contribution-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .contributor-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .contributor-avatar {
+            width: 42px;
+            height: 42px;
+            background: #2a5298;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .contributor-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        .contributor-details {
+            flex: 1;
+        }
+
+        .contributor-name {
+            font-weight: 600;
+            color: #1e3c72;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .contributor-name:hover {
+            color: #2a5298;
+            text-decoration: underline;
+        }
+
+        .contributor-role {
+            color: #666;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .experience-badge {
+            background: #4caf50;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+
+        .experience-badge.junior {
+            background: #2196f3;
+        }
+
+        .experience-badge.mittel {
+            background: #ff9800;
+        }
+
+        .contribution-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .like-btn {
+            background: none;
+            border: 2px solid #ddd;
+            color: #666;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9em;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .like-btn:hover {
+            border-color: #ff9800;
+            color: #ff9800;
+        }
+
+        .like-btn.liked {
+            background: #ff9800;
+            border-color: #ff9800;
+            color: white;
+        }
+
+        .like-btn.liked:hover {
+            background: #f57c00;
+            border-color: #f57c00;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+            font-size: 1.2em;
+            transition: color 0.2s;
+        }
+
+        .action-btn:hover {
+            color: #2a5298;
+        }
+
+        .contribution-text {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            padding-left: 54px;
+        }
+
+        .contribution-meta {
+            display: flex;
+            gap: 15px;
+            padding-left: 54px;
+            font-size: 0.85em;
+            color: #888;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .version-indicator {
+            color: #2a5298;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .version-indicator:hover {
+            color: #1e3c72;
+        }
+
+        .status-banner {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-banner.active {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+        }
+
+        .status-banner .icon {
+            font-size: 1.3em;
+        }
+
+        .contribution-form {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid #e8f0fe;
+        }
+
+        .contribution-form h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-instructions {
+            background: #e8f0fe;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            color: #1e3c72;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1em;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+
+        .char-counter {
+            text-align: right;
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .char-counter.warning {
+            color: #ff9800;
+        }
+
+        .char-counter.error {
+            color: #f44336;
+        }
+
+        .button {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .button-primary {
+            background: #2a5298;
+            color: white;
+        }
+
+        .button-primary:hover:not(:disabled) {
+            background: #1e3c72;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(42, 82, 152, 0.3);
+        }
+
+        .button-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .button-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .button-secondary:hover {
+            background: #5a6268;
+        }
+
+        .landing-page {
+            padding: 20px 0;
+        }
+
+        .landing-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .landing-header h2 {
+            color: #1e3c72;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .landing-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid #2a5298;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2a5298;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .recent-contributions {
+            margin-top: 30px;
+        }
+
+        .recent-contributions h3 {
+            color: #1e3c72;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .location-tag {
+            display: inline-block;
+            background: #e8f0fe;
+            color: #1e3c72;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .location-tag:hover {
+            background: #d0e3f8;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state .icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal h3 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .version-history {
+            margin-top: 20px;
+        }
+
+        .version-item {
+            background: #f8f9fa;
+            border-left: 3px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+        }
+
+        .version-item.current {
+            border-left-color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .version-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .version-text {
+            color: #333;
+            line-height: 1.5;
+            font-size: 0.95em;
+        }
+
+        .user-profile {
+            padding: 20px 0;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: #2a5298;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 2em;
+        }
+
+        .profile-info h2 {
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+                max-height: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filter-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💡 Know-How Börse <span class="phase-badge">PHASE 2 V4</span></h1>
+            <p class="subtitle">Wissensaustausch im Finanzierungsteam - Complete Experience (V2 + V3 Features)</p>
+            <div class="user-info">
+                <div class="left">
+                    <div class="user-avatar" onclick="showUserProfile(1)">GN</div>
+                    <div>
+                        <strong>Gabor Niederländer</strong>
+                        <span class="admin-badge">ADMIN</span>
+                        <div style="font-size: 0.9em; color: #666;">Spezialist Wohnbaufinanzierung</div>
+                    </div>
+                </div>
+                <div class="team-badge">Team Kurt - 13 Mitarbeiter</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <h2>Verkaufsprozess</h2>
+                <ul class="chapter-list" id="chapterList">
+                    <!-- Chapters will be dynamically generated -->
+                </ul>
+            </div>
+
+            <div class="content-area" id="contentArea">
+                <!-- Content will be dynamically loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Sub-Chapter Modal -->
+    <div class="modal-overlay" id="addSubChapterModal">
+        <div class="modal">
+            <h3>➕ Neues Subkapitel anlegen</h3>
+            <div class="form-group">
+                <label>Kapitel</label>
+                <select id="newSubChapterParent" class="form-control" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 1em;">
+                    <!-- Options will be populated -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Titel des Subkapitels</label>
+                <input type="text" id="newSubChapterTitle" placeholder="z.B. Risikomanagement" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 1em;">
+            </div>
+            <div class="form-group">
+                <label>Status</label>
+                <select id="newSubChapterStatus" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 1em;">
+                    <option value="active">Aktiv</option>
+                    <option value="completed">Abgeschlossen</option>
+                </select>
+            </div>
+            <div class="modal-buttons">
+                <button class="button button-secondary" onclick="closeModal('addSubChapterModal')">Abbrechen</button>
+                <button class="button button-primary" onclick="createSubChapter()">Anlegen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Version History Modal -->
+    <div class="modal-overlay" id="versionModal">
+        <div class="modal">
+            <h3>📝 Versionshistorie</h3>
+            <div id="versionHistoryContent"></div>
+            <div class="modal-buttons">
+                <button class="button button-secondary" onclick="closeModal('versionModal')">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Profile Modal -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal">
+            <div id="profileContent"></div>
+            <div class="modal-buttons">
+                <button class="button button-secondary" onclick="closeModal('profileModal')">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced data structure combining V2 and V3 features
+        const chapters = {
+            1: {
+                title: "Überleitung",
+                description: "Erste Schritte bei der Übernahme eines neuen Kunden oder Projekts",
+                subChapters: [
+                    { id: "1.1", title: "Datenqualität prüfen", status: "completed", contributions: 8 },
+                    { id: "1.2", title: "Erstkontakt herstellen", status: "completed", contributions: 7 },
+                    { id: "1.3", title: "Priorität einschätzen", status: "completed", contributions: 9 }
+                ]
+            },
+            2: {
+                title: "Erstangebot",
+                description: "Erstellung und Präsentation des ersten Finanzierungsangebots",
+                subChapters: [
+                    { id: "2.1", title: "Konditionsberechnung", status: "completed", contributions: 10 },
+                    { id: "2.2", title: "Angebotspräsentation", status: "completed", contributions: 8 },
+                    { id: "2.3", title: "Verhandlungspuffer", status: "completed", contributions: 6 }
+                ]
+            },
+            3: {
+                title: "Konditionen verhandeln",
+                description: "Strategien und Techniken zur Konditionenverhandlung",
+                subChapters: [
+                    { id: "3.1", title: "Verhandlungstaktik", status: "completed", contributions: 9 },
+                    { id: "3.2", title: "Preiseinwände behandeln", status: "completed", contributions: 11 },
+                    { id: "3.3", title: "Kompromisse finden", status: "completed", contributions: 7 }
+                ]
+            },
+            4: {
+                title: "Dokumentation",
+                description: "Sammlung und Prüfung aller erforderlichen Unterlagen",
+                subChapters: [
+                    { id: "4.1", title: "Unterlagen anfordern", status: "active", contributions: 3, userContribution: null },
+                    { id: "4.2", title: "Vollständigkeit prüfen", status: "completed", contributions: 6 },
+                    { id: "4.3", title: "Dokumente verifizieren", status: "completed", contributions: 5 }
+                ]
+            },
+            5: {
+                title: "Prüfung & Genehmigung",
+                description: "Interne Prüfung und Genehmigungsprozess",
+                subChapters: [
+                    { id: "5.1", title: "Kreditantrag vorbereiten", status: "completed", contributions: 4 },
+                    { id: "5.2", title: "Kreditausschuss", status: "completed", contributions: 3 },
+                    { id: "5.3", title: "Auflagen bearbeiten", status: "completed", contributions: 5 }
+                ]
+            },
+            6: {
+                title: "Vertragsabschluss",
+                description: "Finaler Vertragsabschluss mit dem Kunden",
+                subChapters: [
+                    { id: "6.1", title: "Vertragsunterlagen vorbereiten", status: "completed", contributions: 6 },
+                    { id: "6.2", title: "Unterzeichnungstermin", status: "completed", contributions: 4 },
+                    { id: "6.3", title: "Auszahlung koordinieren", status: "completed", contributions: 5 }
+                ]
+            }
+        };
+
+        const teamMembers = [
+            { id: 1, name: "Gabor Niederländer", initials: "GN", role: "Spezialist", experience: "Senior", contributions: 24, isAdmin: true },
+            { id: 2, name: "Maria Schmidt", initials: "MS", role: "Teamleiterin", experience: "Senior", contributions: 31, isAdmin: false },
+            { id: 3, name: "Thomas Weber", initials: "TW", role: "Spezialist", experience: "Mittel", contributions: 18, isAdmin: false },
+            { id: 4, name: "Anna Huber", initials: "AH", role: "Spezialistin", experience: "Junior", contributions: 15, isAdmin: false },
+            { id: 5, name: "Peter Gruber", initials: "PG", role: "Spezialist", experience: "Senior", contributions: 28, isAdmin: false },
+            { id: 6, name: "Lisa Müller", initials: "LM", role: "Spezialistin", experience: "Mittel", contributions: 19, isAdmin: false },
+            { id: 7, name: "Michael Bauer", initials: "MB", role: "Spezialist", experience: "Senior", contributions: 26, isAdmin: false }
+        ];
+
+        // Contributions with likes and version history
+        const contributions = {
+            "1.1": [
+                { id: 1, userId: 1, text: "Überleitung durchsehen, Priorität einschätzen. Kalender checken und binnen 24h Erstkontakt zum Kunden herstellen.", timestamp: "2026-01-10 14:30", likes: 5, likedBy: [2, 3, 4, 5, 7], edited: true, versions: [
+                    { text: "Überleitung durchsehen und Erstkontakt herstellen.", timestamp: "2026-01-10 09:15" },
+                    { text: "Überleitung durchsehen, Priorität einschätzen. Kalender checken und binnen 24h Erstkontakt zum Kunden herstellen.", timestamp: "2026-01-10 14:30", current: true }
+                ]},
+                { id: 2, userId: 2, text: "Erste Kontrolle der Datenqualität. Vollständigkeit prüfen. Bei Unklarheiten sofort Rückfrage beim Berater.", timestamp: "2026-01-10 10:20", likes: 8, likedBy: [1, 3, 4, 5, 6, 7], edited: false, versions: [] },
+                { id: 3, userId: 3, text: "Kundenakte im System öffnen, bisherige Geschäftsbeziehung checken. Schneller Anruf beim Kunden zur Terminvereinbarung.", timestamp: "2026-01-10 11:45", likes: 3, likedBy: [2, 5, 6], edited: false, versions: [] },
+                { id: 4, userId: 4, text: "Unterlagen sortieren und digitalisieren. Checkliste erstellen was noch fehlt. Mentor informieren wenn etwas unklar ist.", timestamp: "2026-01-10 13:10", likes: 2, likedBy: [1, 2], edited: false, versions: [] },
+                { id: 5, userId: 5, text: "Bonitätsprüfung vorbereiten. Objektdaten recherchieren. Bei gutem Lead sofort persönlichen Termin vereinbaren, nicht nur Telefon.", timestamp: "2026-01-10 15:25", likes: 6, likedBy: [1, 2, 3, 6, 7], edited: false, versions: [] },
+                { id: 6, userId: 6, text: "Zuerst Immobilienbewertung anschauen. Dann Einkommensnachweise prüfen. Bei positiver Einschätzung direkt Erstgespräch planen.", timestamp: "2026-01-10 16:40", likes: 4, likedBy: [1, 3, 5, 7], edited: false, versions: [] },
+                { id: 7, userId: 7, text: "Risikobewertung durchführen. Sicherheiten analysieren. Machbarkeit einschätzen bevor ich Zeit in Kundenkontakt investiere.", timestamp: "2026-01-11 08:15", likes: 7, likedBy: [1, 2, 3, 4, 5, 6], edited: false, versions: [] }
+            ],
+            "4.1": [
+                { id: 10, userId: 2, text: "Checkliste mit allen benötigten Dokumenten erstellen. Email an Kunden mit detaillierter Auflistung. Frist setzen.", timestamp: "2026-01-12 09:15", likes: 0, likedBy: [], edited: false, versions: [] },
+                { id: 11, userId: 3, text: "Standardformular verwenden für Dokumentenanforderung. Persönlich durchgehen was fehlt. Nachfasstermine direkt vereinbaren.", timestamp: "2026-01-12 10:30", likes: 0, likedBy: [], edited: false, versions: [] },
+                { id: 12, userId: 5, text: "Priorität auf kritische Dokumente legen. Kunde klar kommunizieren was sofort benötigt wird. Rest kann nachgereicht werden.", timestamp: "2026-01-12 11:45", likes: 0, likedBy: [], edited: false, versions: [] }
+            ],
+            "4.2": [
+                { id: 13, userId: 4, text: "Systematisch gegen Checkliste prüfen. Fehlende Dokumente rot markieren. Sofort Nachforderung auslösen.", timestamp: "2026-01-13 14:20", likes: 4, likedBy: [1, 2, 5, 7], edited: false, versions: [] },
+                { id: 14, userId: 6, text: "Digitale Ablage nutzen für besseren Überblick. Statusampel verwenden. Bei Unvollständigkeit sofort Kunde kontaktieren.", timestamp: "2026-01-13 15:10", likes: 5, likedBy: [1, 2, 3, 5, 7], edited: false, versions: [] },
+                { id: 15, userId: 1, text: "Dokumenten-Tracker im CRM pflegen. Automatische Erinnerungen setzen. Wöchentliche Kontrolle der offenen Punkte.", timestamp: "2026-01-13 16:00", likes: 6, likedBy: [2, 3, 4, 5, 6, 7], edited: false, versions: [] },
+                { id: 16, userId: 2, text: "Prüfprotokoll führen mit Zeitstempel. Jede Prüfung dokumentieren. Bei kritischen Lücken sofort eskalieren.", timestamp: "2026-01-14 09:20", likes: 3, likedBy: [1, 5, 7], edited: false, versions: [] },
+                { id: 17, userId: 3, text: "Ampelsystem nutzen: Grün=komplett, Gelb=fehlt unwichtiges, Rot=kritisch. So sieht man sofort den Status.", timestamp: "2026-01-14 10:45", likes: 7, likedBy: [1, 2, 4, 5, 6, 7], edited: false, versions: [] },
+                { id: 18, userId: 7, text: "Checkliste in Etappen abarbeiten. Erst Pflichtdokumente, dann optionale. Prioritäten klar setzen.", timestamp: "2026-01-14 14:30", likes: 2, likedBy: [2, 6], edited: false, versions: [] }
+            ],
+            "4.3": [
+                { id: 19, userId: 7, text: "Echtheit der Dokumente prüfen. Bei Zweifeln Rückfrage direkt bei ausstellender Stelle. Besonders bei Einkommensnachweisen genau hinschauen.", timestamp: "2026-01-14 16:30", likes: 9, likedBy: [1, 2, 3, 4, 5, 6], edited: false, versions: [] },
+                { id: 20, userId: 2, text: "Plausibilitätsprüfung durchführen. Zahlen müssen zusammenpassen. Bei Unstimmigkeiten sofort klären.", timestamp: "2026-01-15 08:45", likes: 6, likedBy: [1, 3, 5, 6, 7], edited: false, versions: [] },
+                { id: 21, userId: 5, text: "Vier-Augen-Prinzip bei kritischen Dokumenten. Kollege kurz drüberschauen lassen. Sicherheit geht vor.", timestamp: "2026-01-15 09:30", likes: 8, likedBy: [1, 2, 3, 4, 6, 7], edited: false, versions: [] },
+                { id: 22, userId: 1, text: "Dokumentenprüfung strukturiert nach Checklist. Unterschriften, Datumsangaben, Vollständigkeit einzeln abhaken.", timestamp: "2026-01-15 10:15", likes: 5, likedBy: [2, 3, 4, 6, 7], edited: false, versions: [] },
+                { id: 23, userId: 4, text: "Bei älteren Dokumenten (>3 Monate) Aktualität hinterfragen. Lieber neuere Version anfordern.", timestamp: "2026-01-15 11:00", likes: 4, likedBy: [1, 2, 5, 6], edited: false, versions: [] }
+            ]
+        };
+
+        let currentUser = teamMembers[0];
+        let currentView = 'landing';
+        let currentSubChapter = null;
+        let globalSearchTerm = '';
+        let filters = {
+            search: "",
+            contributor: "all",
+            experience: "all"
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderChapterList();
+            showLandingPage();
+        });
+
+        function renderChapterList() {
+            const list = document.getElementById('chapterList');
+            let html = '';
+
+            Object.entries(chapters).forEach(([id, chapter]) => {
+                const isExpanded = currentView === 'subchapter' && currentSubChapter && currentSubChapter.startsWith(id + '.');
+
+                html += `
+                    <li class="chapter-item">
+                        <div class="chapter-header ${isExpanded ? 'expanded' : ''}" onclick="toggleChapter(${id})">
+                            <span>${id}. ${chapter.title}</span>
+                            <span class="expand-icon">▶</span>
+                        </div>
+                        <ul class="sub-chapter-list ${isExpanded ? 'expanded' : ''}">
+                `;
+
+                chapter.subChapters.forEach(sub => {
+                    const isActive = currentSubChapter === sub.id;
+                    const statusBadge = sub.status === 'active' ? 'active' : 'completed';
+                    const statusText = sub.status === 'active' ? 'Aktiv' : 'Abgeschlossen';
+
+                    html += `
+                        <li class="sub-chapter-item ${isActive ? 'active' : ''}" onclick="loadSubChapter('${sub.id}')">
+                            <span>${sub.title}</span>
+                            <div class="sub-chapter-badges">
+                                <span class="badge ${statusBadge}">${statusText}</span>
+                                <span class="badge contributions">${sub.contributions}</span>
+                            </div>
+                        </li>
+                    `;
+                });
+
+                // Admin can add sub-chapters
+                if (currentUser.isAdmin) {
+                    html += `<button class="add-subchapter-btn" onclick="showAddSubChapterModal(${id})">➕ Subkapitel hinzufügen</button>`;
+                }
+
+                html += `</ul></li>`;
+            });
+
+            list.innerHTML = html;
+        }
+
+        function toggleChapter(chapterId) {
+            renderChapterList();
+        }
+
+        function showLandingPage() {
+            currentView = 'landing';
+            currentSubChapter = null;
+            renderChapterList();
+
+            // Collect all contributions with their locations
+            let allContributions = [];
+            Object.entries(contributions).forEach(([subId, contribs]) => {
+                contribs.forEach(c => {
+                    allContributions.push({
+                        ...c,
+                        subChapterId: subId
+                    });
+                });
+            });
+
+            // Sort by timestamp (newest first)
+            allContributions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            // Calculate stats
+            const totalContributions = allContributions.length;
+            const activeSubChapters = Object.values(chapters).reduce((sum, ch) =>
+                sum + ch.subChapters.filter(sc => sc.status === 'active').length, 0);
+            const completedSubChapters = Object.values(chapters).reduce((sum, ch) =>
+                sum + ch.subChapters.filter(sc => sc.status === 'completed').length, 0);
+            const recentCount = allContributions.filter(c => {
+                const diff = new Date() - new Date(c.timestamp);
+                return diff < (7 * 24 * 60 * 60 * 1000);
+            }).length;
+
+            const contentArea = document.getElementById('contentArea');
+            let html = `
+                <div class="landing-page">
+                    <div class="landing-header">
+                        <h2>🏠 Know-How Börse Dashboard</h2>
+                        <p>Willkommen zurück, ${currentUser.name}!</p>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">${totalContributions}</div>
+                            <div class="stat-label">Gesamtbeiträge</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${activeSubChapters}</div>
+                            <div class="stat-label">Aktive Themen</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${completedSubChapters}</div>
+                            <div class="stat-label">Abgeschlossen</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${recentCount}</div>
+                            <div class="stat-label">Neue (7 Tage)</div>
+                        </div>
+                    </div>
+
+                    <div class="global-search-bar">
+                        <h3>🔍 Globale Suche</h3>
+                        <div class="search-box-main">
+                            <input type="text" id="globalSearchInput" placeholder="Durchsuchen Sie alle Beiträge über alle Kapitel hinweg..." oninput="performGlobalSearch()" value="${globalSearchTerm}">
+                        </div>
+                        <div id="searchResultsSummary"></div>
+                    </div>
+
+                    <div class="recent-contributions">
+                        <h3>🕒 Neueste Beiträge (alle Kapitel)</h3>
+            `;
+
+            // Show latest 10 contributions
+            const recentContributions = allContributions.slice(0, 10);
+
+            if (recentContributions.length === 0) {
+                html += `
+                    <div class="empty-state">
+                        <div class="icon">📭</div>
+                        <h3>Noch keine Beiträge vorhanden</h3>
+                    </div>
+                `;
+            } else {
+                recentContributions.forEach(contrib => {
+                    const user = teamMembers.find(m => m.id === contrib.userId);
+                    const [chId, subId] = contrib.subChapterId.split('.');
+                    const chapter = chapters[chId];
+                    const subChapter = chapter.subChapters.find(s => s.id === contrib.subChapterId);
+                    const isOwn = contrib.userId === currentUser.id;
+                    const timeAgo = getTimeAgo(new Date(contrib.timestamp));
+
+                    html += `
+                        <div class="location-tag" onclick="loadSubChapter('${contrib.subChapterId}')">
+                            ${chapter.title} → ${subChapter.title}
+                        </div>
+                        <div class="contribution-card ${isOwn ? 'own' : ''}">
+                            <div class="contribution-header">
+                                <div class="contributor-info">
+                                    <div class="contributor-avatar" onclick="showUserProfile(${user.id})">${user.initials}</div>
+                                    <div class="contributor-details">
+                                        <div class="contributor-name" onclick="showUserProfile(${user.id})">${user.name}</div>
+                                        <div class="contributor-role">
+                                            ${user.role} •
+                                            <span class="experience-badge ${user.experience.toLowerCase()}">${user.experience}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="contribution-text">${contrib.text}</div>
+                            <div class="contribution-meta">
+                                <span class="meta-item">📅 ${timeAgo}</span>
+                                ${subChapter.status === 'completed' ? `<span class="meta-item">👍 ${contrib.likes} Likes</span>` : ''}
+                                ${contrib.edited ? `<span class="meta-item">✏️ Bearbeitet</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            html += `
+                    </div>
+                </div>
+            `;
+
+            contentArea.innerHTML = html;
+        }
+
+        function performGlobalSearch() {
+            globalSearchTerm = document.getElementById('globalSearchInput').value;
+
+            if (!globalSearchTerm || globalSearchTerm.length < 2) {
+                document.getElementById('searchResultsSummary').innerHTML = '';
+                return;
+            }
+
+            // Search across all contributions
+            let results = [];
+            Object.entries(contributions).forEach(([subId, contribs]) => {
+                contribs.forEach(c => {
+                    const user = teamMembers.find(m => m.id === c.userId);
+                    if (c.text.toLowerCase().includes(globalSearchTerm.toLowerCase()) ||
+                        user.name.toLowerCase().includes(globalSearchTerm.toLowerCase())) {
+                        results.push({
+                            ...c,
+                            subChapterId: subId
+                        });
+                    }
+                });
+            });
+
+            const summary = document.getElementById('searchResultsSummary');
+            if (results.length === 0) {
+                summary.innerHTML = `<p>Keine Ergebnisse für "${globalSearchTerm}" gefunden.</p>`;
+            } else {
+                const uniqueSubChapters = [...new Set(results.map(r => r.subChapterId))];
+                summary.innerHTML = `
+                    <p><strong>${results.length} Ergebnis(se)</strong> in <strong>${uniqueSubChapters.length} Subkapitel(n)</strong> gefunden.</p>
+                    <div style="margin-top: 10px;">
+                        ${uniqueSubChapters.map(subId => {
+                            const [chId] = subId.split('.');
+                            const chapter = chapters[chId];
+                            const subChapter = chapter.subChapters.find(s => s.id === subId);
+                            const count = results.filter(r => r.subChapterId === subId).length;
+                            return `<span class="location-tag" onclick="loadSubChapter('${subId}')">${chapter.title} → ${subChapter.title} (${count})</span>`;
+                        }).join(' ')}
+                    </div>
+                `;
+            }
+        }
+
+        function loadSubChapter(subChapterId) {
+            currentView = 'subchapter';
+            currentSubChapter = subChapterId;
+            renderChapterList();
+            renderSubChapterContent(subChapterId);
+        }
+
+        function renderSubChapterContent(subChapterId) {
+            const [chapterId, subId] = subChapterId.split('.');
+            const chapter = chapters[chapterId];
+            const subChapter = chapter.subChapters.find(s => s.id === subChapterId);
+
+            const contentArea = document.getElementById('contentArea');
+
+            let html = `
+                <div class="breadcrumb">
+                    <a href="#" onclick="event.preventDefault(); showLandingPage()">Dashboard</a> /
+                    <a href="#" onclick="event.preventDefault()">${chapter.title}</a> /
+                    ${subChapter.title}
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <h1 class="chapter-title">${subChapter.title}</h1>
+                    <p class="chapter-description">${chapter.description}</p>
+                </div>
+            `;
+
+            // Show contribution form for active sub-chapters if user hasn't contributed
+            if (subChapter.status === 'active' && !subChapter.userContribution) {
+                html += `
+                    <div class="status-banner active">
+                        <span class="icon">⏰</span>
+                        <div>
+                            <strong>Aktives Thema:</strong> Bitte teilen Sie Ihre Erfahrung zu diesem Thema.
+                            Sie haben bis Montag, 8:30 Uhr Zeit.
+                        </div>
+                    </div>
+                    ${renderContributionForm(subChapterId, subChapter.title)}
+                `;
+            }
+
+            // Show filters for completed chapters or if there are contributions
+            const hasContributions = contributions[subChapterId] && contributions[subChapterId].length > 0;
+            if (hasContributions && subChapter.status === 'completed') {
+                html += `
+                    <div class="filter-bar">
+                        <h3>🔍 Suchen & Filtern</h3>
+                        <div class="search-box-main">
+                            <input type="text" id="searchInput" placeholder="Durchsuchen Sie alle Beiträge..."
+                                   oninput="applyFilters()" value="${filters.search}">
+                        </div>
+                        <div class="filter-controls">
+                            <div class="filter-group">
+                                <label>Mitwirkende</label>
+                                <select id="contributorFilter" onchange="applyFilters()">
+                                    <option value="all">Alle Mitwirkende</option>
+                                    ${teamMembers.map(m =>
+                                        `<option value="${m.id}" ${filters.contributor == m.id ? 'selected' : ''}>${m.name}</option>`
+                                    ).join('')}
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>Erfahrungslevel</label>
+                                <select id="experienceFilter" onchange="applyFilters()">
+                                    <option value="all">Alle Level</option>
+                                    <option value="Senior" ${filters.experience === 'Senior' ? 'selected' : ''}>Senior</option>
+                                    <option value="Mittel" ${filters.experience === 'Mittel' ? 'selected' : ''}>Mittel</option>
+                                    <option value="Junior" ${filters.experience === 'Junior' ? 'selected' : ''}>Junior</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>Sortierung</label>
+                                <select id="sortOrder" onchange="applyFilters()">
+                                    <option value="likes">Meiste Likes</option>
+                                    <option value="newest">Neueste zuerst</option>
+                                    <option value="oldest">Älteste zuerst</option>
+                                    <option value="edited">Bearbeitet</option>
+                                </select>
+                            </div>
+                        </div>
+                        ${renderActiveFilters()}
+                    </div>
+                `;
+            }
+
+            html += '<div id="contributionsContainer">' + renderContributions(subChapterId, subChapter.status) + '</div>';
+
+            contentArea.innerHTML = html;
+        }
+
+        function renderContributionForm(subChapterId, subChapterTitle) {
+            return `
+                <div class="contribution-form">
+                    <h3>📝 Ihr Beitrag</h3>
+                    <div class="form-instructions">
+                        💡 <strong>Kreativität gefragt!</strong> In der aktiven Phase sehen Sie nur Ihren eigenen Beitrag.
+                        Andere Beiträge werden erst nach Abschluss sichtbar. So fördern wir unabhängiges Denken!
+                        <br><br>
+                        Anforderungen: <strong>mindestens 3 Wörter, maximal 3 Sätze</strong>
+                    </div>
+                    <div class="form-group">
+                        <label>Was sind Ihre Erfahrungen zu "${subChapterTitle}"?</label>
+                        <textarea id="contributionText_${subChapterId}" placeholder="Teilen Sie Ihre Vorgehensweise..." oninput="updateCharCounter('${subChapterId}')"></textarea>
+                        <div class="char-counter" id="charCounter_${subChapterId}">0 Zeichen | 0 Wörter | 0 Sätze</div>
+                    </div>
+                    <button class="button button-primary" onclick="submitContribution('${subChapterId}')" id="submitBtn_${subChapterId}" disabled>
+                        Beitrag einreichen
+                    </button>
+                </div>
+            `;
+        }
+
+        function updateCharCounter(subChapterId) {
+            const text = document.getElementById(`contributionText_${subChapterId}`).value;
+            const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+            const chars = text.length;
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
+
+            const counter = document.getElementById(`charCounter_${subChapterId}`);
+            counter.textContent = `${chars} Zeichen | ${words} Wörter | ${sentences} Sätze`;
+
+            const submitBtn = document.getElementById(`submitBtn_${subChapterId}`);
+
+            if (words >= 3 && sentences <= 3 && chars > 0) {
+                submitBtn.disabled = false;
+                counter.classList.remove('error', 'warning');
+            } else {
+                submitBtn.disabled = true;
+                if (sentences > 3) {
+                    counter.classList.add('error');
+                    counter.textContent += ' | ⚠️ Maximal 3 Sätze erlaubt!';
+                } else if (words < 3) {
+                    counter.classList.add('warning');
+                    counter.textContent += ' | ⚠️ Mindestens 3 Wörter erforderlich';
+                }
+            }
+        }
+
+        function submitContribution(subChapterId) {
+            const text = document.getElementById(`contributionText_${subChapterId}`).value;
+            const [chapterId, subId] = subChapterId.split('.');
+            const chapter = chapters[chapterId];
+            const subChapter = chapter.subChapters.find(s => s.id === subChapterId);
+
+            subChapter.userContribution = text;
+
+            if (!contributions[subChapterId]) {
+                contributions[subChapterId] = [];
+            }
+
+            const newContribution = {
+                id: Date.now(),
+                userId: currentUser.id,
+                text: text,
+                timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
+                likes: 0,
+                likedBy: [],
+                edited: false,
+                versions: []
+            };
+
+            contributions[subChapterId].push(newContribution);
+            subChapter.contributions = contributions[subChapterId].length;
+
+            alert('✓ Beitrag erfolgreich eingereicht!\n\nVielen Dank! Die Beiträge aller Teammitglieder werden freigeschalten, sobald alle ihre Eingaben gemacht haben.');
+
+            loadSubChapter(subChapterId);
+        }
+
+        function renderActiveFilters() {
+            const tags = [];
+
+            if (filters.search) {
+                tags.push(`<div class="filter-tag">Suche: "${filters.search}" <span class="remove" onclick="clearFilter('search')">×</span></div>`);
+            }
+            if (filters.contributor !== 'all') {
+                const member = teamMembers.find(m => m.id == filters.contributor);
+                tags.push(`<div class="filter-tag">Mitwirkende: ${member.name} <span class="remove" onclick="clearFilter('contributor')">×</span></div>`);
+            }
+            if (filters.experience !== 'all') {
+                tags.push(`<div class="filter-tag">Level: ${filters.experience} <span class="remove" onclick="clearFilter('experience')">×</span></div>`);
+            }
+
+            if (tags.length === 0) return '';
+
+            return `<div class="active-filters">${tags.join('')}</div>`;
+        }
+
+        function applyFilters() {
+            filters.search = document.getElementById('searchInput')?.value || '';
+            filters.contributor = document.getElementById('contributorFilter')?.value || 'all';
+            filters.experience = document.getElementById('experienceFilter')?.value || 'all';
+
+            const contributionsContainer = document.getElementById('contributionsContainer');
+            if (contributionsContainer) {
+                const [chapterId] = currentSubChapter.split('.');
+                const chapter = chapters[chapterId];
+                const subChapter = chapter.subChapters.find(s => s.id === currentSubChapter);
+                contributionsContainer.innerHTML = renderContributions(currentSubChapter, subChapter.status);
+            }
+
+            // Update active filters display
+            const filterBar = document.querySelector('.filter-bar');
+            if (filterBar) {
+                const activeFiltersHtml = renderActiveFilters();
+                const existingActiveFilters = filterBar.querySelector('.active-filters');
+                if (activeFiltersHtml && !existingActiveFilters) {
+                    filterBar.insertAdjacentHTML('beforeend', activeFiltersHtml);
+                } else if (activeFiltersHtml && existingActiveFilters) {
+                    existingActiveFilters.outerHTML = activeFiltersHtml;
+                } else if (!activeFiltersHtml && existingActiveFilters) {
+                    existingActiveFilters.remove();
+                }
+            }
+        }
+
+        function clearFilter(filterName) {
+            filters[filterName] = filterName === 'search' ? '' : 'all';
+
+            if (filterName === 'search') {
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) searchInput.value = '';
+            } else if (filterName === 'contributor') {
+                const contributorFilter = document.getElementById('contributorFilter');
+                if (contributorFilter) contributorFilter.value = 'all';
+            } else if (filterName === 'experience') {
+                const experienceFilter = document.getElementById('experienceFilter');
+                if (experienceFilter) experienceFilter.value = 'all';
+            }
+
+            applyFilters();
+        }
+
+        function highlightSearch(text) {
+            if (!filters.search) return text;
+            const regex = new RegExp(`(${filters.search})`, 'gi');
+            return text.replace(regex, '<mark style="background: #fff59d;">$1</mark>');
+        }
+
+        function renderContributions(subChapterId, status) {
+            const contribs = contributions[subChapterId] || [];
+
+            // For active sub-chapters: only show user's own contribution
+            let visibleContribs = status === 'active'
+                ? contribs.filter(c => c.userId === currentUser.id)
+                : contribs;
+
+            // Apply filters for completed chapters
+            if (status === 'completed') {
+                visibleContribs = visibleContribs.filter(c => {
+                    const user = teamMembers.find(m => m.id === c.userId);
+
+                    if (filters.search && !c.text.toLowerCase().includes(filters.search.toLowerCase()) &&
+                        !user.name.toLowerCase().includes(filters.search.toLowerCase())) {
+                        return false;
+                    }
+
+                    if (filters.contributor !== 'all' && c.userId != filters.contributor) {
+                        return false;
+                    }
+
+                    if (filters.experience !== 'all' && user.experience !== filters.experience) {
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                // Sort
+                const sortOrder = document.getElementById('sortOrder')?.value || 'likes';
+                visibleContribs.sort((a, b) => {
+                    if (sortOrder === 'likes') return b.likes - a.likes;
+                    if (sortOrder === 'newest') return new Date(b.timestamp) - new Date(a.timestamp);
+                    if (sortOrder === 'oldest') return new Date(a.timestamp) - new Date(b.timestamp);
+                    if (sortOrder === 'edited') return (b.edited ? 1 : 0) - (a.edited ? 1 : 0);
+                    return 0;
+                });
+            }
+
+            if (visibleContribs.length === 0) {
+                if (status === 'active') {
+                    return `
+                        <div class="empty-state">
+                            <div class="icon">✍️</div>
+                            <h3>Ihre Eingabe wird hier erscheinen</h3>
+                            <p>Sobald Sie Ihren Beitrag eingereicht haben, wird er hier angezeigt.</p>
+                        </div>
+                    `;
+                }
+                return `
+                    <div class="empty-state">
+                        <div class="icon">🔍</div>
+                        <h3>Keine Beiträge gefunden</h3>
+                        <p>Versuchen Sie andere Filtereinstellungen.</p>
+                    </div>
+                `;
+            }
+
+            const maxLikes = status === 'completed' ? Math.max(...visibleContribs.map(c => c.likes)) : 0;
+
+            let html = `
+                <div class="recent-contributions">
+                    <h3>💬 Beiträge (${visibleContribs.length})</h3>
+            `;
+
+            if (status === 'active') {
+                html += `
+                    <div style="background: #e8f0fe; padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 0.95em;">
+                        ℹ️ <strong>Aktive Phase:</strong> Sie sehen nur Ihren eigenen Beitrag. Die Beiträge anderer Teammitglieder werden nach Abschluss dieser Phase sichtbar.
+                    </div>
+                `;
+            }
+
+            visibleContribs.forEach(contrib => {
+                const user = teamMembers.find(m => m.id === contrib.userId);
+                const isOwn = contrib.userId === currentUser.id;
+                const timeAgo = getTimeAgo(new Date(contrib.timestamp));
+                const isLiked = contrib.likedBy.includes(currentUser.id);
+                const isTopLiked = status === 'completed' && contrib.likes > 0 && contrib.likes === maxLikes;
+
+                html += `
+                    <div class="contribution-card ${isOwn ? 'own' : ''} ${isTopLiked ? 'top-liked' : ''}">
+                        ${isTopLiked ? '<div style="color: #ffd700; font-weight: bold; margin-bottom: 8px;">⭐ Meistgelikt</div>' : ''}
+                        <div class="contribution-header">
+                            <div class="contributor-info">
+                                <div class="contributor-avatar" onclick="showUserProfile(${user.id})">${user.initials}</div>
+                                <div class="contributor-details">
+                                    <div class="contributor-name" onclick="showUserProfile(${user.id})">${user.name}</div>
+                                    <div class="contributor-role">
+                                        ${user.role} •
+                                        <span class="experience-badge ${user.experience.toLowerCase()}">${user.experience}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="contribution-actions">
+                                ${status === 'completed' && !isOwn ? `
+                                    <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike(${contrib.id}, '${subChapterId}')">
+                                        👍 ${contrib.likes}
+                                    </button>
+                                ` : ''}
+                                <button class="action-btn" title="Beitrag teilen">📤</button>
+                            </div>
+                        </div>
+                        <div class="contribution-text">${highlightSearch(contrib.text)}</div>
+                        <div class="contribution-meta">
+                            <span class="meta-item">📅 ${timeAgo}</span>
+                            ${status === 'completed' && contrib.likes > 0 ? `<span class="meta-item">👍 ${contrib.likes} Likes</span>` : ''}
+                            ${contrib.edited && contrib.versions.length > 0 ?
+                                `<span class="meta-item">✏️ Bearbeitet (<span class="version-indicator" onclick="showVersionHistory(${contrib.id}, '${subChapterId}')">
+                                    ${contrib.versions.length} Versionen
+                                </span>)</span>`
+                                : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            return html;
+        }
+
+        function toggleLike(contribId, subChapterId) {
+            const contribs = contributions[subChapterId];
+            const contrib = contribs.find(c => c.id === contribId);
+
+            if (!contrib) return;
+
+            const likedIndex = contrib.likedBy.indexOf(currentUser.id);
+
+            if (likedIndex > -1) {
+                contrib.likedBy.splice(likedIndex, 1);
+                contrib.likes--;
+            } else {
+                contrib.likedBy.push(currentUser.id);
+                contrib.likes++;
+            }
+
+            const [chapterId] = subChapterId.split('.');
+            const chapter = chapters[chapterId];
+            const subChapter = chapter.subChapters.find(s => s.id === subChapterId);
+
+            const contributionsContainer = document.getElementById('contributionsContainer');
+            if (contributionsContainer) {
+                contributionsContainer.innerHTML = renderContributions(subChapterId, subChapter.status);
+            }
+        }
+
+        function showVersionHistory(contribId, subChapterId) {
+            const contrib = contributions[subChapterId].find(c => c.id === contribId);
+            if (!contrib || !contrib.versions || contrib.versions.length === 0) return;
+
+            const user = teamMembers.find(m => m.id === contrib.userId);
+
+            let html = `
+                <p style="margin-bottom: 20px; color: #666;">
+                    Beitrag von <strong>${user.name}</strong>
+                </p>
+                <div class="version-history">
+            `;
+
+            contrib.versions.forEach((version, index) => {
+                const isCurrent = version.current;
+                html += `
+                    <div class="version-item ${isCurrent ? 'current' : ''}">
+                        <div class="version-header">
+                            <span><strong>Version ${index + 1}</strong> ${isCurrent ? '(Aktuell)' : ''}</span>
+                            <span>${new Date(version.timestamp).toLocaleString('de-DE')}</span>
+                        </div>
+                        <div class="version-text">${version.text}</div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+
+            document.getElementById('versionHistoryContent').innerHTML = html;
+            openModal('versionModal');
+        }
+
+        function showUserProfile(userId) {
+            const user = teamMembers.find(m => m.id === userId);
+            if (!user) return;
+
+            // Collect all contributions from this user
+            let userContributions = [];
+            Object.entries(contributions).forEach(([subId, contribs]) => {
+                const userContribs = contribs.filter(c => c.userId === userId);
+                userContribs.forEach(c => {
+                    userContributions.push({
+                        ...c,
+                        subChapterId: subId
+                    });
+                });
+            });
+
+            userContributions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            let html = `
+                <div class="user-profile">
+                    <div class="profile-header">
+                        <div class="profile-avatar">${user.initials}</div>
+                        <div class="profile-info">
+                            <h2>${user.name}</h2>
+                            <p style="color: #666; margin-bottom: 5px;">${user.role}</p>
+                            <span class="experience-badge ${user.experience.toLowerCase()}">${user.experience}</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-stats">
+                        <div class="stat-card">
+                            <div class="stat-value">${user.contributions}</div>
+                            <div class="stat-label">Gesamtbeiträge</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${userContributions.length}</div>
+                            <div class="stat-label">Sichtbare Beiträge</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${userContributions.filter(c => c.edited).length}</div>
+                            <div class="stat-label">Bearbeitet</div>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #1e3c72; margin-bottom: 15px;">Letzte Beiträge</h3>
+            `;
+
+            userContributions.slice(0, 5).forEach(contrib => {
+                const [chId, subId] = contrib.subChapterId.split('.');
+                const chapter = chapters[chId];
+                const subChapter = chapter.subChapters.find(s => s.id === contrib.subChapterId);
+
+                html += `
+                    <div class="contribution-card" style="margin-bottom: 15px;">
+                        <div style="font-size: 0.85em; color: #666; margin-bottom: 8px;">
+                            ${chapter.title} → ${subChapter.title}
+                        </div>
+                        <div class="contribution-text" style="padding-left: 0;">${contrib.text}</div>
+                        <div class="contribution-meta" style="padding-left: 0;">
+                            <span>📅 ${getTimeAgo(new Date(contrib.timestamp))}</span>
+                            ${contrib.edited ? '<span>✏️ Bearbeitet</span>' : ''}
+                            ${subChapter.status === 'completed' ? `<span>👍 ${contrib.likes} Likes</span>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+
+            document.getElementById('profileContent').innerHTML = html;
+            openModal('profileModal');
+        }
+
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diff = now - date;
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const days = Math.floor(hours / 24);
+
+            if (days > 0) return `vor ${days} Tag${days > 1 ? 'en' : ''}`;
+            if (hours > 0) return `vor ${hours} Stunde${hours > 1 ? 'n' : ''}`;
+            return 'vor wenigen Minuten';
+        }
+
+        function showAddSubChapterModal(chapterId) {
+            const modal = document.getElementById('addSubChapterModal');
+            const select = document.getElementById('newSubChapterParent');
+
+            let options = '';
+            Object.entries(chapters).forEach(([id, chapter]) => {
+                options += `<option value="${id}" ${id == chapterId ? 'selected' : ''}>${id}. ${chapter.title}</option>`;
+            });
+            select.innerHTML = options;
+
+            document.getElementById('newSubChapterTitle').value = '';
+            document.getElementById('newSubChapterStatus').value = 'active';
+
+            modal.classList.add('active');
+        }
+
+        function createSubChapter() {
+            const chapterId = document.getElementById('newSubChapterParent').value;
+            const title = document.getElementById('newSubChapterTitle').value.trim();
+            const status = document.getElementById('newSubChapterStatus').value;
+
+            if (!title) {
+                alert('Bitte geben Sie einen Titel ein.');
+                return;
+            }
+
+            const chapter = chapters[chapterId];
+            const nextSubId = chapter.subChapters.length + 1;
+            const newSubChapterId = `${chapterId}.${nextSubId}`;
+
+            chapter.subChapters.push({
+                id: newSubChapterId,
+                title: title,
+                status: status,
+                contributions: 0
+            });
+
+            contributions[newSubChapterId] = [];
+
+            closeModal('addSubChapterModal');
+            alert(`✓ Subkapitel "${title}" wurde erfolgreich angelegt!`);
+
+            renderChapterList();
+            loadSubChapter(newSubChapterId);
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Close modals when clicking outside
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        console.log('💡 Know-How Börse Phase 2 Version 4');
+        console.log('✨ Combined Features from V2 + V3:');
+        console.log('   V2: Sub-chapters, Advanced Search/Filter, Version History, User Profiles');
+        console.log('   V3: Landing Page, Global Search, Likes System, Admin Features, Limited Visibility');
+    </script>
+</body>
+</html>
