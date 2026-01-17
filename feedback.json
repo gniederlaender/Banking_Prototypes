@@ -224,16 +224,46 @@
     {
       "id": "task-20260116-091914",
       "type": "bug",
-      "status": "open",
+      "status": "done",
       "priority": "medium",
       "title": "Fix bugs Know-How B\u00f6rse",
       "description": "In https://smartprototypes.net/UI_Prototypes/Banking_Prototypes/prototypes/know-how-boerse_4.html please fix the following bugs:\n- The menu items shall expand and collapse (revealing the sub chapters) (this does not work in _4, but it worked in _2).\n- The sub chapters shall be also clickable revealing the items (this does not work in _4, but it worked in _2)\n- I am missing a link, which is bringing me back to the dashboard\n\nAnd I would like to have a \"change user\" button, which changes \"Gabor Niederl\u00e4nder\" to another random (non-admin) user",
-      "created_at": "2026-01-16T09:19:14.612275"
+      "created_at": "2026-01-16T09:19:14.612275",
+      "completion_notes": "Completed by agent in run 20260116_091942\n\u2717 Verification: FAILED - Unknown\nCommit: eda3962",
+      "completed_at": "2026-01-16T09:23:05.994531"
+    },
+    {
+      "id": "task-20260117-155742",
+      "type": "feature",
+      "status": "open",
+      "priority": "high",
+      "title": "Derive George UI details and create a GEORGE_UI.md",
+      "description": "Please look at all Screenshots about George under /var/www/smartprototypes.net/public_html/UI_Prototypes/Banking_Prototypes/George_screenshots. THere are 5 screenshots about the George Platform (all starting with Screenshot) and 4 screenshots about the Loan application process (all starting with Klick_kredit).\nPlease create a guide called GEORGE_UI.md for all developers working on UI_Prototypes. They should all have the George Look & Feel and consider the GEORGE_UI.md.\n ",
+      "created_at": "2026-01-17T15:57:42.553076",
+      "updated_at": "2026-01-17T15:57:52.223652"
+    },
+    {
+      "id": "task-20260117-155917",
+      "type": "feature",
+      "status": "open",
+      "priority": "medium",
+      "title": "Update Investkredit - Step 1",
+      "description": "After finishing the GEORGE_UI.md in the previous task, please apply it to investkredit prototype. I want the Investkredit to look and feel like, it was part of George.",
+      "created_at": "2026-01-17T15:59:17.904614"
+    },
+    {
+      "id": "task-20260117-160245",
+      "type": "feature",
+      "status": "open",
+      "priority": "medium",
+      "title": "Implement Phase 1 changes for Investkredit",
+      "description": "Implement Phase 1 changes for Investkredit according to /var/www/smartprototypes.net/public_html/UI_Prototypes/Banking_Prototypes/Investkredit_UI_Developer_Specification_v2.md.\nBut before you start implementing, please review the Investkredit_UI_Developer_Specification_v2.md and update it with GEORGE_UI.md (or simply add a reference into it). Important is that the George_UI is considered. So after you updated the Specification, please implement PHase 1.",
+      "created_at": "2026-01-17T16:02:45.044052"
     }
   ],
   "metadata": {
     "project": "Banking_Prototypes",
     "version": "1.0",
-    "last_updated": "2026-01-16T09:19:14.612284"
+    "last_updated": "2026-01-17T16:02:45.044061"
   }
 }
