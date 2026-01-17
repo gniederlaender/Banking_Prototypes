@@ -15,20 +15,24 @@
         }
 
         :root {
-            /* George/Erste Bank Colors */
-            --primary-blue: #0057A0;
-            --primary-yellow: #FFD200;
+            /* George UI Colors */
+            --primary-blue: #1E5EBE;
+            --primary-blue-dark: #174A99;
+            --primary-blue-darker: #0F3A7A;
+            --teal: #00A19C;
+            --magenta: #DC004E;
+            --green: #00916E;
             --success-green: #00AA13;
             --warning-orange: #FF6F00;
-            --error-red: #E30613;
-            --bg-light: #F7F7F7;
+            --error-red: #D32F2F;
+            --bg-light: #F5F5F5;
             --bg-white: #FFFFFF;
-            --text-dark: #1A1A1A;
-            --text-medium: #4D4D4D;
-            --text-light: #808080;
-            --border-color: #D9D9D9;
-            --shadow-light: rgba(0, 0, 0, 0.08);
-            --shadow-medium: rgba(0, 0, 0, 0.12);
+            --text-dark: #212121;
+            --text-medium: #666666;
+            --text-light: #757575;
+            --border-color: #E0E0E0;
+            --shadow-light: rgba(0, 0, 0, 0.1);
+            --shadow-medium: rgba(0, 0, 0, 0.15);
         }
 
         body {
@@ -41,29 +45,108 @@
         }
 
         .header {
-            background: var(--bg-white);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1.25rem 2rem;
+            background: var(--primary-blue);
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px var(--shadow-medium);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 8px var(--shadow-light);
+            padding: 0 2rem;
+            height: 64px;
         }
 
-        .header h1 {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-dark);
-            letter-spacing: -0.2px;
-        }
-
-        .header .logo {
+        .nav-logo {
             font-size: 24px;
             font-weight: 700;
-            color: var(--text-dark);
-            background: var(--primary-yellow);
-            padding: 0.5rem 1.25rem;
-            border-radius: 4px;
+            color: var(--bg-white);
+            letter-spacing: -0.5px;
+            text-decoration: none;
+            display: inline-block;
+            padding: 0.5rem 0;
+        }
+
+        .nav-logo a {
+            color: var(--bg-white);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-item a {
+            color: var(--bg-white);
+            text-decoration: none;
+            padding: 0.75rem 1.25rem;
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 24px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .nav-item.active a,
+        .nav-item a:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-btn {
+            background: transparent;
+            border: none;
+            color: var(--bg-white);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.2s ease-in-out;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .user-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .page-title {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--teal) 100%);
+            color: var(--bg-white);
+            padding: 2rem;
+            margin-top: 64px;
+            text-align: center;
+        }
+
+        .page-title h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .page-title p {
+            margin-top: 0.5rem;
+            opacity: 0.9;
+            font-size: 16px;
         }
 
         .container {
@@ -74,10 +157,10 @@
 
         .progress-bar {
             background: var(--bg-white);
-            border-radius: 8px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 1px 4px var(--shadow-light);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px var(--shadow-light);
         }
 
         .progress-steps {
@@ -140,9 +223,9 @@
         }
 
         .step.completed .step-circle {
-            background: var(--primary-yellow);
-            border-color: var(--primary-yellow);
-            color: var(--text-dark);
+            background: var(--teal);
+            border-color: var(--teal);
+            color: var(--bg-white);
         }
 
         .step-label {
@@ -179,10 +262,16 @@
 
         .card {
             background: var(--bg-white);
-            border-radius: 8px;
-            padding: 2rem;
-            box-shadow: 0 1px 4px var(--shadow-light);
-            margin-bottom: 1.5rem;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 4px var(--shadow-light);
+            margin-bottom: 16px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
         }
 
         .card-title {
@@ -214,12 +303,12 @@
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 0.875rem 1rem;
-            border: 2px solid var(--border-color);
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
-            font-size: 16px;
+            font-size: 15px;
             font-family: inherit;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease-in-out;
             background-color: var(--bg-white);
             color: var(--text-dark);
         }
@@ -229,13 +318,13 @@
         .form-group textarea:focus {
             outline: none;
             border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(0, 87, 160, 0.1);
+            box-shadow: 0 0 0 3px rgba(30, 94, 190, 0.1);
         }
 
-        .form-group input:hover,
-        .form-group select:hover,
-        .form-group textarea:hover {
-            border-color: var(--text-light);
+        .form-group input:hover:not(:focus),
+        .form-group select:hover:not(:focus),
+        .form-group textarea:hover:not(:focus) {
+            border-color: #9E9E9E;
         }
 
         .form-group textarea {
@@ -266,20 +355,25 @@
         .radio-item {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 1rem;
-            border: 2px solid var(--border-color);
-            border-radius: 4px;
+            gap: 12px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease-in-out;
             background: var(--bg-white);
         }
 
         .checkbox-item:hover,
         .radio-item:hover {
-            background: var(--bg-light);
+            background: rgba(30, 94, 190, 0.03);
             border-color: var(--primary-blue);
             box-shadow: 0 2px 4px var(--shadow-light);
+        }
+
+        .checkbox-item input[type="checkbox"]:checked + label,
+        .radio-item input[type="radio"]:checked + label {
+            font-weight: 600;
         }
 
         .checkbox-item input[type="checkbox"],
@@ -290,18 +384,19 @@
 
         .file-upload {
             border: 2px dashed var(--border-color);
-            border-radius: 4px;
-            padding: 2rem;
+            border-radius: 8px;
+            padding: 32px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease-in-out;
             background: var(--bg-white);
         }
 
         .file-upload:hover {
             border-color: var(--primary-blue);
-            background: var(--bg-light);
+            background: rgba(30, 94, 190, 0.03);
             box-shadow: 0 2px 4px var(--shadow-light);
+            transform: translateY(-1px);
         }
 
         .file-upload input[type="file"] {
@@ -318,9 +413,15 @@
             align-items: center;
             padding: 0.875rem 1rem;
             background: var(--bg-light);
-            border-radius: 4px;
+            border-radius: 6px;
             margin-bottom: 0.5rem;
             border: 1px solid var(--border-color);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .file-item:hover {
+            background: #FAFAFA;
+            border-color: #BDBDBD;
         }
 
         .file-item .file-name {
@@ -333,15 +434,24 @@
             color: var(--error-red);
             cursor: pointer;
             font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: background 0.2s ease-in-out;
+        }
+
+        .file-item .file-remove:hover {
+            background: rgba(211, 47, 47, 0.1);
         }
 
         .info-box {
-            background: #E6F2F8;
+            background: #E3F2FD;
             border-left: 4px solid var(--primary-blue);
-            padding: 1rem 1.25rem;
-            border-radius: 4px;
-            margin-bottom: 1.5rem;
+            padding: 16px 20px;
+            border-radius: 6px;
+            margin-bottom: 16px;
             color: var(--text-dark);
+            font-size: 14px;
+            line-height: 1.6;
         }
 
         .info-box.warning {
@@ -372,55 +482,61 @@
         }
 
         .btn {
-            padding: 0.875rem 2rem;
+            padding: 12px 24px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 16px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease-in-out;
             font-family: inherit;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.01em;
         }
 
         .btn-primary {
             background: var(--primary-blue);
             color: var(--bg-white);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
         }
 
         .btn-primary:hover {
-            background: #004A8F;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 87, 160, 0.3);
+            background: var(--primary-blue-dark);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
         }
 
         .btn-primary:active {
-            transform: translateY(0);
+            background: var(--primary-blue-darker);
+            transform: scale(0.98);
         }
 
         .btn-secondary {
             background: var(--bg-white);
-            color: var(--text-dark);
-            border: 2px solid var(--border-color);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
         }
 
         .btn-secondary:hover {
-            background: var(--bg-light);
-            border-color: var(--text-light);
+            background: rgba(30, 94, 190, 0.05);
+            border-color: var(--primary-blue-dark);
         }
 
         .btn:disabled {
-            opacity: 0.5;
+            background: #9E9E9E;
+            color: var(--bg-white);
             cursor: not-allowed;
+            box-shadow: none;
+            border: none;
         }
 
         .status-badge {
             display: inline-block;
             padding: 0.375rem 0.875rem;
-            border-radius: 16px;
+            border-radius: 20px;
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 600;
             margin-left: 0.5rem;
+            letter-spacing: 0.01em;
         }
 
         .status-badge.success {
@@ -435,12 +551,12 @@
 
         .status-badge.error {
             background: #FFEBEE;
-            color: #E30613;
+            color: #D32F2F;
         }
 
         .status-badge.info {
-            background: #E6F2F8;
-            color: #0057A0;
+            background: #E3F2FD;
+            color: var(--primary-blue);
         }
 
         .summary-item {
@@ -511,10 +627,28 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo">George Business</div>
+    <header class="header">
+        <nav class="nav-container">
+            <div class="nav-logo">
+                <a href="#" title="George Home">george</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#">Übersicht</a></li>
+                <li class="nav-item active"><a href="#">Ihre Produkte</a></li>
+                <li class="nav-item"><a href="#">Ihre Zusatzfunktionen</a></li>
+                <li class="nav-item"><a href="#">Discover</a></li>
+                <li class="nav-item"><a href="#">Kontakt</a></li>
+            </ul>
+            <div class="nav-user">
+                <button class="user-btn" title="Profil" aria-label="Profil">👤</button>
+                <button class="user-btn" title="Abmelden" aria-label="Abmelden">⏻</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="page-title">
         <h1>Investitionskredit - Antragsprozess</h1>
-        <div style="width: 120px;"></div>
+        <p>Schnell und einfach online beantragen</p>
     </div>
 
     <div class="container">
