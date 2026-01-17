@@ -226,6 +226,34 @@
             background: var(--teal);
             border-color: var(--teal);
             color: var(--bg-white);
+            position: relative;
+        }
+
+        /* Phase 1.4: Step Completion Indicators - Checkmark */
+        .step.completed .step-circle::before {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            font-weight: bold;
+            animation: checkmarkDraw 0.3s ease-out;
+        }
+
+        @keyframes checkmarkDraw {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .step.completed .step-circle {
+            font-size: 0; /* Hide the number when completed */
         }
 
         .step-label {
@@ -527,6 +555,98 @@
             cursor: not-allowed;
             box-shadow: none;
             border: none;
+            opacity: 0.5;
+            position: relative;
+        }
+
+        /* Phase 1.1: Pre-Qualification Button State Communication */
+        .btn-disabled-tooltip {
+            opacity: 0.5;
+            cursor: not-allowed;
+            position: relative;
+        }
+
+        .btn-disabled-tooltip::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            background: var(--text-dark);
+            color: var(--bg-white);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: all 0.2s ease-in-out;
+            pointer-events: none;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-disabled-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            border: 6px solid transparent;
+            border-top-color: var(--text-dark);
+            opacity: 0;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-disabled-tooltip:hover::before,
+        .btn-disabled-tooltip:hover::after {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+
+        .btn-with-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-checkmark {
+            animation: checkmarkFadeIn 0.3s ease-out;
+        }
+
+        @keyframes checkmarkFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Phase 1.5: Button Loading States */
+        .btn-loading {
+            position: relative;
+            color: transparent !important;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--bg-white);
+            border-radius: 50%;
+            animation: spinner 0.8s linear infinite;
+        }
+
+        @keyframes spinner {
+            to { transform: rotate(360deg); }
         }
 
         .status-badge {
@@ -610,6 +730,59 @@
             color: var(--error-red);
         }
 
+        /* Phase 1.2: Required Field Legend */
+        .form-legend {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .form-legend .required-indicator {
+            color: var(--error-red);
+            font-weight: bold;
+        }
+
+        /* Phase 1.3: Progress Auto-Save Indicator */
+        .auto-save-indicator {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-white);
+            padding: 12px 20px;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-dark);
+            z-index: 1001;
+            animation: slideInUp 0.3s ease-out;
+        }
+
+        .auto-save-indicator.show {
+            display: flex;
+        }
+
+        .auto-save-indicator .icon-check {
+            color: var(--success-green);
+            font-size: 18px;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         @media (max-width: 768px) {
             .form-row,
             .form-row-3 {
@@ -652,6 +825,12 @@
     </div>
 
     <div class="container">
+        <!-- Phase 1.3: Auto-save Indicator -->
+        <div class="auto-save-indicator" id="autoSaveIndicator">
+            <span class="icon-check">✓</span>
+            <span>Automatisch gespeichert</span>
+        </div>
+
         <div class="progress-bar">
             <div class="progress-steps">
                 <div class="progress-line" id="progressLine"></div>
@@ -691,8 +870,13 @@
             <div class="card">
                 <div class="card-title">Pre-Check & Vorqualifizierung</div>
                 <div class="info-box">
-                    <strong>Ziel:</strong> Frühzeitige "No-Touch"-Filterung für STP, Minimierung von Abbrüchen. 
+                    <strong>Ziel:</strong> Frühzeitige "No-Touch"-Filterung für STP, Minimierung von Abbrüchen.
                     Bitte beantworten Sie die folgenden Fragen, um Ihre Förderfähigkeit zu prüfen.
+                </div>
+
+                <!-- Phase 1.2: Required Field Legend -->
+                <div class="form-legend">
+                    <span class="required-indicator">*</span> Pflichtfeld
                 </div>
 
                 <div class="form-group">
@@ -801,8 +985,8 @@
                 </div>
 
                 <div class="button-group">
-                    <button class="btn btn-secondary" onclick="checkEligibility()">Vorqualifizierung prüfen</button>
-                    <button class="btn btn-primary" id="continueFromPreCheck" onclick="nextStep()" disabled>Weiter zum Antrag</button>
+                    <button class="btn btn-secondary" id="checkEligibilityBtn" onclick="checkEligibility()">Vorqualifizierung prüfen</button>
+                    <button class="btn btn-primary btn-disabled-tooltip" id="continueFromPreCheck" onclick="nextStep()" disabled data-tooltip="Bitte zuerst Vorqualifizierung prüfen">Weiter zum Antrag</button>
                 </div>
             </div>
         </div>
@@ -813,6 +997,11 @@
                 <div class="card-title">Antragsdaten</div>
                 <div class="info-box">
                     Ihre Daten werden aus Ihrem George Business Profil vorausgefüllt. Bitte überprüfen und ergänzen Sie die Angaben.
+                </div>
+
+                <!-- Phase 1.2: Required Field Legend -->
+                <div class="form-legend">
+                    <span class="required-indicator">*</span> Pflichtfeld
                 </div>
 
                 <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Unternehmensdaten</div>
@@ -924,6 +1113,11 @@
                     <strong>Ziel:</strong> Reibungslose, regelkonforme Kundendatengewinnung mit NFC/OCR, lückenloser AML-Proof.
                 </div>
 
+                <!-- Phase 1.2: Required Field Legend -->
+                <div class="form-legend">
+                    <span class="required-indicator">*</span> Pflichtfeld
+                </div>
+
                 <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Digitale Identifikation</div>
                 <div class="form-group">
                     <label>Ausweis-Scan <span class="required">*</span></label>
@@ -1023,6 +1217,11 @@
                 <div class="card-title">Dokumenten-Upload</div>
                 <div class="info-box">
                     Bitte laden Sie alle erforderlichen Dokumente hoch. Die Dokumente werden automatisch auf Vollständigkeit geprüft.
+                </div>
+
+                <!-- Phase 1.2: Required Field Legend -->
+                <div class="form-legend">
+                    <span class="required-indicator">*</span> Pflichtfeld
                 </div>
 
                 <div class="card-title" style="font-size: 16px; margin-top: 1rem;">Finanzunterlagen <span class="required">*</span></div>
@@ -1142,6 +1341,11 @@
                 <div class="card-title">Sicherheiten-Management</div>
                 <div class="info-box">
                     <strong>Ziel:</strong> Standardisierte Intake- & Bewertungslogik; vollständige Vertragsmappe inkl. Bürgschaft.
+                </div>
+
+                <!-- Phase 1.2: Required Field Legend -->
+                <div class="form-legend">
+                    <span class="required-indicator">*</span> Pflichtfeld
                 </div>
 
                 <div class="form-group">
@@ -1534,28 +1738,53 @@
                 return;
             }
 
-            const resultDiv = document.getElementById('eligibilityResult');
-            const icon = document.getElementById('eligibilityIcon');
-            const title = document.getElementById('eligibilityTitle');
-            const message = document.getElementById('eligibilityMessage');
+            // Phase 1.5: Button Loading State
+            const checkBtn = document.getElementById('checkEligibilityBtn');
+            const originalText = checkBtn.textContent;
+            checkBtn.classList.add('btn-loading');
+            checkBtn.disabled = true;
 
-            // Simulate eligibility check
-            const isEligible = Math.random() > 0.3; // 70% chance of being eligible
+            // Simulate async check with timeout
+            setTimeout(() => {
+                const resultDiv = document.getElementById('eligibilityResult');
+                const icon = document.getElementById('eligibilityIcon');
+                const title = document.getElementById('eligibilityTitle');
+                const message = document.getElementById('eligibilityMessage');
 
-            if (isEligible) {
-                icon.className = 'eligibility-icon success';
-                icon.textContent = '✓';
-                title.textContent = 'Vorqualifizierung erfolgreich';
-                message.textContent = 'Sie erfüllen die grundlegenden Voraussetzungen für einen Investitionskredit. Sie können nun mit dem Antragsprozess fortfahren.';
-            } else {
-                icon.className = 'eligibility-icon warning';
-                icon.textContent = '⚠';
-                title.textContent = 'Weitere Prüfung erforderlich';
-                message.textContent = 'Ihr Antrag erfordert eine manuelle Prüfung. Bitte wenden Sie sich an Ihre Filiale oder setzen Sie den Antrag online fort.';
-            }
+                // Simulate eligibility check
+                const isEligible = Math.random() > 0.3; // 70% chance of being eligible
 
-            resultDiv.style.display = 'block';
-            document.getElementById('continueFromPreCheck').disabled = false;
+                if (isEligible) {
+                    icon.className = 'eligibility-icon success';
+                    icon.textContent = '✓';
+                    title.textContent = 'Vorqualifizierung erfolgreich';
+                    message.textContent = 'Sie erfüllen die grundlegenden Voraussetzungen für einen Investitionskredit. Sie können nun mit dem Antragsprozess fortfahren.';
+                } else {
+                    icon.className = 'eligibility-icon warning';
+                    icon.textContent = '⚠';
+                    title.textContent = 'Weitere Prüfung erforderlich';
+                    message.textContent = 'Ihr Antrag erfordert eine manuelle Prüfung. Bitte wenden Sie sich an Ihre Filiale oder setzen Sie den Antrag online fort.';
+                }
+
+                resultDiv.style.display = 'block';
+
+                // Remove loading state and add checkmark
+                checkBtn.classList.remove('btn-loading');
+                checkBtn.innerHTML = '<span class="btn-checkmark">✓</span> ' + originalText;
+
+                // Phase 1.1: Enable continue button and remove tooltip class
+                const continueBtn = document.getElementById('continueFromPreCheck');
+                continueBtn.disabled = false;
+                continueBtn.classList.remove('btn-disabled-tooltip');
+
+                // Auto-scroll to result
+                setTimeout(() => {
+                    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+
+                // Save state
+                saveFormState();
+            }, 2000);
         }
 
         function handleFileUpload(input, listId) {
@@ -1622,6 +1851,10 @@
             const checkBtn = document.getElementById('checkDecisionBtn');
             const continueBtn = document.getElementById('continueToContractBtn');
 
+            // Phase 1.5: Button Loading State
+            checkBtn.classList.add('btn-loading');
+            checkBtn.disabled = true;
+
             // Simulate checks
             setTimeout(() => {
                 ratingCheck.innerHTML = '<span class="status-badge success">✓ Rating: B+ (Genehmigt)</span>';
@@ -1665,6 +1898,7 @@
                 `;
 
                 decisionResult.style.display = 'block';
+                checkBtn.classList.remove('btn-loading');
                 checkBtn.style.display = 'none';
                 continueBtn.style.display = 'inline-block';
             }, 2500);
@@ -1714,8 +1948,113 @@
             }, 1000);
         }
 
+        // Phase 1.3: Progress Auto-Save Functionality
+        let saveTimeout;
+        const SAVE_DELAY = 2000; // 2 seconds debounce
+
+        function saveFormState() {
+            const formData = {
+                applicationId: localStorage.getItem('applicationId') || generateUUID(),
+                currentStep: currentStep,
+                lastSaved: new Date().toISOString(),
+                formData: {
+                    step0: {
+                        customerType: document.querySelector('input[name="customerType"]:checked')?.value,
+                        investmentPurpose: document.getElementById('investmentPurpose')?.value,
+                        loanAmount: document.getElementById('loanAmount')?.value,
+                        loanTerm: document.getElementById('loanTerm')?.value,
+                        fundingWish: document.querySelector('input[name="fundingWish"]:checked')?.value
+                    },
+                    step1: {
+                        legalForm: document.getElementById('legalForm')?.value,
+                        uidNumber: document.getElementById('uidNumber')?.value,
+                        companyRegister: document.getElementById('companyRegister')?.value,
+                        naceCode: document.getElementById('naceCode')?.value,
+                        revenue: document.getElementById('revenue')?.value,
+                        employees: document.getElementById('employees')?.value
+                    }
+                }
+            };
+
+            localStorage.setItem('investkredit_application', JSON.stringify(formData));
+            localStorage.setItem('applicationId', formData.applicationId);
+
+            showAutoSaveIndicator();
+        }
+
+        function showAutoSaveIndicator() {
+            const indicator = document.getElementById('autoSaveIndicator');
+            indicator.classList.add('show');
+
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 2000);
+        }
+
+        function debounceSave() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(saveFormState, SAVE_DELAY);
+        }
+
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        function loadFormState() {
+            const saved = localStorage.getItem('investkredit_application');
+            if (saved) {
+                const data = JSON.parse(saved);
+                const shouldRestore = confirm('Möchten Sie Ihren gespeicherten Fortschritt wiederherstellen?');
+
+                if (shouldRestore) {
+                    // Restore form data
+                    if (data.formData.step0) {
+                        if (data.formData.step0.customerType) {
+                            const radio = document.querySelector(`input[name="customerType"][value="${data.formData.step0.customerType}"]`);
+                            if (radio) radio.checked = true;
+                        }
+                        if (data.formData.step0.investmentPurpose) {
+                            document.getElementById('investmentPurpose').value = data.formData.step0.investmentPurpose;
+                        }
+                        if (data.formData.step0.loanAmount) {
+                            document.getElementById('loanAmount').value = data.formData.step0.loanAmount;
+                        }
+                        if (data.formData.step0.loanTerm) {
+                            document.getElementById('loanTerm').value = data.formData.step0.loanTerm;
+                        }
+                        if (data.formData.step0.fundingWish) {
+                            const radio = document.querySelector(`input[name="fundingWish"][value="${data.formData.step0.fundingWish}"]`);
+                            if (radio) radio.checked = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Add event listeners for auto-save on all inputs
+        function setupAutoSave() {
+            const inputs = document.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('blur', debounceSave);
+                input.addEventListener('change', debounceSave);
+            });
+
+            // Save on step change
+            const originalNextStep = nextStep;
+            window.nextStep = function() {
+                saveFormState();
+                originalNextStep();
+            };
+        }
+
         // Initialize
         updateProgress();
+        loadFormState();
+        setupAutoSave();
 
         // Show funding documents section if funding is selected in step 0
         document.querySelectorAll('input[name="fundingWish"]').forEach(radio => {

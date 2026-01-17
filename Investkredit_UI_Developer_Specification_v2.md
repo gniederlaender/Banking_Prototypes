@@ -3,6 +3,8 @@
 **Date:** January 17, 2026
 **Version:** 2.0 (Chrome Extension Analysis)
 
+> **Note:** This specification follows the **GEORGE UI Design Guide** (see GEORGE_UI.md) for all visual design, components, and interaction patterns. All color schemes, typography, button styles, form elements, and responsive behavior should align with the George brand guidelines documented in GEORGE_UI.md.
+
 ---
 
 # Phase 1: Quick Wins
@@ -15,6 +17,8 @@ These items can be implemented with minimal code changes and provide immediate U
 ## 1.1 Pre-Qualification Button State Communication
 
 **Current Issue:** Users don't know they must click "Vorqualifizierung prufen" before proceeding.
+
+**Design Reference:** Follow GEORGE_UI.md > Buttons section for button hierarchy and states.
 
 **Specification:**
 ```
@@ -48,6 +52,8 @@ CSS Changes:
 ## 1.2 Required Field Legend
 
 **Current Issue:** Asterisks (*) used without explanation.
+
+**Design Reference:** Follow GEORGE_UI.md > Forms & Inputs section for form styling and label conventions.
 
 **Specification:**
 ```
@@ -106,6 +112,8 @@ UI Element:
 
 **Current Issue:** Completed steps show yellow but no explicit checkmark.
 
+**Design Reference:** Follow GEORGE_UI.md > Interaction Patterns and Color Palette for progress indicators using George brand colors (Primary Blue #1E5EBE, Teal #00A19C).
+
 **Specification:**
 ```
 Location: Progress stepper (all pages)
@@ -132,6 +140,8 @@ Animation:
 ## 1.5 Button Loading States
 
 **Current Issue:** No feedback when clicking action buttons.
+
+**Design Reference:** Follow GEORGE_UI.md > Buttons > Button States and Interaction Patterns > Loading States for consistent loading indicators.
 
 **Specification:**
 ```
