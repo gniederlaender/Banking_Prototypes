@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mitgliedschaftsprogramm - George Banking</title>
+    <title>Membership Program - George Banking</title>
     <style>
         * {
             margin: 0;
@@ -80,6 +80,22 @@
             gap: 16px;
         }
 
+        .lang-switcher {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .lang-switcher:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
         .back-btn {
             background: none;
             border: none;
@@ -128,6 +144,52 @@
         .greeting-subtitle {
             font-size: 16px;
             opacity: 0.95;
+        }
+
+        /* Tab Navigation */
+        .tab-navigation {
+            background: white;
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+        }
+
+        .tab-button {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: #666666;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-button:hover {
+            background: #F5F5F5;
+            color: #212121;
+        }
+
+        .tab-button.active {
+            background: #1E5EBE;
+            color: white;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         /* Current Status Section */
@@ -206,6 +268,39 @@
             font-size: 12px;
             color: #9E9E9E;
             margin-top: 4px;
+        }
+
+        /* Sparefroh Batch Display */
+        .batch-display {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .batch-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 2px 8px rgba(255, 165, 0, 0.3);
+        }
+
+        .batch-count {
+            font-size: 36px;
+            font-weight: 700;
+            color: #FFA500;
+            line-height: 1;
+        }
+
+        .batch-label {
+            font-size: 14px;
+            color: #757575;
+            font-weight: 600;
         }
 
         /* Progress Bar - George Style */
@@ -340,7 +435,7 @@
         }
 
         .tier-card.active::before {
-            content: "✓ Aktuelle Stufe";
+            content: attr(data-current-label);
             position: absolute;
             top: -12px;
             right: 20px;
@@ -454,7 +549,7 @@
         }
 
         .benefit-selection-card.selected::before {
-            content: "✓ Aktiv";
+            content: attr(data-selected-label);
             position: absolute;
             top: -10px;
             right: 20px;
@@ -738,6 +833,16 @@
             .main-content {
                 padding: 24px 16px;
             }
+
+            .tab-navigation {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+
+            .tab-button {
+                min-width: 120px;
+                font-size: 13px;
+            }
         }
     </style>
 </head>
@@ -747,13 +852,16 @@
         <div class="nav-container">
             <a href="../index.html" class="nav-logo">George</a>
             <ul class="nav-menu">
-                <li class="nav-item"><a href="#">Übersicht</a></li>
-                <li class="nav-item active"><a href="#">Ihre Produkte</a></li>
-                <li class="nav-item"><a href="#">Ihre Zusatzfunktionen</a></li>
-                <li class="nav-item"><a href="#">Discover</a></li>
+                <li class="nav-item"><a href="#" data-i18n="nav.overview">Overview</a></li>
+                <li class="nav-item active"><a href="#" data-i18n="nav.products">Your Products</a></li>
+                <li class="nav-item"><a href="#" data-i18n="nav.features">Your Features</a></li>
+                <li class="nav-item"><a href="#" data-i18n="nav.discover">Discover</a></li>
             </ul>
             <div class="nav-user">
-                <a href="../index.html" class="back-btn">← Zurück</a>
+                <button class="lang-switcher" onclick="toggleLanguage()">
+                    <span id="langSwitcher">🇩🇪 Deutsch</span>
+                </button>
+                <a href="../index.html" class="back-btn">← <span data-i18n="nav.back">Back</span></a>
             </div>
         </div>
     </nav>
@@ -762,329 +870,386 @@
         <div class="container">
             <!-- Greeting Section -->
             <div class="greeting-section">
-                <div class="greeting-text">Mitgliedschaftsprogramm</div>
-                <div class="greeting-subtitle">Sammeln Sie Punkte, schalten Sie Stufen frei und genießen Sie exklusive Banking-Vorteile</div>
+                <div class="greeting-text" data-i18n="greeting.title">Membership Program</div>
+                <div class="greeting-subtitle" data-i18n="greeting.subtitle">Collect sparefroh batches, unlock tiers and enjoy exclusive banking benefits</div>
             </div>
 
-            <!-- Current Status Card -->
-            <div class="status-card">
-                <div class="status-header">
-                    <div class="current-tier">
-                        <span class="tier-badge gold">★ GOLD MITGLIED</span>
-                        <div class="tier-name">Gold Stufe</div>
-                        <p class="tier-description">Sie genießen Premium-Vorteile! Setzen Sie Ihre guten Banking-Gewohnheiten fort, um Platin zu erreichen.</p>
-                    </div>
-                    <div class="points-display">
-                        <div class="points-label">Ihre Punkte</div>
-                        <div class="points-value">4.750</div>
-                        <div class="points-subtext">Gesamt verdient: 8.420</div>
-                    </div>
-                </div>
-
-                <div class="progress-section">
-                    <div class="progress-header">
-                        <span class="progress-label">Fortschritt zur Platin-Stufe</span>
-                        <span class="progress-points">4.750 / 7.500 Punkte</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar-fill" style="width: 63.3%"></div>
-                    </div>
-                </div>
+            <!-- Tab Navigation -->
+            <div class="tab-navigation">
+                <button class="tab-button active" onclick="switchTab(0)" data-i18n="tabs.dashboard">Dashboard</button>
+                <button class="tab-button" onclick="switchTab(1)" data-i18n="tabs.tiers">Tiers</button>
+                <button class="tab-button" onclick="switchTab(2)" data-i18n="tabs.benefits">Benefits</button>
+                <button class="tab-button" onclick="switchTab(3)" data-i18n="tabs.collect">Collect Points</button>
             </div>
 
-            <!-- How You Earn Points -->
-            <h2 class="section-title">💎 So sammeln Sie Punkte</h2>
-            <div class="earning-grid">
-                <div class="earning-card">
-                    <span class="earning-icon">🏦</span>
-                    <div class="earning-title">Produktbesitz</div>
-                    <p class="earning-description">Verdienen Sie Punkte für jedes aktive Produkt: Girokonten, Sparkonten, Kreditkarten, Investitionen und Kredite.</p>
-                    <div class="earning-points">
-                        <span class="icon">+</span>
-                        <span>Sie haben verdient: 1.850 Punkte</span>
+            <!-- TAB 1: DASHBOARD -->
+            <div class="tab-content active" id="tab-dashboard">
+                <!-- Current Status Card -->
+                <div class="status-card">
+                    <div class="status-header">
+                        <div class="current-tier">
+                            <span class="tier-badge gold">★ <span data-i18n="tier.gold.badge">GOLD MEMBER</span></span>
+                            <div class="tier-name" data-i18n="tier.gold.name">Gold Tier</div>
+                            <p class="tier-description" data-i18n="tier.gold.description">You're enjoying premium benefits! Continue your good banking habits to reach Platinum.</p>
+                        </div>
+                        <div class="points-display">
+                            <div class="points-label" data-i18n="dashboard.batches">Your Sparefroh Batches</div>
+                            <div class="batch-display">
+                                <div class="batch-icon">🎁</div>
+                                <div>
+                                    <div class="batch-count">47.5</div>
+                                    <div class="batch-label" data-i18n="dashboard.batches.label">Batches</div>
+                                </div>
+                            </div>
+                            <div class="points-subtext"><span data-i18n="dashboard.total">Total earned:</span> 84.2</div>
+                        </div>
+                    </div>
+
+                    <div class="progress-section">
+                        <div class="progress-header">
+                            <span class="progress-label" data-i18n="dashboard.progress.platinum">Progress to Platinum Tier</span>
+                            <span class="progress-points">47.5 / 75 <span data-i18n="dashboard.batches.label">Batches</span></span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: 63.3%"></div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="earning-card">
-                    <span class="earning-icon">📱</span>
-                    <div class="earning-title">Digitale Nutzung</div>
-                    <p class="earning-description">Werden Sie belohnt für die Nutzung von Mobile Banking, Online-Überweisungen, kontaktloses Zahlen und digitale Kontoauszüge.</p>
-                    <div class="earning-points">
-                        <span class="icon">+</span>
-                        <span>Sie haben verdient: 1.520 Punkte</span>
+                <!-- Quick Stats -->
+                <h2 class="section-title">📊 <span data-i18n="dashboard.stats.title">Your Progress</span></h2>
+                <div class="earning-grid">
+                    <div class="earning-card">
+                        <span class="earning-icon">🏦</span>
+                        <div class="earning-title" data-i18n="collect.products.title">Product Ownership</div>
+                        <p class="earning-description" data-i18n="collect.products.description">Earn batches for every active product: checking accounts, savings accounts, credit cards, investments, and loans.</p>
+                        <div class="earning-points">
+                            <span class="icon">+</span>
+                            <span><span data-i18n="dashboard.stats.earned">You earned:</span> 18.5 <span data-i18n="dashboard.batches.label">Batches</span></span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="earning-card">
-                    <span class="earning-icon">💚</span>
-                    <div class="earning-title">Finanzielle Gesundheit</div>
-                    <p class="earning-description">Behalten Sie positive Kontostände, regelmäßiges Sparen, pünktliche Zahlungen und verantwortungsvolle Kreditnutzung für Bonuspunkte bei.</p>
-                    <div class="earning-points">
-                        <span class="icon">+</span>
-                        <span>Sie haben verdient: 1.380 Punkte</span>
+                    <div class="earning-card">
+                        <span class="earning-icon">📱</span>
+                        <div class="earning-title" data-i18n="collect.digital.title">Digital Usage</div>
+                        <p class="earning-description" data-i18n="collect.digital.description">Get rewarded for using mobile banking, online transfers, contactless payments, and digital statements.</p>
+                        <div class="earning-points">
+                            <span class="icon">+</span>
+                            <span><span data-i18n="dashboard.stats.earned">You earned:</span> 15.2 <span data-i18n="dashboard.batches.label">Batches</span></span>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Membership Tiers -->
-            <h2 class="section-title">🎯 Mitgliedschaftsstufen</h2>
-            <div class="tiers-grid">
-                <!-- Bronze Tier -->
-                <div class="tier-card bronze">
-                    <div class="tier-card-header">
-                        <span class="tier-icon">🥉</span>
-                        <div class="tier-card-name">Bronze</div>
-                        <div class="tier-requirements">0 - 1.500 Punkte</div>
+                    <div class="earning-card">
+                        <span class="earning-icon">💚</span>
+                        <div class="earning-title" data-i18n="collect.health.title">Financial Health</div>
+                        <p class="earning-description" data-i18n="collect.health.description">Maintain positive balances, regular savings, on-time payments, and responsible credit usage for bonus batches.</p>
+                        <div class="earning-points">
+                            <span class="icon">+</span>
+                            <span><span data-i18n="dashboard.stats.earned">You earned:</span> 13.8 <span data-i18n="dashboard.batches.label">Batches</span></span>
+                        </div>
                     </div>
-                    <ul class="benefits-list">
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text"><span class="benefit-highlight">Basis-Belohnungen:</span> 1 Vorteilsauswahl</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">Standard-Kundenservice</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">Vierteljährliche Kontoüberprüfung</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">Finanzbildungsressourcen</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Silver Tier -->
-                <div class="tier-card silver">
-                    <div class="tier-card-header">
-                        <span class="tier-icon">🥈</span>
-                        <div class="tier-card-name">Silber</div>
-                        <div class="tier-requirements">1.501 - 3.500 Punkte</div>
-                    </div>
-                    <ul class="benefits-list">
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text"><span class="benefit-highlight">Erweiterte Belohnungen:</span> 2 Vorteilsauswahlen</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">Priorität E-Mail-Support</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">Reduzierte Bankomatsgebühren weltweit</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">Kostenlose Überweisungen (2/Monat)</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">Exklusiver Webinar-Zugang</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Gold Tier -->
-                <div class="tier-card gold active">
-                    <div class="tier-card-header">
-                        <span class="tier-icon">🥇</span>
-                        <div class="tier-card-name">Gold</div>
-                        <div class="tier-requirements">3.501 - 7.500 Punkte</div>
-                    </div>
-                    <ul class="benefits-list">
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text"><span class="benefit-highlight">Premium-Belohnungen:</span> 3 Vorteilsauswahlen</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">Persönlicher Beziehungsmanager</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">Höhere Zinssätze auf Spareinlagen</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">Keine Kontoführungsgebühren</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">Reiseversicherungsschutz</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">Anlageberatungsgespräche</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Platinum Tier -->
-                <div class="tier-card platinum">
-                    <div class="tier-card-header">
-                        <span class="tier-icon">💎</span>
-                        <div class="tier-card-name">Platin</div>
-                        <div class="tier-requirements">7.501+ Punkte</div>
-                    </div>
-                    <ul class="benefits-list">
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text"><span class="benefit-highlight">Elite-Belohnungen:</span> 5 Vorteilsauswahlen</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">24/7 Concierge-Service</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">Kostenlose Bankaktien (jährlich)</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">Premium-Kreditzinsen</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">Priorität Support-Tickets</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">Flughafen-Lounge-Zugang</span>
-                        </li>
-                        <li class="benefit-item">
-                            <span class="benefit-check">✓</span>
-                            <span class="benefit-text">Exklusive Investmentmöglichkeiten</span>
-                        </li>
-                    </ul>
                 </div>
             </div>
 
-            <!-- Your Active Benefits -->
-            <h2 class="section-title">🎁 Wählen Sie Ihre Vorteile (3 von 3 ausgewählt)</h2>
-            <div class="benefits-selection-grid">
-                <!-- Benefit 1 - Selected -->
-                <div class="benefit-selection-card selected" onclick="toggleBenefit(this, 'gold')">
-                    <div class="benefit-selection-header">
-                        <span class="benefit-selection-icon">📈</span>
-                        <span class="benefit-tier-badge gold">Gold+</span>
+            <!-- TAB 2: TIERS -->
+            <div class="tab-content" id="tab-tiers">
+                <h2 class="section-title">🎯 <span data-i18n="tiers.title">Membership Tiers</span></h2>
+                <div class="tiers-grid">
+                    <!-- Bronze Tier -->
+                    <div class="tier-card bronze">
+                        <div class="tier-card-header">
+                            <span class="tier-icon">🥉</span>
+                            <div class="tier-card-name" data-i18n="tier.bronze.name">Bronze</div>
+                            <div class="tier-requirements">0 - 15 <span data-i18n="dashboard.batches.label">Batches</span></div>
+                        </div>
+                        <ul class="benefits-list">
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text"><span class="benefit-highlight" data-i18n="tier.bronze.benefit1.title">Basic Rewards:</span> <span data-i18n="tier.bronze.benefit1.desc">1 benefit choice</span></span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.bronze.benefit2">Standard customer service</span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.bronze.benefit3">Quarterly account review</span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.bronze.benefit4">Financial education resources</span>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="benefit-selection-title">Erhöhter Sparzins</div>
-                    <p class="benefit-selection-description">Steigern Sie Ihre Ersparnisse mit einem zusätzlichen Zinsbonus auf alle Sparkonten und Festgelder.</p>
-                    <div class="benefit-value">+0,75% Zinsbonus</div>
-                    <button class="select-btn selected">✓ Ausgewählt</button>
-                </div>
 
-                <!-- Benefit 2 - Selected -->
-                <div class="benefit-selection-card selected" onclick="toggleBenefit(this, 'gold')">
-                    <div class="benefit-selection-header">
-                        <span class="benefit-selection-icon">💰</span>
-                        <span class="benefit-tier-badge gold">Gold+</span>
+                    <!-- Silver Tier -->
+                    <div class="tier-card silver">
+                        <div class="tier-card-header">
+                            <span class="tier-icon">🥈</span>
+                            <div class="tier-card-name" data-i18n="tier.silver.name">Silver</div>
+                            <div class="tier-requirements">15.1 - 35 <span data-i18n="dashboard.batches.label">Batches</span></div>
+                        </div>
+                        <ul class="benefits-list">
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text"><span class="benefit-highlight" data-i18n="tier.silver.benefit1.title">Enhanced Rewards:</span> <span data-i18n="tier.silver.benefit1.desc">2 benefit choices</span></span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.silver.benefit2">Priority email support</span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.silver.benefit3">Reduced ATM fees worldwide</span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.silver.benefit4">Free wire transfers (2/month)</span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.silver.benefit5">Exclusive webinar access</span>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="benefit-selection-title">Keine Kontogebühren</div>
-                    <p class="benefit-selection-description">Alle monatlichen Kontoführungsgebühren für Giro- und Sparkonten entfallen, plus kostenlose Scheckhefte.</p>
-                    <div class="benefit-value">Sparen Sie 25€/Monat</div>
-                    <button class="select-btn selected">✓ Ausgewählt</button>
-                </div>
 
-                <!-- Benefit 3 - Selected -->
-                <div class="benefit-selection-card selected" onclick="toggleBenefit(this, 'gold')">
-                    <div class="benefit-selection-header">
-                        <span class="benefit-selection-icon">✈️</span>
-                        <span class="benefit-tier-badge gold">Gold+</span>
+                    <!-- Gold Tier -->
+                    <div class="tier-card gold active" data-current-label="✓ Current Tier">
+                        <div class="tier-card-header">
+                            <span class="tier-icon">🥇</span>
+                            <div class="tier-card-name" data-i18n="tier.gold.name">Gold</div>
+                            <div class="tier-requirements">35.1 - 75 <span data-i18n="dashboard.batches.label">Batches</span></div>
+                        </div>
+                        <ul class="benefits-list">
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text"><span class="benefit-highlight" data-i18n="tier.gold.benefit1.title">Premium Rewards:</span> <span data-i18n="tier.gold.benefit1.desc">3 benefit choices</span></span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.gold.benefit2">Personal relationship manager</span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.gold.benefit3">Higher interest rates on savings</span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.gold.benefit4">No account maintenance fees</span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.gold.benefit5">Travel insurance coverage</span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.gold.benefit6">Investment advisory sessions</span>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="benefit-selection-title">Reiseversicherung</div>
-                    <p class="benefit-selection-description">Umfassende Reiseversicherung einschließlich Reiserücktritt, medizinischer Notfälle und Gepäckverlust.</p>
-                    <div class="benefit-value">Bis zu 100.000€ Deckung</div>
-                    <button class="select-btn selected">✓ Ausgewählt</button>
-                </div>
 
-                <!-- Benefit 4 - Available -->
-                <div class="benefit-selection-card" onclick="toggleBenefit(this, 'gold')">
-                    <div class="benefit-selection-header">
-                        <span class="benefit-selection-icon">💳</span>
-                        <span class="benefit-tier-badge gold">Gold+</span>
+                    <!-- Platinum Tier -->
+                    <div class="tier-card platinum">
+                        <div class="tier-card-header">
+                            <span class="tier-icon">💎</span>
+                            <div class="tier-card-name" data-i18n="tier.platinum.name">Platinum</div>
+                            <div class="tier-requirements">75.1+ <span data-i18n="dashboard.batches.label">Batches</span></div>
+                        </div>
+                        <ul class="benefits-list">
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text"><span class="benefit-highlight" data-i18n="tier.platinum.benefit1.title">Elite Rewards:</span> <span data-i18n="tier.platinum.benefit1.desc">5 benefit choices</span></span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.platinum.benefit2">24/7 concierge service</span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.platinum.benefit3">Free bank shares (annually)</span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.platinum.benefit4">Premium loan rates</span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.platinum.benefit5">Priority support tickets</span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.platinum.benefit6">Airport lounge access</span>
+                            </li>
+                            <li class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span class="benefit-text" data-i18n="tier.platinum.benefit7">Exclusive investment opportunities</span>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="benefit-selection-title">Cashback-Belohnungen</div>
-                    <p class="benefit-selection-description">Verdienen Sie Cashback bei allen Debitkartenkäufen und Rechnungszahlungen über unsere Banking-Plattform.</p>
-                    <div class="benefit-value">2% auf alle Einkäufe</div>
-                    <button class="select-btn primary">Vorteil wählen</button>
-                </div>
-
-                <!-- Benefit 5 - Available -->
-                <div class="benefit-selection-card" onclick="toggleBenefit(this, 'gold')">
-                    <div class="benefit-selection-header">
-                        <span class="benefit-selection-icon">🎓</span>
-                        <span class="benefit-tier-badge gold">Gold+</span>
-                    </div>
-                    <div class="benefit-selection-title">Finanzberatung</div>
-                    <p class="benefit-selection-description">Vierteljährliche Einzelgespräche mit zertifizierten Finanzplanern, um Ihre finanziellen Ziele zu erreichen.</p>
-                    <div class="benefit-value">4 Sitzungen/Jahr</div>
-                    <button class="select-btn primary">Vorteil wählen</button>
-                </div>
-
-                <!-- Benefit 6 - Locked (Platinum only) -->
-                <div class="benefit-selection-card locked">
-                    <div class="benefit-selection-header">
-                        <span class="benefit-selection-icon">📊</span>
-                        <span class="benefit-tier-badge platinum">Platin</span>
-                    </div>
-                    <div class="benefit-selection-title">Kostenlose Bankaktien</div>
-                    <p class="benefit-selection-description">Erhalten Sie jährlich kostenlose Bankaktien als geschätztes Platin-Mitglied und Aktionär.</p>
-                    <div class="benefit-value">500€ in Aktien/Jahr</div>
-                    <button class="select-btn locked"><span class="lock-icon">🔒</span> Benötigt Platin</button>
-                </div>
-
-                <!-- Benefit 7 - Locked (Platinum only) -->
-                <div class="benefit-selection-card locked">
-                    <div class="benefit-selection-header">
-                        <span class="benefit-selection-icon">🎫</span>
-                        <span class="benefit-tier-badge platinum">Platin</span>
-                    </div>
-                    <div class="benefit-selection-title">Prioritäts-Support-Zugang</div>
-                    <p class="benefit-selection-description">Überspringen Sie die Warteschlange mit Express-Ticketbearbeitung und dedizierten Support-Kanälen.</p>
-                    <div class="benefit-value">24/7 VIP-Support</div>
-                    <button class="select-btn locked"><span class="lock-icon">🔒</span> Benötigt Platin</button>
-                </div>
-
-                <!-- Benefit 8 - Locked (Platinum only) -->
-                <div class="benefit-selection-card locked">
-                    <div class="benefit-selection-header">
-                        <span class="benefit-selection-icon">💼</span>
-                        <span class="benefit-tier-badge platinum">Platin</span>
-                    </div>
-                    <div class="benefit-selection-title">Premium-Kreditzinsen</div>
-                    <p class="benefit-selection-description">Zugang zu exklusiven Kreditkonditionen mit reduziertem Zinssatz für Hypotheken, Autokredite und Privatkredite.</p>
-                    <div class="benefit-value">-1,5% Zinsreduzierung</div>
-                    <button class="select-btn locked"><span class="lock-icon">🔒</span> Benötigt Platin</button>
                 </div>
             </div>
 
-            <!-- How It Works -->
-            <div class="how-it-works">
-                <h2 class="section-title">🎯 So funktioniert's</h2>
-                <div class="steps-grid">
-                    <div class="step-card">
-                        <div class="step-number">1</div>
-                        <div class="step-title">Banking & Verdienen</div>
-                        <p class="step-description">Nutzen Sie Ihre Konten, tätigen Sie digitale Transaktionen und pflegen Sie gesunde Finanzgewohnheiten, um automatisch Punkte zu verdienen.</p>
+            <!-- TAB 3: BENEFITS -->
+            <div class="tab-content" id="tab-benefits">
+                <h2 class="section-title">🎁 <span data-i18n="benefits.choose.title">Choose Your Benefits</span> <span id="benefitCounter">(3 of 3 selected)</span></h2>
+                <div class="benefits-selection-grid">
+                    <!-- Benefit 1 - Selected -->
+                    <div class="benefit-selection-card selected" data-selected-label="✓ Active" onclick="toggleBenefit(this, 'gold')">
+                        <div class="benefit-selection-header">
+                            <span class="benefit-selection-icon">📈</span>
+                            <span class="benefit-tier-badge gold">Gold+</span>
+                        </div>
+                        <div class="benefit-selection-title" data-i18n="benefit1.title">Increased Savings Rate</div>
+                        <p class="benefit-selection-description" data-i18n="benefit1.description">Boost your savings with an additional interest bonus on all savings accounts and term deposits.</p>
+                        <div class="benefit-value">+0.75% <span data-i18n="benefit1.value">interest bonus</span></div>
+                        <button class="select-btn selected">✓ <span data-i18n="benefit.selected">Selected</span></button>
                     </div>
-                    <div class="step-card">
-                        <div class="step-number">2</div>
-                        <div class="step-title">Stufen freischalten</div>
-                        <p class="step-description">Während Sie Punkte sammeln, steigen Sie durch Bronze, Silber, Gold und Platin-Stufen mit zunehmenden Vorteilen auf.</p>
+
+                    <!-- Benefit 2 - Selected -->
+                    <div class="benefit-selection-card selected" data-selected-label="✓ Active" onclick="toggleBenefit(this, 'gold')">
+                        <div class="benefit-selection-header">
+                            <span class="benefit-selection-icon">💰</span>
+                            <span class="benefit-tier-badge gold">Gold+</span>
+                        </div>
+                        <div class="benefit-selection-title" data-i18n="benefit2.title">No Account Fees</div>
+                        <p class="benefit-selection-description" data-i18n="benefit2.description">All monthly account maintenance fees waived for checking and savings accounts, plus free checkbooks.</p>
+                        <div class="benefit-value"><span data-i18n="benefit2.value">Save</span> €25/month</div>
+                        <button class="select-btn selected">✓ <span data-i18n="benefit.selected">Selected</span></button>
                     </div>
-                    <div class="step-card">
-                        <div class="step-number">3</div>
-                        <div class="step-title">Vorteile wählen</div>
-                        <p class="step-description">Wählen Sie aus einer Vielzahl exklusiver Vorteile, die auf Ihrer Stufe verfügbar sind. Höhere Stufen = mehr Auswahl!</p>
+
+                    <!-- Benefit 3 - Selected -->
+                    <div class="benefit-selection-card selected" data-selected-label="✓ Active" onclick="toggleBenefit(this, 'gold')">
+                        <div class="benefit-selection-header">
+                            <span class="benefit-selection-icon">✈️</span>
+                            <span class="benefit-tier-badge gold">Gold+</span>
+                        </div>
+                        <div class="benefit-selection-title" data-i18n="benefit3.title">Travel Insurance</div>
+                        <p class="benefit-selection-description" data-i18n="benefit3.description">Comprehensive travel insurance including trip cancellation, medical emergencies, and lost luggage.</p>
+                        <div class="benefit-value"><span data-i18n="benefit3.value">Up to</span> €100,000 <span data-i18n="benefit3.coverage">coverage</span></div>
+                        <button class="select-btn selected">✓ <span data-i18n="benefit.selected">Selected</span></button>
                     </div>
-                    <div class="step-card">
-                        <div class="step-number">4</div>
-                        <div class="step-title">Belohnungen genießen</div>
-                        <p class="step-description">Ihre ausgewählten Vorteile werden sofort aktiviert und jährlich erneuert, solange Sie Ihren Stufenstatus beibehalten.</p>
+
+                    <!-- Benefit 4 - Available -->
+                    <div class="benefit-selection-card" onclick="toggleBenefit(this, 'gold')">
+                        <div class="benefit-selection-header">
+                            <span class="benefit-selection-icon">💳</span>
+                            <span class="benefit-tier-badge gold">Gold+</span>
+                        </div>
+                        <div class="benefit-selection-title" data-i18n="benefit4.title">Cashback Rewards</div>
+                        <p class="benefit-selection-description" data-i18n="benefit4.description">Earn cashback on all debit card purchases and bill payments through our banking platform.</p>
+                        <div class="benefit-value">2% <span data-i18n="benefit4.value">on all purchases</span></div>
+                        <button class="select-btn primary"><span data-i18n="benefit.select">Select Benefit</span></button>
+                    </div>
+
+                    <!-- Benefit 5 - Available -->
+                    <div class="benefit-selection-card" onclick="toggleBenefit(this, 'gold')">
+                        <div class="benefit-selection-header">
+                            <span class="benefit-selection-icon">🎓</span>
+                            <span class="benefit-tier-badge gold">Gold+</span>
+                        </div>
+                        <div class="benefit-selection-title" data-i18n="benefit5.title">Financial Advisory</div>
+                        <p class="benefit-selection-description" data-i18n="benefit5.description">Quarterly one-on-one sessions with certified financial planners to help achieve your financial goals.</p>
+                        <div class="benefit-value">4 <span data-i18n="benefit5.value">sessions/year</span></div>
+                        <button class="select-btn primary"><span data-i18n="benefit.select">Select Benefit</span></button>
+                    </div>
+
+                    <!-- Benefit 6 - Locked (Platinum only) -->
+                    <div class="benefit-selection-card locked">
+                        <div class="benefit-selection-header">
+                            <span class="benefit-selection-icon">📊</span>
+                            <span class="benefit-tier-badge platinum">Platinum</span>
+                        </div>
+                        <div class="benefit-selection-title" data-i18n="benefit6.title">Free Bank Shares</div>
+                        <p class="benefit-selection-description" data-i18n="benefit6.description">Receive complimentary bank shares annually as a valued platinum member and shareholder.</p>
+                        <div class="benefit-value">€500 <span data-i18n="benefit6.value">in shares/year</span></div>
+                        <button class="select-btn locked"><span class="lock-icon">🔒</span> <span data-i18n="benefit.locked">Requires Platinum</span></button>
+                    </div>
+
+                    <!-- Benefit 7 - Locked (Platinum only) -->
+                    <div class="benefit-selection-card locked">
+                        <div class="benefit-selection-header">
+                            <span class="benefit-selection-icon">🎫</span>
+                            <span class="benefit-tier-badge platinum">Platinum</span>
+                        </div>
+                        <div class="benefit-selection-title" data-i18n="benefit7.title">Priority Support Access</div>
+                        <p class="benefit-selection-description" data-i18n="benefit7.description">Skip the queue with express ticket processing and dedicated support channels.</p>
+                        <div class="benefit-value">24/7 <span data-i18n="benefit7.value">VIP support</span></div>
+                        <button class="select-btn locked"><span class="lock-icon">🔒</span> <span data-i18n="benefit.locked">Requires Platinum</span></button>
+                    </div>
+
+                    <!-- Benefit 8 - Locked (Platinum only) -->
+                    <div class="benefit-selection-card locked">
+                        <div class="benefit-selection-header">
+                            <span class="benefit-selection-icon">💼</span>
+                            <span class="benefit-tier-badge platinum">Platinum</span>
+                        </div>
+                        <div class="benefit-selection-title" data-i18n="benefit8.title">Premium Loan Rates</div>
+                        <p class="benefit-selection-description" data-i18n="benefit8.description">Access exclusive loan rates with reduced interest for mortgages, auto loans, and personal loans.</p>
+                        <div class="benefit-value">-1.5% <span data-i18n="benefit8.value">rate reduction</span></div>
+                        <button class="select-btn locked"><span class="lock-icon">🔒</span> <span data-i18n="benefit.locked">Requires Platinum</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: COLLECT POINTS -->
+            <div class="tab-content" id="tab-collect">
+                <h2 class="section-title">💎 <span data-i18n="collect.title">How to Collect Sparefroh Batches</span></h2>
+                <div class="earning-grid">
+                    <div class="earning-card">
+                        <span class="earning-icon">🏦</span>
+                        <div class="earning-title" data-i18n="collect.products.title">Product Ownership</div>
+                        <p class="earning-description" data-i18n="collect.products.description">Earn batches for every active product: checking accounts, savings accounts, credit cards, investments, and loans.</p>
+                        <div class="earning-points">
+                            <span class="icon">+</span>
+                            <span><span data-i18n="dashboard.stats.earned">You earned:</span> 18.5 <span data-i18n="dashboard.batches.label">Batches</span></span>
+                        </div>
+                    </div>
+
+                    <div class="earning-card">
+                        <span class="earning-icon">📱</span>
+                        <div class="earning-title" data-i18n="collect.digital.title">Digital Usage</div>
+                        <p class="earning-description" data-i18n="collect.digital.description">Get rewarded for using mobile banking, online transfers, contactless payments, and digital statements.</p>
+                        <div class="earning-points">
+                            <span class="icon">+</span>
+                            <span><span data-i18n="dashboard.stats.earned">You earned:</span> 15.2 <span data-i18n="dashboard.batches.label">Batches</span></span>
+                        </div>
+                    </div>
+
+                    <div class="earning-card">
+                        <span class="earning-icon">💚</span>
+                        <div class="earning-title" data-i18n="collect.health.title">Financial Health</div>
+                        <p class="earning-description" data-i18n="collect.health.description">Maintain positive balances, regular savings, on-time payments, and responsible credit usage for bonus batches.</p>
+                        <div class="earning-points">
+                            <span class="icon">+</span>
+                            <span><span data-i18n="dashboard.stats.earned">You earned:</span> 13.8 <span data-i18n="dashboard.batches.label">Batches</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- How It Works -->
+                <div class="how-it-works">
+                    <h2 class="section-title">🎯 <span data-i18n="howitworks.title">How It Works</span></h2>
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <div class="step-number">1</div>
+                            <div class="step-title" data-i18n="howitworks.step1.title">Bank & Earn</div>
+                            <p class="step-description" data-i18n="howitworks.step1.description">Use your accounts, make digital transactions, and maintain healthy financial habits to automatically earn sparefroh batches.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">2</div>
+                            <div class="step-title" data-i18n="howitworks.step2.title">Unlock Tiers</div>
+                            <p class="step-description" data-i18n="howitworks.step2.description">As you collect batches, progress through Bronze, Silver, Gold, and Platinum tiers with increasing benefits.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">3</div>
+                            <div class="step-title" data-i18n="howitworks.step3.title">Choose Benefits</div>
+                            <p class="step-description" data-i18n="howitworks.step3.description">Select from a variety of exclusive benefits available at your tier level. Higher tiers = more choices!</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">4</div>
+                            <div class="step-title" data-i18n="howitworks.step4.title">Enjoy Rewards</div>
+                            <p class="step-description" data-i18n="howitworks.step4.description">Your selected benefits activate immediately and renew annually as long as you maintain your tier status.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1096,30 +1261,300 @@
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal()">×</button>
             <div class="modal-icon">✓</div>
-            <h3 class="modal-title">Vorteil aktualisiert!</h3>
-            <p class="modal-text" id="modalText">Ihre Vorteilsauswahl wurde erfolgreich aktualisiert. Änderungen werden sofort wirksam.</p>
-            <button class="modal-btn" onclick="closeModal()">Verstanden!</button>
+            <h3 class="modal-title" id="modalTitle">Benefit Updated!</h3>
+            <p class="modal-text" id="modalText">Your benefit selection has been successfully updated. Changes will take effect immediately.</p>
+            <button class="modal-btn" onclick="closeModal()"><span data-i18n="modal.ok">Got It!</span></button>
         </div>
     </div>
 
     <script>
-        // Initialize progress bar animation on load
+        // Language Translations
+        const translations = {
+            en: {
+                'nav.overview': 'Overview',
+                'nav.products': 'Your Products',
+                'nav.features': 'Your Features',
+                'nav.discover': 'Discover',
+                'nav.back': 'Back',
+                'greeting.title': 'Membership Program',
+                'greeting.subtitle': 'Collect sparefroh batches, unlock tiers and enjoy exclusive banking benefits',
+                'tabs.dashboard': 'Dashboard',
+                'tabs.tiers': 'Tiers',
+                'tabs.benefits': 'Benefits',
+                'tabs.collect': 'Collect Points',
+                'dashboard.batches': 'Your Sparefroh Batches',
+                'dashboard.batches.label': 'Batches',
+                'dashboard.total': 'Total earned:',
+                'dashboard.progress.platinum': 'Progress to Platinum Tier',
+                'dashboard.stats.title': 'Your Progress',
+                'dashboard.stats.earned': 'You earned:',
+                'tier.gold.badge': 'GOLD MEMBER',
+                'tier.gold.name': 'Gold Tier',
+                'tier.gold.description': 'You\'re enjoying premium benefits! Continue your good banking habits to reach Platinum.',
+                'tier.bronze.name': 'Bronze',
+                'tier.silver.name': 'Silver',
+                'tier.platinum.name': 'Platinum',
+                'tier.bronze.benefit1.title': 'Basic Rewards:',
+                'tier.bronze.benefit1.desc': '1 benefit choice',
+                'tier.bronze.benefit2': 'Standard customer service',
+                'tier.bronze.benefit3': 'Quarterly account review',
+                'tier.bronze.benefit4': 'Financial education resources',
+                'tier.silver.benefit1.title': 'Enhanced Rewards:',
+                'tier.silver.benefit1.desc': '2 benefit choices',
+                'tier.silver.benefit2': 'Priority email support',
+                'tier.silver.benefit3': 'Reduced ATM fees worldwide',
+                'tier.silver.benefit4': 'Free wire transfers (2/month)',
+                'tier.silver.benefit5': 'Exclusive webinar access',
+                'tier.gold.benefit1.title': 'Premium Rewards:',
+                'tier.gold.benefit1.desc': '3 benefit choices',
+                'tier.gold.benefit2': 'Personal relationship manager',
+                'tier.gold.benefit3': 'Higher interest rates on savings',
+                'tier.gold.benefit4': 'No account maintenance fees',
+                'tier.gold.benefit5': 'Travel insurance coverage',
+                'tier.gold.benefit6': 'Investment advisory sessions',
+                'tier.platinum.benefit1.title': 'Elite Rewards:',
+                'tier.platinum.benefit1.desc': '5 benefit choices',
+                'tier.platinum.benefit2': '24/7 concierge service',
+                'tier.platinum.benefit3': 'Free bank shares (annually)',
+                'tier.platinum.benefit4': 'Premium loan rates',
+                'tier.platinum.benefit5': 'Priority support tickets',
+                'tier.platinum.benefit6': 'Airport lounge access',
+                'tier.platinum.benefit7': 'Exclusive investment opportunities',
+                'tiers.title': 'Membership Tiers',
+                'benefits.choose.title': 'Choose Your Benefits',
+                'benefit.selected': 'Selected',
+                'benefit.select': 'Select Benefit',
+                'benefit.locked': 'Requires Platinum',
+                'benefit1.title': 'Increased Savings Rate',
+                'benefit1.description': 'Boost your savings with an additional interest bonus on all savings accounts and term deposits.',
+                'benefit1.value': 'interest bonus',
+                'benefit2.title': 'No Account Fees',
+                'benefit2.description': 'All monthly account maintenance fees waived for checking and savings accounts, plus free checkbooks.',
+                'benefit2.value': 'Save',
+                'benefit3.title': 'Travel Insurance',
+                'benefit3.description': 'Comprehensive travel insurance including trip cancellation, medical emergencies, and lost luggage.',
+                'benefit3.value': 'Up to',
+                'benefit3.coverage': 'coverage',
+                'benefit4.title': 'Cashback Rewards',
+                'benefit4.description': 'Earn cashback on all debit card purchases and bill payments through our banking platform.',
+                'benefit4.value': 'on all purchases',
+                'benefit5.title': 'Financial Advisory',
+                'benefit5.description': 'Quarterly one-on-one sessions with certified financial planners to help achieve your financial goals.',
+                'benefit5.value': 'sessions/year',
+                'benefit6.title': 'Free Bank Shares',
+                'benefit6.description': 'Receive complimentary bank shares annually as a valued platinum member and shareholder.',
+                'benefit6.value': 'in shares/year',
+                'benefit7.title': 'Priority Support Access',
+                'benefit7.description': 'Skip the queue with express ticket processing and dedicated support channels.',
+                'benefit7.value': 'VIP support',
+                'benefit8.title': 'Premium Loan Rates',
+                'benefit8.description': 'Access exclusive loan rates with reduced interest for mortgages, auto loans, and personal loans.',
+                'benefit8.value': 'rate reduction',
+                'collect.title': 'How to Collect Sparefroh Batches',
+                'collect.products.title': 'Product Ownership',
+                'collect.products.description': 'Earn batches for every active product: checking accounts, savings accounts, credit cards, investments, and loans.',
+                'collect.digital.title': 'Digital Usage',
+                'collect.digital.description': 'Get rewarded for using mobile banking, online transfers, contactless payments, and digital statements.',
+                'collect.health.title': 'Financial Health',
+                'collect.health.description': 'Maintain positive balances, regular savings, on-time payments, and responsible credit usage for bonus batches.',
+                'howitworks.title': 'How It Works',
+                'howitworks.step1.title': 'Bank & Earn',
+                'howitworks.step1.description': 'Use your accounts, make digital transactions, and maintain healthy financial habits to automatically earn sparefroh batches.',
+                'howitworks.step2.title': 'Unlock Tiers',
+                'howitworks.step2.description': 'As you collect batches, progress through Bronze, Silver, Gold, and Platinum tiers with increasing benefits.',
+                'howitworks.step3.title': 'Choose Benefits',
+                'howitworks.step3.description': 'Select from a variety of exclusive benefits available at your tier level. Higher tiers = more choices!',
+                'howitworks.step4.title': 'Enjoy Rewards',
+                'howitworks.step4.description': 'Your selected benefits activate immediately and renew annually as long as you maintain your tier status.',
+                'modal.ok': 'Got It!',
+                'modal.tier.title': '🔒 Tier Requirement',
+                'modal.tier.text': 'This benefit requires the {tier} tier or higher. Keep collecting batches to unlock it!',
+                'modal.limit.title': '⚠️ Selection Limit Reached',
+                'modal.limit.text': 'You can select up to {max} benefits with your Gold tier. Deselect another benefit first, or upgrade to Platinum for more choices!',
+                'modal.activated.title': '✓ Benefit Activated!',
+                'modal.activated.text': 'Your new benefit has been activated and is available immediately. Enjoy your reward!',
+                'modal.platinum.title': '🎉 Congratulations!',
+                'modal.platinum.text': 'You\'ve reached Platinum tier! You can now select up to 5 benefits and unlock exclusive rewards.'
+            },
+            de: {
+                'nav.overview': 'Übersicht',
+                'nav.products': 'Ihre Produkte',
+                'nav.features': 'Ihre Zusatzfunktionen',
+                'nav.discover': 'Discover',
+                'nav.back': 'Zurück',
+                'greeting.title': 'Mitgliedschaftsprogramm',
+                'greeting.subtitle': 'Sammeln Sie sparefroh Batches, schalten Sie Stufen frei und genießen Sie exklusive Banking-Vorteile',
+                'tabs.dashboard': 'Dashboard',
+                'tabs.tiers': 'Stufen',
+                'tabs.benefits': 'Vorteile',
+                'tabs.collect': 'Punkte sammeln',
+                'dashboard.batches': 'Ihre Sparefroh Batches',
+                'dashboard.batches.label': 'Batches',
+                'dashboard.total': 'Gesamt verdient:',
+                'dashboard.progress.platinum': 'Fortschritt zur Platin-Stufe',
+                'dashboard.stats.title': 'Ihr Fortschritt',
+                'dashboard.stats.earned': 'Sie haben verdient:',
+                'tier.gold.badge': 'GOLD MITGLIED',
+                'tier.gold.name': 'Gold Stufe',
+                'tier.gold.description': 'Sie genießen Premium-Vorteile! Setzen Sie Ihre guten Banking-Gewohnheiten fort, um Platin zu erreichen.',
+                'tier.bronze.name': 'Bronze',
+                'tier.silver.name': 'Silber',
+                'tier.platinum.name': 'Platin',
+                'tier.bronze.benefit1.title': 'Basis-Belohnungen:',
+                'tier.bronze.benefit1.desc': '1 Vorteilsauswahl',
+                'tier.bronze.benefit2': 'Standard-Kundenservice',
+                'tier.bronze.benefit3': 'Vierteljährliche Kontoüberprüfung',
+                'tier.bronze.benefit4': 'Finanzbildungsressourcen',
+                'tier.silver.benefit1.title': 'Erweiterte Belohnungen:',
+                'tier.silver.benefit1.desc': '2 Vorteilsauswahlen',
+                'tier.silver.benefit2': 'Priorität E-Mail-Support',
+                'tier.silver.benefit3': 'Reduzierte Bankomatsgebühren weltweit',
+                'tier.silver.benefit4': 'Kostenlose Überweisungen (2/Monat)',
+                'tier.silver.benefit5': 'Exklusiver Webinar-Zugang',
+                'tier.gold.benefit1.title': 'Premium-Belohnungen:',
+                'tier.gold.benefit1.desc': '3 Vorteilsauswahlen',
+                'tier.gold.benefit2': 'Persönlicher Beziehungsmanager',
+                'tier.gold.benefit3': 'Höhere Zinssätze auf Spareinlagen',
+                'tier.gold.benefit4': 'Keine Kontoführungsgebühren',
+                'tier.gold.benefit5': 'Reiseversicherungsschutz',
+                'tier.gold.benefit6': 'Anlageberatungsgespräche',
+                'tier.platinum.benefit1.title': 'Elite-Belohnungen:',
+                'tier.platinum.benefit1.desc': '5 Vorteilsauswahlen',
+                'tier.platinum.benefit2': '24/7 Concierge-Service',
+                'tier.platinum.benefit3': 'Kostenlose Bankaktien (jährlich)',
+                'tier.platinum.benefit4': 'Premium-Kreditzinsen',
+                'tier.platinum.benefit5': 'Priorität Support-Tickets',
+                'tier.platinum.benefit6': 'Flughafen-Lounge-Zugang',
+                'tier.platinum.benefit7': 'Exklusive Investmentmöglichkeiten',
+                'tiers.title': 'Mitgliedschaftsstufen',
+                'benefits.choose.title': 'Wählen Sie Ihre Vorteile',
+                'benefit.selected': 'Ausgewählt',
+                'benefit.select': 'Vorteil wählen',
+                'benefit.locked': 'Benötigt Platin',
+                'benefit1.title': 'Erhöhter Sparzins',
+                'benefit1.description': 'Steigern Sie Ihre Ersparnisse mit einem zusätzlichen Zinsbonus auf alle Sparkonten und Festgelder.',
+                'benefit1.value': 'Zinsbonus',
+                'benefit2.title': 'Keine Kontogebühren',
+                'benefit2.description': 'Alle monatlichen Kontoführungsgebühren für Giro- und Sparkonten entfallen, plus kostenlose Scheckhefte.',
+                'benefit2.value': 'Sparen Sie',
+                'benefit3.title': 'Reiseversicherung',
+                'benefit3.description': 'Umfassende Reiseversicherung einschließlich Reiserücktritt, medizinischer Notfälle und Gepäckverlust.',
+                'benefit3.value': 'Bis zu',
+                'benefit3.coverage': 'Deckung',
+                'benefit4.title': 'Cashback-Belohnungen',
+                'benefit4.description': 'Verdienen Sie Cashback bei allen Debitkartenkäufen und Rechnungszahlungen über unsere Banking-Plattform.',
+                'benefit4.value': 'auf alle Einkäufe',
+                'benefit5.title': 'Finanzberatung',
+                'benefit5.description': 'Vierteljährliche Einzelgespräche mit zertifizierten Finanzplanern, um Ihre finanziellen Ziele zu erreichen.',
+                'benefit5.value': 'Sitzungen/Jahr',
+                'benefit6.title': 'Kostenlose Bankaktien',
+                'benefit6.description': 'Erhalten Sie jährlich kostenlose Bankaktien als geschätztes Platin-Mitglied und Aktionär.',
+                'benefit6.value': 'in Aktien/Jahr',
+                'benefit7.title': 'Prioritäts-Support-Zugang',
+                'benefit7.description': 'Überspringen Sie die Warteschlange mit Express-Ticketbearbeitung und dedizierten Support-Kanälen.',
+                'benefit7.value': 'VIP-Support',
+                'benefit8.title': 'Premium-Kreditzinsen',
+                'benefit8.description': 'Zugang zu exklusiven Kreditkonditionen mit reduziertem Zinssatz für Hypotheken, Autokredite und Privatkredite.',
+                'benefit8.value': 'Zinsreduzierung',
+                'collect.title': 'So sammeln Sie Sparefroh Batches',
+                'collect.products.title': 'Produktbesitz',
+                'collect.products.description': 'Verdienen Sie Batches für jedes aktive Produkt: Girokonten, Sparkonten, Kreditkarten, Investitionen und Kredite.',
+                'collect.digital.title': 'Digitale Nutzung',
+                'collect.digital.description': 'Werden Sie belohnt für die Nutzung von Mobile Banking, Online-Überweisungen, kontaktloses Zahlen und digitale Kontoauszüge.',
+                'collect.health.title': 'Finanzielle Gesundheit',
+                'collect.health.description': 'Behalten Sie positive Kontostände, regelmäßiges Sparen, pünktliche Zahlungen und verantwortungsvolle Kreditnutzung für Bonuspunkte bei.',
+                'howitworks.title': 'So funktioniert\'s',
+                'howitworks.step1.title': 'Banking & Verdienen',
+                'howitworks.step1.description': 'Nutzen Sie Ihre Konten, tätigen Sie digitale Transaktionen und pflegen Sie gesunde Finanzgewohnheiten, um automatisch sparefroh Batches zu verdienen.',
+                'howitworks.step2.title': 'Stufen freischalten',
+                'howitworks.step2.description': 'Während Sie Batches sammeln, steigen Sie durch Bronze, Silber, Gold und Platin-Stufen mit zunehmenden Vorteilen auf.',
+                'howitworks.step3.title': 'Vorteile wählen',
+                'howitworks.step3.description': 'Wählen Sie aus einer Vielzahl exklusiver Vorteile, die auf Ihrer Stufe verfügbar sind. Höhere Stufen = mehr Auswahl!',
+                'howitworks.step4.title': 'Belohnungen genießen',
+                'howitworks.step4.description': 'Ihre ausgewählten Vorteile werden sofort aktiviert und jährlich erneuert, solange Sie Ihren Stufenstatus beibehalten.',
+                'modal.ok': 'Verstanden!',
+                'modal.tier.title': '🔒 Stufenanforderung',
+                'modal.tier.text': 'Dieser Vorteil erfordert die {tier}-Stufe oder höher. Sammeln Sie weiter Batches, um ihn freizuschalten!',
+                'modal.limit.title': '⚠️ Auswahllimit erreicht',
+                'modal.limit.text': 'Sie können bis zu {max} Vorteile mit Ihrer Gold-Stufe auswählen. Wählen Sie zuerst einen anderen Vorteil ab, oder steigen Sie auf Platin auf für mehr Auswahl!',
+                'modal.activated.title': '✓ Vorteil aktiviert!',
+                'modal.activated.text': 'Ihr neuer Vorteil wurde aktiviert und steht sofort zur Verfügung. Genießen Sie Ihre Belohnung!',
+                'modal.platinum.title': '🎉 Herzlichen Glückwunsch!',
+                'modal.platinum.text': 'Sie haben die Platin-Stufe erreicht! Sie können jetzt bis zu 5 Vorteile auswählen und exklusive Belohnungen freischalten.'
+            }
+        };
+
+        let currentLang = 'en';
+
+        // Initialize on load
         document.addEventListener('DOMContentLoaded', function() {
             const progressBar = document.querySelector('.progress-bar-fill');
             setTimeout(() => {
                 progressBar.style.width = '63.3%';
             }, 300);
+            translatePage();
         });
+
+        // Language Toggle
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'de' : 'en';
+            const langSwitcher = document.getElementById('langSwitcher');
+            langSwitcher.textContent = currentLang === 'en' ? '🇩🇪 Deutsch' : '🇬🇧 English';
+            document.documentElement.lang = currentLang;
+            translatePage();
+        }
+
+        function translatePage() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    el.textContent = translations[currentLang][key];
+                }
+            });
+
+            // Update dynamic labels
+            const activeLabel = currentLang === 'en' ? '✓ Current Tier' : '✓ Aktuelle Stufe';
+            document.querySelector('.tier-card.active').setAttribute('data-current-label', activeLabel);
+
+            const selectedLabel = currentLang === 'en' ? '✓ Active' : '✓ Aktiv';
+            document.querySelectorAll('.benefit-selection-card.selected').forEach(card => {
+                card.setAttribute('data-selected-label', selectedLabel);
+            });
+        }
+
+        // Tab Switching
+        function switchTab(tabIndex) {
+            const tabs = document.querySelectorAll('.tab-button');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach((tab, index) => {
+                if (index === tabIndex) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            contents.forEach((content, index) => {
+                if (index === tabIndex) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+        }
 
         // Track selected benefits count
         let selectedCount = 3;
-        const maxSelections = 3; // Gold tier allows 3 selections
+        const maxSelections = 3;
 
         function toggleBenefit(card, requiredTier) {
-            // Don't allow interaction with locked benefits
             if (card.classList.contains('locked')) {
                 const tierName = requiredTier.charAt(0).toUpperCase() + requiredTier.slice(1);
-                showModal('🔒 Stufenanforderung', `Dieser Vorteil erfordert die ${tierName}-Stufe oder höher. Sammeln Sie weiter Punkte, um ihn freizuschalten!`);
+                const title = translations[currentLang]['modal.tier.title'];
+                const text = translations[currentLang]['modal.tier.text'].replace('{tier}', tierName);
+                showModal(title, text);
                 return;
             }
 
@@ -1127,43 +1562,39 @@
             const btn = card.querySelector('.select-btn');
 
             if (isSelected) {
-                // Deselect
                 card.classList.remove('selected');
-                btn.textContent = 'Vorteil wählen';
+                btn.innerHTML = '<span data-i18n="benefit.select">' + translations[currentLang]['benefit.select'] + '</span>';
                 btn.className = 'select-btn primary';
                 selectedCount--;
                 updateSelectionTitle();
             } else {
-                // Check if we've reached the max
                 if (selectedCount >= maxSelections) {
-                    showModal('⚠️ Auswahllimit erreicht', `Sie können bis zu ${maxSelections} Vorteile mit Ihrer Gold-Stufe auswählen. Wählen Sie zuerst einen anderen Vorteil ab, oder steigen Sie auf Platin auf für mehr Auswahl!`);
+                    const title = translations[currentLang]['modal.limit.title'];
+                    const text = translations[currentLang]['modal.limit.text'].replace('{max}', maxSelections);
+                    showModal(title, text);
                     return;
                 }
 
-                // Select
                 card.classList.add('selected');
-                btn.textContent = '✓ Ausgewählt';
+                btn.innerHTML = '✓ <span data-i18n="benefit.selected">' + translations[currentLang]['benefit.selected'] + '</span>';
                 btn.className = 'select-btn selected';
                 selectedCount++;
                 updateSelectionTitle();
 
-                showModal('✓ Vorteil aktiviert!', 'Ihr neuer Vorteil wurde aktiviert und steht sofort zur Verfügung. Genießen Sie Ihre Belohnung!');
+                const title = translations[currentLang]['modal.activated.title'];
+                const text = translations[currentLang]['modal.activated.text'];
+                showModal(title, text);
             }
         }
 
         function updateSelectionTitle() {
-            const sectionTitles = document.querySelectorAll('.section-title');
-            sectionTitles.forEach(title => {
-                if (title.textContent.includes('Wählen Sie Ihre Vorteile')) {
-                    title.textContent = `🎁 Wählen Sie Ihre Vorteile (${selectedCount} von ${maxSelections} ausgewählt)`;
-                }
-            });
+            document.getElementById('benefitCounter').textContent = `(${selectedCount} of ${maxSelections} selected)`;
         }
 
         function showModal(title, message) {
             const modal = document.getElementById('confirmationModal');
-            const modalTitle = modal.querySelector('.modal-title');
-            const modalText = modal.querySelector('.modal-text');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalText = document.getElementById('modalText');
 
             modalTitle.textContent = title;
             modalText.textContent = message;
@@ -1175,40 +1606,11 @@
             modal.classList.remove('show');
         }
 
-        // Close modal when clicking outside
         document.getElementById('confirmationModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeModal();
             }
         });
-
-        // Simulate real-time points update (demo purposes)
-        let currentPoints = 4750;
-        function simulatePointsEarning() {
-            setInterval(() => {
-                const randomIncrease = Math.floor(Math.random() * 3);
-                if (randomIncrease > 0) {
-                    currentPoints += randomIncrease;
-                    document.querySelector('.points-value').textContent = currentPoints.toLocaleString();
-
-                    // Update progress bar
-                    const percentage = (currentPoints / 7500) * 100;
-                    const progressBar = document.querySelector('.progress-bar-fill');
-                    progressBar.style.width = `${Math.min(percentage, 100)}%`;
-
-                    // Update progress text
-                    document.querySelector('.progress-points').textContent = `${currentPoints.toLocaleString()} / 7,500 points`;
-
-                    // Check if reached Platinum
-                    if (currentPoints >= 7500) {
-                        showModal('🎉 Congratulations!', 'You\'ve reached Platinum tier! You can now select up to 5 benefits and unlock exclusive rewards.');
-                    }
-                }
-            }, 30000); // Every 30 seconds for demo
-        }
-
-        // Uncomment to enable points simulation
-        // simulatePointsEarning();
     </script>
 </body>
 </html>
