@@ -280,7 +280,7 @@
     {
       "id": "task-20260119-120118",
       "type": "feature",
-      "status": "open",
+      "status": "done",
       "priority": "medium",
       "title": "Enhancement Membership program",
       "description": "The point system feels to abstract. Please divide the overall point system by 100 to make it work with smaller numbers. Also change the communication from points to sparefroh batches (see attachment a basic reference which you can use to create those batches)\n\nInstead of scrolling through all content please add navigation tabs (1. dashboard, 2 tiers, 3 benefits, 4 collect points)\n\nAdd the option for changing language between German and English whereas English is set as default. Execute the full functional prototype in both languages.\n\nAs always review the overall design and come up with ux improvements. \n\nThink hard and long.",
@@ -293,12 +293,24 @@
           "original_name": "IMG_7352.jpeg"
         }
       ],
-      "updated_at": "2026-01-19T12:01:18.546441"
+      "updated_at": "2026-01-19T12:01:18.546441",
+      "completion_notes": "Completed by agent in run 20260119_130644\n\u2717 Verification: FAILED - Unknown\nCommit: a1f2bf2",
+      "completed_at": "2026-01-19T13:11:52.020568"
+    },
+    {
+      "id": "task-20260119-135256",
+      "type": "bug",
+      "status": "open",
+      "priority": "medium",
+      "title": "Fix Real Estate Scraper - Incorrect CSS Selectors for derstandard.at",
+      "description": "The real-estate-financing.html prototype fails to scrape property data from immobilien.derstandard.at. The CSS selectors don't match the actual DOM structure.\n\nREQUIRED FIXES:\n- Address: Use .heading-section-address instead of .object-location\n- Price/Area/Rooms: Use .sc-stat with .sc-stat-label and .sc-stat-value pattern\n- Image: Extract from picture > source srcset attribute (not img src)\n\nSee attached specification (real_estate_scraper_fix.md) for complete implementation details and code examples. Also uploaded to the server at /var/www/smartprototypes.net/public_html/UI_Prototypes/Banking_Prototypes/real_estate_scraper_fix.md\n\nTest URL: https://immobilien.derstandard.at/detail/15006491",
+      "created_at": "2026-01-19T13:52:56.356135",
+      "updated_at": "2026-01-19T13:57:18.164423"
     }
   ],
   "metadata": {
     "project": "Banking_Prototypes",
     "version": "1.0",
-    "last_updated": "2026-01-19T12:01:18.546463"
+    "last_updated": "2026-01-19T13:57:18.164434"
   }
 }
