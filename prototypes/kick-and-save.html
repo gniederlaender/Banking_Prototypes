@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kick & Save - Automated Goal Savings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #F5F5F5;
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        /* Top Navigation - George Style */
+        .top-nav {
+            background-color: #1E5EBE;
+            color: white;
+            height: 64px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .nav-logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Content Container */
+        .main-content {
+            margin-top: 64px;
+            padding: 32px 24px;
+            min-height: calc(100vh - 64px);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1E5EBE 0%, #00A19C 100%);
+            color: white;
+            padding: 48px 32px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .hero-icon {
+            font-size: 4em;
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Step Indicator */
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #E0E0E0;
+            z-index: 0;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #E0E0E0;
+            color: #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+
+        .step.active .step-number {
+            background: #1E5EBE;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .step.completed .step-number {
+            background: #00916E;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.85em;
+            color: #666;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .step.active .step-label {
+            color: #1E5EBE;
+            font-weight: 700;
+        }
+
+        /* Card Sections */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.4s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #212121;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .section-description {
+            color: #666;
+            margin-bottom: 32px;
+            font-size: 1.05em;
+        }
+
+        /* Competition Selection */
+        .competition-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .competition-card {
+            border: 3px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .competition-card:hover {
+            border-color: #1E5EBE;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(30, 94, 190, 0.2);
+        }
+
+        .competition-card.selected {
+            border-color: #00916E;
+            background: #E8F5F1;
+        }
+
+        .competition-icon {
+            font-size: 3em;
+            margin-bottom: 12px;
+        }
+
+        .competition-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #212121;
+            margin-bottom: 4px;
+        }
+
+        .competition-year {
+            color: #757575;
+            font-size: 0.9em;
+        }
+
+        /* Team Selection */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .team-card {
+            border: 3px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 20px 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            background: white;
+        }
+
+        .team-card:hover {
+            border-color: #1E5EBE;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 94, 190, 0.15);
+        }
+
+        .team-card.selected {
+            border-color: #00916E;
+            background: #E8F5F1;
+        }
+
+        .team-flag {
+            font-size: 3em;
+            margin-bottom: 12px;
+        }
+
+        .team-name {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #212121;
+        }
+
+        /* Amount Configuration */
+        .config-section {
+            margin-bottom: 32px;
+        }
+
+        .config-label {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #212121;
+            margin-bottom: 16px;
+        }
+
+        .amount-selector {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .amount-input {
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .amount-input input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 1.5em;
+            font-weight: 600;
+            border: 3px solid #E0E0E0;
+            border-radius: 8px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+
+        .amount-input input:focus {
+            outline: none;
+            border-color: #1E5EBE;
+        }
+
+        .currency {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #757575;
+        }
+
+        .quick-amounts {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .quick-amount-btn {
+            padding: 8px 20px;
+            border: 2px solid #E0E0E0;
+            background: white;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-amount-btn:hover {
+            border-color: #1E5EBE;
+            color: #1E5EBE;
+        }
+
+        /* Account Selection */
+        .account-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .account-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border: 3px solid #E0E0E0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .account-item:hover {
+            border-color: #1E5EBE;
+        }
+
+        .account-item.selected {
+            border-color: #00916E;
+            background: #E8F5F1;
+        }
+
+        .account-icon {
+            font-size: 2em;
+            margin-right: 16px;
+        }
+
+        .account-info {
+            flex: 1;
+        }
+
+        .account-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #212121;
+            margin-bottom: 4px;
+        }
+
+        .account-number {
+            color: #757575;
+            font-size: 0.9em;
+        }
+
+        .account-balance {
+            font-weight: 600;
+            color: #00916E;
+            font-size: 1.1em;
+        }
+
+        /* Confirmation Summary */
+        .summary-card {
+            background: linear-gradient(135deg, #00916E 0%, #00A19C 100%);
+            color: white;
+            padding: 32px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .summary-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            opacity: 0.9;
+        }
+
+        .summary-value {
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        /* Success State */
+        .success-icon {
+            font-size: 5em;
+            text-align: center;
+            margin-bottom: 24px;
+            animation: scaleIn 0.5s;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .success-title {
+            font-size: 2em;
+            font-weight: 700;
+            color: #00916E;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .success-message {
+            text-align: center;
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 32px;
+        }
+
+        /* Notification Preview */
+        .notification-preview {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            max-width: 400px;
+            margin: 32px auto;
+            border-left: 4px solid #00916E;
+        }
+
+        .notification-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .notification-app {
+            font-weight: 700;
+            color: #212121;
+        }
+
+        .notification-time {
+            color: #757575;
+            font-size: 0.85em;
+        }
+
+        .notification-content {
+            font-size: 1.05em;
+            color: #212121;
+            line-height: 1.6;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 32px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #1E5EBE;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #174A99;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 94, 190, 0.3);
+        }
+
+        .btn-secondary {
+            background: #E0E0E0;
+            color: #212121;
+        }
+
+        .btn-secondary:hover {
+            background: #BDBDBD;
+        }
+
+        .btn-success {
+            background: #00916E;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #007759;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 145, 110, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #E3F2FD;
+            border-left: 4px solid #1E5EBE;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 24px 0;
+        }
+
+        .info-box-title {
+            font-weight: 600;
+            color: #1565C0;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box-content {
+            color: #1976D2;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 1.8em;
+            }
+
+            .hero-subtitle {
+                font-size: 1em;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .competition-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .team-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+
+            .amount-selector {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .amount-input {
+                max-width: 100%;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-logo">George</a>
+            <a href="../index.html" class="back-btn">← Back</a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="container">
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <div class="hero-icon">⚽</div>
+                <h1 class="hero-title">Kick & Save</h1>
+                <p class="hero-subtitle">Turn every goal your favorite team scores into automatic savings!</p>
+            </div>
+
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div class="step active" id="step1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Competition</div>
+                </div>
+                <div class="step" id="step2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Team</div>
+                </div>
+                <div class="step" id="step3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Amount</div>
+                </div>
+                <div class="step" id="step4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Confirm</div>
+                </div>
+            </div>
+
+            <!-- Step 1: Competition Selection -->
+            <div class="section active" id="section-competition">
+                <div class="card">
+                    <h2 class="section-title">Choose Your Competition</h2>
+                    <p class="section-description">Select the competition you want to follow</p>
+
+                    <div class="competition-grid">
+                        <div class="competition-card" onclick="selectCompetition('worldcup')">
+                            <div class="competition-icon">🏆</div>
+                            <div class="competition-name">FIFA World Cup</div>
+                            <div class="competition-year">2026</div>
+                        </div>
+                        <div class="competition-card" onclick="selectCompetition('euro')">
+                            <div class="competition-icon">⚽</div>
+                            <div class="competition-name">UEFA Euro</div>
+                            <div class="competition-year">2024</div>
+                        </div>
+                        <div class="competition-card" onclick="selectCompetition('champions')">
+                            <div class="competition-icon">🌟</div>
+                            <div class="competition-name">Champions League</div>
+                            <div class="competition-year">2025/26</div>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" id="btn-competition" disabled onclick="goToStep(2)">
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Team Selection -->
+            <div class="section" id="section-team">
+                <div class="card">
+                    <h2 class="section-title">Select Your Favorite Team</h2>
+                    <p class="section-description">Choose the team you want to support</p>
+
+                    <div class="team-grid" id="teamGrid">
+                        <!-- Teams will be populated based on competition -->
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-secondary" onclick="goToStep(1)">Back</button>
+                        <button class="btn btn-primary" id="btn-team" disabled onclick="goToStep(3)">
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Amount Configuration -->
+            <div class="section" id="section-amount">
+                <div class="card">
+                    <h2 class="section-title">Configure Your Savings</h2>
+                    <p class="section-description">Set how much to save per goal and choose your savings account</p>
+
+                    <div class="config-section">
+                        <div class="config-label">💰 Amount per goal</div>
+                        <div class="amount-selector">
+                            <div class="amount-input">
+                                <input type="number" id="amount-input" min="1" max="100" value="5"
+                                       oninput="updateAmount(this.value)">
+                            </div>
+                            <div class="currency">€</div>
+                        </div>
+                        <div class="quick-amounts">
+                            <button class="quick-amount-btn" onclick="setAmount(1)">€1</button>
+                            <button class="quick-amount-btn" onclick="setAmount(2)">€2</button>
+                            <button class="quick-amount-btn" onclick="setAmount(5)">€5</button>
+                            <button class="quick-amount-btn" onclick="setAmount(10)">€10</button>
+                            <button class="quick-amount-btn" onclick="setAmount(20)">€20</button>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <div class="config-label">🏦 Target savings account</div>
+                        <div class="account-list">
+                            <div class="account-item" onclick="selectAccount('savings1')">
+                                <div class="account-icon">💰</div>
+                                <div class="account-info">
+                                    <div class="account-name">Dream Vacation</div>
+                                    <div class="account-number">AT12 3456 7890 1234 5678</div>
+                                </div>
+                                <div class="account-balance">€2,450.00</div>
+                            </div>
+                            <div class="account-item" onclick="selectAccount('savings2')">
+                                <div class="account-icon">🏠</div>
+                                <div class="account-info">
+                                    <div class="account-name">Home Savings</div>
+                                    <div class="account-number">AT98 7654 3210 9876 5432</div>
+                                </div>
+                                <div class="account-balance">€8,720.00</div>
+                            </div>
+                            <div class="account-item" onclick="selectAccount('savings3')">
+                                <div class="account-icon">🎯</div>
+                                <div class="account-info">
+                                    <div class="account-name">General Savings</div>
+                                    <div class="account-number">AT55 1122 3344 5566 7788</div>
+                                </div>
+                                <div class="account-balance">€5,340.00</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-title">
+                            <span>ℹ️</span>
+                            <span>How it works</span>
+                        </div>
+                        <div class="info-box-content">
+                            Every time your selected team scores a goal, we'll automatically transfer the specified amount from your main checking account to your chosen savings account. You'll receive a notification celebrating the goal and confirming the savings transfer!
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-secondary" onclick="goToStep(2)">Back</button>
+                        <button class="btn btn-primary" id="btn-amount" disabled onclick="goToStep(4)">
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Confirmation -->
+            <div class="section" id="section-confirm">
+                <div class="card">
+                    <h2 class="section-title">Review & Confirm</h2>
+                    <p class="section-description">Please review your Kick & Save automation rule</p>
+
+                    <div class="summary-card">
+                        <div class="summary-title">Your Kick & Save Rule</div>
+                        <div class="summary-item">
+                            <div class="summary-label">Competition</div>
+                            <div class="summary-value" id="summary-competition">-</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Team</div>
+                            <div class="summary-value" id="summary-team">-</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Amount per goal</div>
+                            <div class="summary-value" id="summary-amount">-</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Target account</div>
+                            <div class="summary-value" id="summary-account">-</div>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-title">
+                            <span>📱</span>
+                            <span>Notification preview</span>
+                        </div>
+                        <div class="info-box-content">
+                            Here's what you'll see when your team scores:
+                        </div>
+                    </div>
+
+                    <div class="notification-preview">
+                        <div class="notification-header">
+                            <div class="competition-icon" style="font-size: 1.5em;">⚽</div>
+                            <div>
+                                <div class="notification-app">George - Kick & Save</div>
+                                <div class="notification-time">Just now</div>
+                            </div>
+                        </div>
+                        <div class="notification-content" id="notification-preview-text">
+                            🎉 GOAL! <strong id="preview-team">Your team</strong> scored!<br>
+                            <strong id="preview-amount">€5</strong> has been saved to your <strong id="preview-account">savings account</strong>. Keep celebrating! 🎊
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-secondary" onclick="goToStep(3)">Back</button>
+                        <button class="btn btn-success" onclick="activateRule()">
+                            Activate Kick & Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Screen -->
+            <div class="section" id="section-success">
+                <div class="card">
+                    <div class="success-icon">🎉</div>
+                    <h2 class="success-title">Kick & Save Activated!</h2>
+                    <p class="success-message">
+                        Your automatic savings rule is now active. Every goal your team scores will contribute to your financial goals!
+                    </p>
+
+                    <div class="summary-card">
+                        <div class="summary-title">Active Rule Summary</div>
+                        <div class="summary-item">
+                            <div class="summary-label">Status</div>
+                            <div class="summary-value">✓ Active</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Next match</div>
+                            <div class="summary-value">TBD - Check calendar</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">Potential savings</div>
+                            <div class="summary-value" id="potential-savings">-</div>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-secondary" onclick="window.location.href='../index.html'">
+                            Go to Dashboard
+                        </button>
+                        <button class="btn btn-primary" onclick="resetAndStart()">
+                            Create Another Rule
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        let selectedCompetition = null;
+        let selectedTeam = null;
+        let selectedAmount = 5;
+        let selectedAccount = null;
+
+        const competitions = {
+            worldcup: {
+                name: 'FIFA World Cup 2026',
+                teams: [
+                    { id: 'austria', name: 'Austria', flag: '🇦🇹' },
+                    { id: 'germany', name: 'Germany', flag: '🇩🇪' },
+                    { id: 'spain', name: 'Spain', flag: '🇪🇸' },
+                    { id: 'france', name: 'France', flag: '🇫🇷' },
+                    { id: 'italy', name: 'Italy', flag: '🇮🇹' },
+                    { id: 'england', name: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
+                    { id: 'brazil', name: 'Brazil', flag: '🇧🇷' },
+                    { id: 'argentina', name: 'Argentina', flag: '🇦🇷' },
+                    { id: 'netherlands', name: 'Netherlands', flag: '🇳🇱' },
+                    { id: 'portugal', name: 'Portugal', flag: '🇵🇹' },
+                    { id: 'belgium', name: 'Belgium', flag: '🇧🇪' },
+                    { id: 'croatia', name: 'Croatia', flag: '🇭🇷' }
+                ]
+            },
+            euro: {
+                name: 'UEFA Euro 2024',
+                teams: [
+                    { id: 'austria', name: 'Austria', flag: '🇦🇹' },
+                    { id: 'germany', name: 'Germany', flag: '🇩🇪' },
+                    { id: 'spain', name: 'Spain', flag: '🇪🇸' },
+                    { id: 'france', name: 'France', flag: '🇫🇷' },
+                    { id: 'italy', name: 'Italy', flag: '🇮🇹' },
+                    { id: 'england', name: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
+                    { id: 'netherlands', name: 'Netherlands', flag: '🇳🇱' },
+                    { id: 'portugal', name: 'Portugal', flag: '🇵🇹' }
+                ]
+            },
+            champions: {
+                name: 'Champions League 2025/26',
+                teams: [
+                    { id: 'real-madrid', name: 'Real Madrid', flag: '⚪' },
+                    { id: 'barcelona', name: 'Barcelona', flag: '🔴🔵' },
+                    { id: 'bayern', name: 'Bayern Munich', flag: '🔴⚪' },
+                    { id: 'liverpool', name: 'Liverpool', flag: '🔴' },
+                    { id: 'man-city', name: 'Man City', flag: '💙' },
+                    { id: 'psg', name: 'PSG', flag: '🔵🔴' }
+                ]
+            }
+        };
+
+        const accounts = {
+            savings1: { name: 'Dream Vacation', number: 'AT12 3456 7890 1234 5678' },
+            savings2: { name: 'Home Savings', number: 'AT98 7654 3210 9876 5432' },
+            savings3: { name: 'General Savings', number: 'AT55 1122 3344 5566 7788' }
+        };
+
+        function selectCompetition(competitionId) {
+            selectedCompetition = competitionId;
+
+            // Update UI
+            document.querySelectorAll('.competition-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+
+            // Enable continue button
+            document.getElementById('btn-competition').disabled = false;
+
+            // Populate teams for next step
+            populateTeams(competitionId);
+        }
+
+        function populateTeams(competitionId) {
+            const teamGrid = document.getElementById('teamGrid');
+            teamGrid.innerHTML = '';
+
+            const teams = competitions[competitionId].teams;
+            teams.forEach(team => {
+                const teamCard = document.createElement('div');
+                teamCard.className = 'team-card';
+                teamCard.onclick = () => selectTeam(team);
+                teamCard.innerHTML = `
+                    <div class="team-flag">${team.flag}</div>
+                    <div class="team-name">${team.name}</div>
+                `;
+                teamGrid.appendChild(teamCard);
+            });
+        }
+
+        function selectTeam(team) {
+            selectedTeam = team;
+
+            // Update UI
+            document.querySelectorAll('.team-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+
+            // Enable continue button
+            document.getElementById('btn-team').disabled = false;
+        }
+
+        function updateAmount(value) {
+            selectedAmount = parseFloat(value) || 0;
+            checkAmountStep();
+        }
+
+        function setAmount(amount) {
+            document.getElementById('amount-input').value = amount;
+            selectedAmount = amount;
+            checkAmountStep();
+        }
+
+        function checkAmountStep() {
+            const btnAmount = document.getElementById('btn-amount');
+            btnAmount.disabled = !(selectedAmount > 0 && selectedAccount);
+        }
+
+        function selectAccount(accountId) {
+            selectedAccount = accountId;
+
+            // Update UI
+            document.querySelectorAll('.account-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+
+            checkAmountStep();
+        }
+
+        function goToStep(stepNumber) {
+            // Update step indicator
+            for (let i = 1; i <= 4; i++) {
+                const step = document.getElementById(`step${i}`);
+                const section = document.getElementById(getSectionId(i));
+
+                if (i < stepNumber) {
+                    step.classList.remove('active');
+                    step.classList.add('completed');
+                } else if (i === stepNumber) {
+                    step.classList.remove('completed');
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+
+                section.classList.toggle('active', i === stepNumber);
+            }
+
+            // Update summary on confirmation step
+            if (stepNumber === 4) {
+                updateSummary();
+            }
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function getSectionId(stepNumber) {
+            const sections = ['section-competition', 'section-team', 'section-amount', 'section-confirm'];
+            return sections[stepNumber - 1];
+        }
+
+        function updateSummary() {
+            const competition = competitions[selectedCompetition];
+
+            document.getElementById('summary-competition').textContent = competition.name;
+            document.getElementById('summary-team').textContent = `${selectedTeam.flag} ${selectedTeam.name}`;
+            document.getElementById('summary-amount').textContent = `€${selectedAmount}`;
+            document.getElementById('summary-account').textContent = accounts[selectedAccount].name;
+
+            // Update notification preview
+            document.getElementById('preview-team').textContent = selectedTeam.name;
+            document.getElementById('preview-amount').textContent = `€${selectedAmount}`;
+            document.getElementById('preview-account').textContent = accounts[selectedAccount].name;
+        }
+
+        function activateRule() {
+            // Simulate activation
+            goToStep(5);
+
+            // Show success section
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById('section-success').classList.add('active');
+
+            // Update step indicator to show all completed
+            for (let i = 1; i <= 4; i++) {
+                const step = document.getElementById(`step${i}`);
+                step.classList.remove('active');
+                step.classList.add('completed');
+            }
+
+            // Calculate potential savings (assuming 3 goals per match average, 10 matches)
+            const potentialSavings = selectedAmount * 3 * 10;
+            document.getElementById('potential-savings').textContent = `~€${potentialSavings} (est. 10 matches)`;
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetAndStart() {
+            // Reset state
+            selectedCompetition = null;
+            selectedTeam = null;
+            selectedAmount = 5;
+            selectedAccount = null;
+
+            // Reset UI
+            document.querySelectorAll('.competition-card, .team-card, .account-item').forEach(el => {
+                el.classList.remove('selected');
+            });
+
+            document.getElementById('amount-input').value = 5;
+            document.getElementById('btn-competition').disabled = true;
+            document.getElementById('btn-team').disabled = true;
+            document.getElementById('btn-amount').disabled = true;
+
+            // Go to step 1
+            goToStep(1);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default amount
+            document.getElementById('amount-input').value = selectedAmount;
+        });
+    </script>
+</body>
+</html>
