@@ -287,16 +287,37 @@
     {
       "id": "task-20260128-202549",
       "type": "feature",
-      "status": "open",
+      "status": "done",
       "priority": "medium",
       "title": "Kick and save ",
       "description": "Create this money automation feature which automates savings based on your favorite national team shooting a goal. Let me choose competition FIFA World Cup 2026 and later I would like to choose Austria as my Favorite Club. Later you choose how much you want to save when your club scores a goal. And which target account the amount should be deposited on. Finally you get a confirmation screen summarising the rule and then if the club scores you get a emotional push notification. Iterate this with your senior designers and come up with a functional html prototype ",
-      "created_at": "2026-01-28T20:25:49.803841"
+      "created_at": "2026-01-28T20:25:49.803841",
+      "completion_notes": "Completed by agent in run 20260129_082002\n\u2717 Verification: FAILED - Unknown\nCommit: 244e083",
+      "completed_at": "2026-01-29T08:22:27.277159"
+    },
+    {
+      "id": "task-20260129-151956",
+      "type": "feature",
+      "status": "open",
+      "priority": "medium",
+      "title": "special financing application ",
+      "description": "Build a loan agent to help the customer finding the correct loan product and prepare the approval documents for the bank. The customer should describe to this agent what he wants to have financed, how he wants to repay and if there are special features necessary. The agent should then create the creditcase  with all the relevant data he has from internal systems and add the new information the customer gave. The main relevant information is: investment purpose, business/investment concept (optional), loan amount, tenor, planned repayments, collateral (optional), current outstandings, changes that are expected due the investment, information about the industry of the customer (optional). Provide all this information in a well structured summary that the client can confirm and send to the bank for further checking and approval. Show the customer understandable if something is missing and what the next steps will be.",
+      "created_at": "2026-01-29T15:19:56.690107"
+    },
+    {
+      "id": "task-20260129-154325",
+      "type": "feature",
+      "status": "open",
+      "priority": "medium",
+      "title": "Sicherheitscode f\u00fcr Aufgabenliste (Task-Liste)",
+      "description": "Baue ein Mini-Security-Feature f\u00fcr die Aufgabenverwaltung (Task-Liste) ein:\n\n1. Wenn ein User die Aufgabenliste aufrufen will, erscheint zuerst ein Eingabefeld f\u00fcr einen 6-stelligen Sicherheitscode (gleiche L\u00f6sung wie f\u00fcr Admins)\n2. Nur bei korrektem Code wird die Task-Liste angezeigt.\n3. Der Sicherheitscode ist: 019800",
+      "created_at": "2026-01-29T15:43:25.310224",
+      "updated_at": "2026-01-29T15:45:57.719595"
     }
   ],
   "metadata": {
     "project": "Banking_Prototypes",
     "version": "1.0",
-    "last_updated": "2026-01-28T20:25:49.803852"
+    "last_updated": "2026-01-29T15:45:57.719606"
   }
 }
