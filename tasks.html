@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aufgabenliste - Banking Prototypes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+        }
+
+        /* Passcode Overlay */
+        .passcode-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .passcode-overlay.hidden {
+            display: none;
+        }
+        .passcode-modal {
+            background: white;
+            border-radius: 16px;
+            padding: 48px 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        .passcode-modal .lock-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        .passcode-modal h2 {
+            color: #1e3c72;
+            font-size: 1.4em;
+            margin-bottom: 8px;
+        }
+        .passcode-modal p {
+            color: #666;
+            font-size: 0.95em;
+            margin-bottom: 28px;
+        }
+        .passcode-input {
+            width: 220px;
+            padding: 14px 20px;
+            font-size: 1.6em;
+            text-align: center;
+            letter-spacing: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.3s;
+        }
+        .passcode-input:focus {
+            border-color: #2a5298;
+        }
+        .passcode-input.error {
+            border-color: #e53935;
+            animation: shake 0.4s ease;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            50% { transform: translateX(8px); }
+            75% { transform: translateX(-4px); }
+        }
+        .passcode-btn {
+            display: block;
+            width: 220px;
+            margin: 20px auto 0;
+            padding: 12px;
+            background: #2a5298;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .passcode-btn:hover {
+            background: #1e3c72;
+        }
+        .passcode-error {
+            color: #e53935;
+            font-size: 0.9em;
+            margin-top: 12px;
+            min-height: 20px;
+        }
+
+        /* Task List Content */
+        .content {
+            display: none;
+            padding: 40px 20px;
+        }
+        .content.visible {
+            display: block;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        .header h1 {
+            color: white;
+            font-size: 1.8em;
+        }
+        .header a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: color 0.2s;
+        }
+        .header a:hover {
+            color: white;
+        }
+
+        /* Filter Tabs */
+        .filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            background: transparent;
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover {
+            border-color: rgba(255,255,255,0.6);
+            color: white;
+        }
+        .filter-btn.active {
+            background: white;
+            color: #1e3c72;
+            border-color: white;
+            font-weight: 600;
+        }
+        .task-count {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9em;
+            margin-bottom: 16px;
+        }
+
+        /* Task Cards */
+        .task-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .task-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        .task-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        .task-title {
+            color: #1e3c72;
+            font-size: 1.05em;
+            font-weight: 600;
+        }
+        .task-badge {
+            flex-shrink: 0;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-done {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .badge-open {
+            background: #fff3e0;
+            color: #e65100;
+        }
+        .badge-feature {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        .badge-bug {
+            background: #fce4ec;
+            color: #c62828;
+        }
+        .task-desc {
+            color: #555;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .task-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            font-size: 0.8em;
+            color: #999;
+        }
+        .task-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .task-notes {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+            font-size: 0.82em;
+            color: #777;
+            font-style: italic;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255,255,255,0.6);
+        }
+        .empty-state .icon {
+            font-size: 3em;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Passcode Overlay -->
+    <div class="passcode-overlay" id="passcodeOverlay">
+        <div class="passcode-modal">
+            <div class="lock-icon">🔒</div>
+            <h2>Zugang zur Aufgabenliste</h2>
+            <p>Bitte geben Sie den 6-stelligen Zugangscode ein.</p>
+            <input
+                type="password"
+                id="passcodeInput"
+                class="passcode-input"
+                maxlength="6"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                autocomplete="off"
+                autofocus
+            >
+            <button class="passcode-btn" id="passcodeBtn">Bestätigen</button>
+            <div class="passcode-error" id="passcodeError"></div>
+        </div>
+    </div>
+
+    <!-- Task List Content -->
+    <div class="content" id="taskContent">
+        <div class="container">
+            <div class="header">
+                <h1>Aufgabenliste</h1>
+                <a href="index.html">&larr; Zurück zu Prototypen</a>
+            </div>
+
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">Alle</button>
+                <button class="filter-btn" data-filter="open">Offen</button>
+                <button class="filter-btn" data-filter="done">Erledigt</button>
+                <button class="filter-btn" data-filter="feature">Features</button>
+                <button class="filter-btn" data-filter="bug">Bugs</button>
+            </div>
+
+            <div class="task-count" id="taskCount"></div>
+            <div id="taskList"></div>
+        </div>
+    </div>
+
+    <script>
+        const PASSCODE = '019800';
+        const SESSION_KEY = 'aufgabenliste_access';
+
+        // --- Passcode Logic ---
+        const overlay = document.getElementById('passcodeOverlay');
+        const content = document.getElementById('taskContent');
+        const input = document.getElementById('passcodeInput');
+        const btn = document.getElementById('passcodeBtn');
+        const errorEl = document.getElementById('passcodeError');
+
+        function grantAccess() {
+            sessionStorage.setItem(SESSION_KEY, 'granted');
+            overlay.classList.add('hidden');
+            content.classList.add('visible');
+            loadTasks();
+        }
+
+        function checkPasscode() {
+            const val = input.value.trim();
+            if (val === PASSCODE) {
+                grantAccess();
+            } else {
+                errorEl.textContent = 'Falscher Code';
+                input.classList.add('error');
+                input.value = '';
+                input.focus();
+                setTimeout(() => {
+                    input.classList.remove('error');
+                }, 500);
+            }
+        }
+
+        // Check session
+        if (sessionStorage.getItem(SESSION_KEY) === 'granted') {
+            grantAccess();
+        } else {
+            input.focus();
+        }
+
+        btn.addEventListener('click', checkPasscode);
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') checkPasscode();
+            errorEl.textContent = '';
+        });
+
+        // Only allow digits
+        input.addEventListener('input', () => {
+            input.value = input.value.replace(/\D/g, '');
+        });
+
+        // --- Task List Logic ---
+        let allTasks = [];
+        let activeFilter = 'all';
+
+        async function loadTasks() {
+            try {
+                const resp = await fetch('feedback.json?t=' + Date.now());
+                const data = await resp.json();
+                allTasks = (data.feedback_items || []).slice().reverse();
+                renderTasks();
+            } catch (err) {
+                document.getElementById('taskList').innerHTML =
+                    '<div class="empty-state"><div class="icon">⚠️</div><p>Fehler beim Laden der Aufgaben.</p></div>';
+            }
+        }
+
+        function renderTasks() {
+            let filtered = allTasks;
+            if (activeFilter === 'open') filtered = allTasks.filter(t => t.status === 'open');
+            else if (activeFilter === 'done') filtered = allTasks.filter(t => t.status === 'done');
+            else if (activeFilter === 'feature') filtered = allTasks.filter(t => t.type === 'feature');
+            else if (activeFilter === 'bug') filtered = allTasks.filter(t => t.type === 'bug');
+
+            document.getElementById('taskCount').textContent =
+                filtered.length + ' Aufgabe' + (filtered.length !== 1 ? 'n' : '') +
+                (activeFilter !== 'all' ? ' (gefiltert)' : '');
+
+            if (filtered.length === 0) {
+                document.getElementById('taskList').innerHTML =
+                    '<div class="empty-state"><div class="icon">📋</div><p>Keine Aufgaben gefunden.</p></div>';
+                return;
+            }
+
+            document.getElementById('taskList').innerHTML = filtered.map(task => {
+                const statusBadge = task.status === 'done'
+                    ? '<span class="task-badge badge-done">Erledigt</span>'
+                    : '<span class="task-badge badge-open">Offen</span>';
+                const typeBadge = task.type === 'bug'
+                    ? '<span class="task-badge badge-bug">Bug</span>'
+                    : '<span class="task-badge badge-feature">Feature</span>';
+
+                const created = task.created_at ? new Date(task.created_at).toLocaleDateString('de-AT') : '';
+                const completed = task.completed_at ? new Date(task.completed_at).toLocaleDateString('de-AT') : '';
+
+                let notes = '';
+                if (task.completion_notes) {
+                    notes = '<div class="task-notes">' + escapeHtml(task.completion_notes) + '</div>';
+                }
+
+                return `
+                    <div class="task-card">
+                        <div class="task-top">
+                            <div class="task-title">${escapeHtml(task.title)}</div>
+                            <div style="display:flex;gap:6px;">
+                                ${typeBadge}${statusBadge}
+                            </div>
+                        </div>
+                        <div class="task-desc">${escapeHtml(task.description || '')}</div>
+                        <div class="task-meta">
+                            <span>Erstellt: ${created}</span>
+                            ${completed ? '<span>Erledigt: ' + completed + '</span>' : ''}
+                            ${task.priority ? '<span>Priorität: ' + escapeHtml(task.priority) + '</span>' : ''}
+                        </div>
+                        ${notes}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeFilter = btn.dataset.filter;
+                renderTasks();
+            });
+        });
+    </script>
+</body>
+</html>
