@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Agent - Smart Financing Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #1E5EBE;
+            --primary-blue-dark: #174A99;
+            --teal: #00A19C;
+            --green: #00916E;
+            --bg-light: #F5F5F5;
+            --bg-white: #FFFFFF;
+            --text-dark: #212121;
+            --text-medium: #666666;
+            --text-light: #757575;
+            --border-color: #E0E0E0;
+            --warning-orange: #FF9800;
+            --error-red: #D32F2F;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--primary-blue);
+            color: white;
+            height: 64px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .nav-logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Main Layout */
+        .main-container {
+            margin-top: 64px;
+            display: flex;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: calc(100vh - 64px);
+        }
+
+        /* Chat Section */
+        .chat-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .chat-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--teal) 100%);
+            color: white;
+        }
+
+        .chat-header h1 {
+            font-size: 1.5em;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-header p {
+            opacity: 0.95;
+            font-size: 0.95em;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.agent {
+            align-self: flex-start;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.2em;
+        }
+
+        .message.agent .message-avatar {
+            background: linear-gradient(135deg, var(--primary-blue), var(--teal));
+        }
+
+        .message.user .message-avatar {
+            background: var(--green);
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            line-height: 1.5;
+        }
+
+        .message.agent .message-content {
+            background: #F0F4F8;
+            color: var(--text-dark);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user .message-content {
+            background: var(--primary-blue);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-content strong {
+            font-weight: 600;
+        }
+
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .quick-reply-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--primary-blue);
+            background: white;
+            color: var(--primary-blue);
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-reply-btn:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Input Area */
+        .chat-input-area {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border-color);
+            background: white;
+        }
+
+        .input-form {
+            display: flex;
+            gap: 12px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .send-btn {
+            padding: 12px 24px;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .send-btn:hover {
+            background: var(--primary-blue-dark);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Summary Panel */
+        .summary-panel {
+            width: 400px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .summary-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-light);
+        }
+
+        .summary-header h2 {
+            font-size: 1.2em;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .summary-content {
+            padding: 24px;
+        }
+
+        .summary-section {
+            margin-bottom: 24px;
+        }
+
+        .summary-section h3 {
+            font-size: 0.95em;
+            color: var(--text-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: var(--text-medium);
+            font-size: 0.9em;
+        }
+
+        .summary-value {
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: right;
+        }
+
+        .summary-value.empty {
+            color: var(--text-light);
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .completeness-bar {
+            margin-top: 24px;
+            padding: 16px;
+            background: #F0F4F8;
+            border-radius: 8px;
+        }
+
+        .completeness-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #E0E0E0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--green), var(--teal));
+            transition: width 0.5s ease-out;
+        }
+
+        .missing-items {
+            margin-top: 16px;
+            padding: 12px;
+            background: #FFF3E0;
+            border-left: 4px solid var(--warning-orange);
+            border-radius: 4px;
+        }
+
+        .missing-items h4 {
+            font-size: 0.9em;
+            color: var(--warning-orange);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .missing-items ul {
+            list-style: none;
+            font-size: 0.85em;
+            color: var(--text-medium);
+        }
+
+        .missing-items li {
+            padding: 4px 0;
+        }
+
+        .missing-items li::before {
+            content: "• ";
+            color: var(--warning-orange);
+        }
+
+        .submit-section {
+            padding: 24px;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-light);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--green);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background: #007759;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 145, 110, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .next-steps {
+            margin-top: 16px;
+            padding: 12px;
+            background: #E3F2FD;
+            border-left: 4px solid var(--primary-blue);
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: var(--text-medium);
+            line-height: 1.6;
+        }
+
+        .next-steps strong {
+            color: var(--primary-blue);
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            padding: 12px 16px;
+            background: #F0F4F8;
+            border-radius: 12px;
+            max-width: fit-content;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--text-light);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                opacity: 0.3;
+            }
+            30% {
+                opacity: 1;
+            }
+        }
+
+        /* Success Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 500px;
+            text-align: center;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-icon {
+            font-size: 4em;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 1.8em;
+            color: var(--green);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .modal-message {
+            color: var(--text-medium);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .modal-btn.primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .modal-btn.primary:hover {
+            background: var(--primary-blue-dark);
+        }
+
+        .modal-btn.secondary {
+            background: var(--border-color);
+            color: var(--text-dark);
+        }
+
+        .modal-btn.secondary:hover {
+            background: #BDBDBD;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .summary-panel {
+                width: 100%;
+                max-height: 50vh;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav-container {
+                padding: 0 16px;
+            }
+
+            .chat-messages {
+                padding: 16px;
+            }
+
+            .summary-content {
+                padding: 16px;
+            }
+
+            .message-content {
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-logo">George</a>
+            <a href="../index.html" class="back-btn">← Back</a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Chat Section -->
+        <div class="chat-section">
+            <div class="chat-header">
+                <h1>🤖 Loan Agent Assistant</h1>
+                <p>Your intelligent financing advisor - Let's find the perfect loan solution together</p>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be added here -->
+            </div>
+
+            <div class="chat-input-area">
+                <form class="input-form" id="chatForm">
+                    <textarea
+                        class="chat-input"
+                        id="userInput"
+                        placeholder="Type your message here..."
+                        rows="1"
+                    ></textarea>
+                    <button type="submit" class="send-btn">Send</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Summary Panel -->
+        <div class="summary-panel">
+            <div class="summary-header">
+                <h2>📋 Credit Case Summary</h2>
+            </div>
+
+            <div class="summary-content">
+                <div class="summary-section">
+                    <h3>Investment Details</h3>
+                    <div class="summary-item">
+                        <span class="summary-label">Purpose</span>
+                        <span class="summary-value empty" id="purpose">Not specified</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Loan Amount</span>
+                        <span class="summary-value empty" id="loanAmount">Not specified</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Tenor</span>
+                        <span class="summary-value empty" id="tenor">Not specified</span>
+                    </div>
+                </div>
+
+                <div class="summary-section">
+                    <h3>Repayment Plan</h3>
+                    <div class="summary-item">
+                        <span class="summary-label">Repayment Type</span>
+                        <span class="summary-value empty" id="repaymentType">Not specified</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Monthly Payment</span>
+                        <span class="summary-value empty" id="monthlyPayment">To be calculated</span>
+                    </div>
+                </div>
+
+                <div class="summary-section">
+                    <h3>Additional Information</h3>
+                    <div class="summary-item">
+                        <span class="summary-label">Collateral</span>
+                        <span class="summary-value empty" id="collateral">Not specified</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Industry</span>
+                        <span class="summary-value empty" id="industry">Not specified</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Current Outstandings</span>
+                        <span class="summary-value empty" id="outstandings">Not specified</span>
+                    </div>
+                </div>
+
+                <div class="completeness-bar">
+                    <div class="completeness-label">
+                        <span>Application Completeness</span>
+                        <span id="completenessPercent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="missing-items" id="missingItems">
+                    <h4>⚠️ Missing Information</h4>
+                    <ul id="missingList">
+                        <li>Investment purpose</li>
+                        <li>Loan amount</li>
+                        <li>Tenor (loan duration)</li>
+                        <li>Repayment plan</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <button class="submit-btn" id="submitBtn" disabled>
+                    Submit to Bank
+                </button>
+                <div class="next-steps">
+                    <strong>Next Steps:</strong><br>
+                    Complete all required information above, then submit your application for bank review and approval.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-icon">✅</div>
+            <h2 class="modal-title">Application Submitted!</h2>
+            <p class="modal-message">
+                Your loan application has been successfully submitted to the bank for review.
+                You'll receive a notification once our team completes the initial assessment.
+            </p>
+            <div class="modal-buttons">
+                <button class="modal-btn primary" onclick="window.location.href='../index.html'">
+                    Go to Dashboard
+                </button>
+                <button class="modal-btn secondary" onclick="resetApplication()">
+                    Start New Application
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application State
+        const appState = {
+            purpose: null,
+            concept: null,
+            loanAmount: null,
+            tenor: null,
+            repaymentType: null,
+            collateral: null,
+            outstandings: null,
+            expectedChanges: null,
+            industry: null,
+            conversationStage: 'greeting'
+        };
+
+        const requiredFields = ['purpose', 'loanAmount', 'tenor', 'repaymentType'];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            addAgentMessage("Hello! I'm your Loan Agent Assistant. I'm here to help you find the perfect financing solution for your needs. Let's start by understanding what you'd like to finance. What is the purpose of your loan?", [
+                "Business equipment",
+                "Real estate investment",
+                "Working capital",
+                "Vehicle fleet",
+                "Other"
+            ]);
+
+            // Setup form
+            document.getElementById('chatForm').addEventListener('submit', handleSubmit);
+            document.getElementById('userInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSubmit(e);
+                }
+            });
+
+            document.getElementById('submitBtn').addEventListener('click', submitApplication);
+        });
+
+        function handleSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+
+            if (message) {
+                addUserMessage(message);
+                input.value = '';
+                processUserInput(message);
+            }
+        }
+
+        function addUserMessage(text) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            messageDiv.innerHTML = `
+                <div class="message-avatar">👤</div>
+                <div class="message-content">${escapeHtml(text)}</div>
+            `;
+            messagesDiv.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function addAgentMessage(text, quickReplies = null) {
+            const messagesDiv = document.getElementById('chatMessages');
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            setTimeout(() => {
+                hideTypingIndicator();
+
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message agent';
+
+                let content = `<div class="message-content">${text}`;
+
+                if (quickReplies) {
+                    content += '<div class="quick-replies">';
+                    quickReplies.forEach(reply => {
+                        content += `<button class="quick-reply-btn" onclick="handleQuickReply('${escapeHtml(reply)}')">${reply}</button>`;
+                    });
+                    content += '</div>';
+                }
+
+                content += '</div>';
+
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">🤖</div>
+                    ${content}
+                `;
+
+                messagesDiv.appendChild(messageDiv);
+                scrollToBottom();
+            }, 800);
+        }
+
+        function showTypingIndicator() {
+            const messagesDiv = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message agent';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="typing-indicator">
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            messagesDiv.appendChild(typingDiv);
+            scrollToBottom();
+        }
+
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        function handleQuickReply(reply) {
+            addUserMessage(reply);
+            processUserInput(reply);
+        }
+
+        function processUserInput(input) {
+            const lowerInput = input.toLowerCase();
+
+            switch (appState.conversationStage) {
+                case 'greeting':
+                    appState.purpose = input;
+                    updateSummary('purpose', input);
+                    appState.conversationStage = 'loan_amount';
+                    addAgentMessage(`Great! You're looking for financing for <strong>${input}</strong>. How much do you need to borrow?`, [
+                        "€50,000",
+                        "€100,000",
+                        "€250,000",
+                        "€500,000"
+                    ]);
+                    break;
+
+                case 'loan_amount':
+                    const amount = extractAmount(input);
+                    if (amount) {
+                        appState.loanAmount = amount;
+                        updateSummary('loanAmount', formatCurrency(amount));
+                        appState.conversationStage = 'tenor';
+                        addAgentMessage(`Perfect! A loan of <strong>${formatCurrency(amount)}</strong>. What loan duration (tenor) are you considering?`, [
+                            "12 months",
+                            "24 months",
+                            "36 months",
+                            "60 months"
+                        ]);
+                    } else {
+                        addAgentMessage("I didn't catch the amount. Could you please specify the loan amount? For example: €100,000");
+                    }
+                    break;
+
+                case 'tenor':
+                    const months = extractMonths(input);
+                    if (months) {
+                        appState.tenor = months;
+                        updateSummary('tenor', `${months} months`);
+                        appState.conversationStage = 'repayment';
+                        addAgentMessage(`Excellent! A ${months}-month term. How would you prefer to repay this loan?`, [
+                            "Monthly installments",
+                            "Quarterly payments",
+                            "Balloon payment",
+                            "Interest-only with lump sum"
+                        ]);
+                    } else {
+                        addAgentMessage("Could you clarify the loan duration? For example: 24 months or 2 years");
+                    }
+                    break;
+
+                case 'repayment':
+                    appState.repaymentType = input;
+                    updateSummary('repaymentType', input);
+                    calculateMonthlyPayment();
+                    appState.conversationStage = 'collateral';
+                    addAgentMessage(`Good choice! We'll set up <strong>${input}</strong>. Do you have any collateral to secure this loan? (e.g., property, equipment, inventory)`, [
+                        "Yes, I have collateral",
+                        "No collateral available",
+                        "I'll provide details later"
+                    ]);
+                    break;
+
+                case 'collateral':
+                    if (lowerInput.includes('yes') || lowerInput.includes('property') || lowerInput.includes('equipment')) {
+                        appState.collateral = input;
+                        updateSummary('collateral', input);
+                        appState.conversationStage = 'concept';
+                        addAgentMessage("Great! Please briefly describe your business/investment concept or how you plan to use these funds.");
+                    } else if (lowerInput.includes('no')) {
+                        appState.collateral = "No collateral";
+                        updateSummary('collateral', "No collateral");
+                        appState.conversationStage = 'concept';
+                        addAgentMessage("Understood. Please briefly describe your business/investment concept or how you plan to use these funds.");
+                    } else {
+                        appState.collateral = input;
+                        updateSummary('collateral', input);
+                        appState.conversationStage = 'concept';
+                        addAgentMessage("Noted. Please briefly describe your business/investment concept or how you plan to use these funds.");
+                    }
+                    break;
+
+                case 'concept':
+                    appState.concept = input;
+                    appState.conversationStage = 'outstandings';
+                    addAgentMessage("Thank you for sharing that. Do you currently have any outstanding loans or credit facilities with us or other banks?", [
+                        "Yes, I have existing loans",
+                        "No outstanding loans",
+                        "I'll provide details later"
+                    ]);
+                    break;
+
+                case 'outstandings':
+                    appState.outstandings = input;
+                    updateSummary('outstandings', input);
+                    appState.conversationStage = 'industry';
+                    addAgentMessage("Got it. What industry or sector does your business operate in?", [
+                        "Manufacturing",
+                        "Retail",
+                        "Services",
+                        "Technology",
+                        "Real Estate",
+                        "Other"
+                    ]);
+                    break;
+
+                case 'industry':
+                    appState.industry = input;
+                    updateSummary('industry', input);
+                    appState.conversationStage = 'changes';
+                    addAgentMessage("Perfect! What financial changes do you expect as a result of this investment? (e.g., increased revenue, cost savings, asset acquisition)");
+                    break;
+
+                case 'changes':
+                    appState.expectedChanges = input;
+                    appState.conversationStage = 'complete';
+                    addAgentMessage(`Excellent! I've gathered all the essential information. Your credit case summary is now complete. Please review the details in the panel on the right, and when you're ready, click "<strong>Submit to Bank</strong>" to send your application for review.`);
+                    break;
+
+                case 'complete':
+                    addAgentMessage("Your application is ready for submission. Please review the summary and click the 'Submit to Bank' button when you're ready.");
+                    break;
+            }
+
+            updateCompleteness();
+        }
+
+        function extractAmount(input) {
+            // Extract number from various formats
+            const cleaned = input.replace(/[€$,\s]/g, '');
+            const match = cleaned.match(/(\d+)/);
+            return match ? parseInt(match[1]) : null;
+        }
+
+        function extractMonths(input) {
+            const match = input.match(/(\d+)\s*(month|year|mo|yr)/i);
+            if (match) {
+                let value = parseInt(match[1]);
+                if (match[2].toLowerCase().startsWith('y')) {
+                    value *= 12;
+                }
+                return value;
+            }
+            return null;
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('de-DE', {
+                style: 'currency',
+                currency: 'EUR',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function calculateMonthlyPayment() {
+            if (appState.loanAmount && appState.tenor) {
+                const interestRate = 0.045; // 4.5% annual
+                const monthlyRate = interestRate / 12;
+                const payment = appState.loanAmount *
+                    (monthlyRate * Math.pow(1 + monthlyRate, appState.tenor)) /
+                    (Math.pow(1 + monthlyRate, appState.tenor) - 1);
+
+                updateSummary('monthlyPayment', formatCurrency(payment));
+            }
+        }
+
+        function updateSummary(field, value) {
+            const element = document.getElementById(field);
+            if (element) {
+                element.textContent = value;
+                element.classList.remove('empty');
+            }
+        }
+
+        function updateCompleteness() {
+            const totalFields = requiredFields.length;
+            let completedFields = 0;
+            const missingItems = [];
+
+            requiredFields.forEach(field => {
+                if (appState[field]) {
+                    completedFields++;
+                } else {
+                    const labels = {
+                        purpose: 'Investment purpose',
+                        loanAmount: 'Loan amount',
+                        tenor: 'Tenor (loan duration)',
+                        repaymentType: 'Repayment plan'
+                    };
+                    missingItems.push(labels[field]);
+                }
+            });
+
+            const percentage = Math.round((completedFields / totalFields) * 100);
+
+            document.getElementById('completenessPercent').textContent = `${percentage}%`;
+            document.getElementById('progressFill').style.width = `${percentage}%`;
+
+            const missingDiv = document.getElementById('missingItems');
+            const missingList = document.getElementById('missingList');
+
+            if (missingItems.length === 0) {
+                missingDiv.style.display = 'none';
+                document.getElementById('submitBtn').disabled = false;
+            } else {
+                missingDiv.style.display = 'block';
+                missingList.innerHTML = missingItems.map(item => `<li>${item}</li>`).join('');
+                document.getElementById('submitBtn').disabled = true;
+            }
+        }
+
+        function submitApplication() {
+            if (requiredFields.every(field => appState[field])) {
+                document.getElementById('successModal').classList.add('show');
+            }
+        }
+
+        function resetApplication() {
+            Object.keys(appState).forEach(key => {
+                appState[key] = null;
+            });
+            appState.conversationStage = 'greeting';
+
+            document.getElementById('chatMessages').innerHTML = '';
+            document.getElementById('successModal').classList.remove('show');
+
+            // Reset summary
+            ['purpose', 'loanAmount', 'tenor', 'repaymentType', 'collateral', 'industry', 'outstandings', 'monthlyPayment'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = id === 'monthlyPayment' ? 'To be calculated' : 'Not specified';
+                    element.classList.add('empty');
+                }
+            });
+
+            updateCompleteness();
+
+            addAgentMessage("Hello! I'm your Loan Agent Assistant. I'm here to help you find the perfect financing solution for your needs. Let's start by understanding what you'd like to finance. What is the purpose of your loan?", [
+                "Business equipment",
+                "Real estate investment",
+                "Working capital",
+                "Vehicle fleet",
+                "Other"
+            ]);
+        }
+
+        function scrollToBottom() {
+            const messagesDiv = document.getElementById('chatMessages');
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
