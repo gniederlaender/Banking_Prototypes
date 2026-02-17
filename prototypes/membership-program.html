@@ -996,6 +996,359 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
+        /* Batch Modal Styles */
+        .batch-modal-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .batch-modal-icon {
+            font-size: 2.5em;
+        }
+
+        .batch-modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #212121;
+        }
+
+        .batch-modal-subtitle {
+            font-size: 13px;
+            color: #757575;
+            margin-top: 2px;
+        }
+
+        .batch-detail-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .batch-detail-label {
+            color: #757575;
+            min-width: 110px;
+            flex-shrink: 0;
+        }
+
+        .batch-detail-value {
+            color: #212121;
+            font-weight: 500;
+        }
+
+        .batch-earned-banner {
+            background: linear-gradient(135deg, #E8F5F1, #D0F0E8);
+            border: 1px solid #00916E;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 16px 0;
+            font-size: 13px;
+            color: #00704E;
+            line-height: 1.5;
+        }
+
+        .batch-inactive-banner {
+            background: #FFF8E1;
+            border: 1px solid #FFB300;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 16px 0;
+            font-size: 13px;
+            color: #7B5800;
+            line-height: 1.5;
+        }
+
+        .batch-modal-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .batch-modal-btns .modal-btn {
+            flex: 1;
+        }
+
+        .batch-modal-btns .modal-btn.secondary {
+            background: white;
+            color: #1E5EBE;
+            border: 2px solid #1E5EBE;
+        }
+
+        .batch-modal-btns .modal-btn.secondary:hover {
+            background: #F0F4FA;
+        }
+
+        /* Auto-Savings Modal Styles */
+        #autoSavingsModal .modal-content {
+            max-width: 480px;
+        }
+
+        .autosave-step-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 24px;
+        }
+
+        .step-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #E0E0E0;
+            color: #9E9E9E;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        .step-dot.active {
+            background: #1E5EBE;
+            color: white;
+        }
+
+        .step-dot.done {
+            background: #00916E;
+            color: white;
+        }
+
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: #E0E0E0;
+            transition: background 0.3s;
+        }
+
+        .step-line.done {
+            background: #00916E;
+        }
+
+        .autosave-step-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #212121;
+            margin-bottom: 4px;
+        }
+
+        .autosave-step-subtitle {
+            font-size: 13px;
+            color: #757575;
+            margin-bottom: 20px;
+        }
+
+        .account-option {
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .account-option:hover {
+            border-color: #1E5EBE;
+            background: #F5F8FF;
+        }
+
+        .account-option.selected {
+            border-color: #1E5EBE;
+            background: #EEF3FC;
+        }
+
+        .account-option input[type="radio"] {
+            accent-color: #1E5EBE;
+            width: 16px;
+            height: 16px;
+        }
+
+        .account-option-info {
+            flex: 1;
+        }
+
+        .account-option-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #212121;
+        }
+
+        .account-option-balance {
+            font-size: 13px;
+            color: #757575;
+            margin-top: 2px;
+        }
+
+        .autosave-form-group {
+            margin-bottom: 16px;
+        }
+
+        .autosave-form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #424242;
+            margin-bottom: 6px;
+        }
+
+        .autosave-input-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .autosave-input {
+            border: 2px solid #E0E0E0;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 15px;
+            width: 100%;
+            transition: border-color 0.2s;
+        }
+
+        .autosave-input:focus {
+            outline: none;
+            border-color: #1E5EBE;
+        }
+
+        .autosave-select {
+            border: 2px solid #E0E0E0;
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .autosave-select:focus {
+            outline: none;
+            border-color: #1E5EBE;
+        }
+
+        .autosave-confirm-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #F0F0F0;
+            font-size: 14px;
+        }
+
+        .autosave-confirm-row:last-of-type {
+            border-bottom: none;
+        }
+
+        .autosave-confirm-label {
+            color: #757575;
+        }
+
+        .autosave-confirm-value {
+            font-weight: 600;
+            color: #212121;
+        }
+
+        .autosave-batch-preview {
+            background: linear-gradient(135deg, #FFF8E1, #FFF3CD);
+            border: 1px solid #FFB300;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .autosave-batch-preview-icon {
+            font-size: 2em;
+        }
+
+        .autosave-batch-preview-text {
+            font-size: 13px;
+            color: #7B5800;
+            font-weight: 600;
+        }
+
+        /* Success State */
+        .autosave-success {
+            text-align: center;
+            padding: 16px 0;
+        }
+
+        .autosave-success-icon {
+            font-size: 4em;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .autosave-success-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #212121;
+            margin-bottom: 8px;
+        }
+
+        .autosave-success-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .batch-earn-animation {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, #00916E 0%, #00A19C 100%);
+            border-radius: 12px;
+            margin: 16px auto;
+            box-shadow: 0 4px 12px rgba(0, 145, 110, 0.4);
+            animation: batchEarnPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes batchEarnPop {
+            0% { transform: scale(0.3); opacity: 0; }
+            70% { transform: scale(1.15); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .batch-earn-animation svg {
+            width: 40px;
+            height: 40px;
+            filter: brightness(0) invert(1);
+        }
+
+        .autosave-success-tier-msg {
+            background: #F0F4FA;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #1E5EBE;
+            font-weight: 500;
+            margin: 12px 0 20px;
+        }
+
+        /* Measures section highlight animation */
+        @keyframes measureHighlight {
+            0% { box-shadow: 0 2px 4px rgba(0,0,0,0.1); background: white; }
+            30% { box-shadow: 0 0 0 4px rgba(30, 94, 190, 0.25); background: #EEF3FC; }
+            100% { box-shadow: 0 2px 4px rgba(0,0,0,0.1); background: white; }
+        }
+
+        .measures-section.highlight {
+            animation: measureHighlight 1.8s ease-out forwards;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .nav-menu {
@@ -1143,49 +1496,49 @@
                         </div>
 
                         <div class="batch-grid">
-                            <div class="batch-item active" title="Batch 1 - Active">
+                            <div class="batch-item active" title="Batch 1 - Active" onclick="showBatchModal(1)" data-batch-id="1">
                                 <div class="sparefroh-icon">
                                     <svg class="piggy-bank" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M21,8c-1.45,0-2.26,1.44-1.93,2.51l-3.55,3.56c-0.3-0.09-0.74-0.09-1.04,0l-2.55-2.55C12.27,10.45,11.46,9,10,9 c-1.45,0-2.27,1.44-1.93,2.52l-4.56,4.55C2.44,15.74,1,16.55,1,18c0,1.1,0.9,2,2,2h10c4.42,0,8-3.58,8-8c0-0.55-0.45-1-1-1h-2 V8h1C20.55,8,21,7.55,21,7C21,6.45,20.55,6,20,6h-3c-0.55,0-1,0.45-1,1v4.51l-2,2l-2-2C12,11.55,12,11,12,11 c-0.35,0-0.68,0.14-0.93,0.39L7.52,14.93C7.18,14.97,6.85,15,6.5,15C5.67,15,5,15.67,5,16.5S5.67,18,6.5,18S8,17.33,8,16.5 c0-0.17-0.03-0.33-0.08-0.49l3.15-3.15c0.07,0.02,0.14,0.04,0.21,0.04c0.07,0,0.14-0.01,0.21-0.04l2,2 c-0.05,0.16-0.08,0.32-0.08,0.49c0,0.83,0.67,1.5,1.5,1.5s1.5-0.67,1.5-1.5c0-0.17-0.03-0.33-0.08-0.49l3.15-3.15 c0.07,0.02,0.14,0.04,0.21,0.04c0.83,0,1.5-0.67,1.5-1.5S21.83,8,21,8z"/>
                                     </svg>
                                 </div>
                             </div>
-                            <div class="batch-item active" title="Batch 2 - Active">
+                            <div class="batch-item active" title="Batch 2 - Active" onclick="showBatchModal(2)" data-batch-id="2">
                                 <div class="sparefroh-icon">
                                     <svg class="piggy-bank" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M21,8c-1.45,0-2.26,1.44-1.93,2.51l-3.55,3.56c-0.3-0.09-0.74-0.09-1.04,0l-2.55-2.55C12.27,10.45,11.46,9,10,9 c-1.45,0-2.27,1.44-1.93,2.52l-4.56,4.55C2.44,15.74,1,16.55,1,18c0,1.1,0.9,2,2,2h10c4.42,0,8-3.58,8-8c0-0.55-0.45-1-1-1h-2 V8h1C20.55,8,21,7.55,21,7C21,6.45,20.55,6,20,6h-3c-0.55,0-1,0.45-1,1v4.51l-2,2l-2-2C12,11.55,12,11,12,11 c-0.35,0-0.68,0.14-0.93,0.39L7.52,14.93C7.18,14.97,6.85,15,6.5,15C5.67,15,5,15.67,5,16.5S5.67,18,6.5,18S8,17.33,8,16.5 c0-0.17-0.03-0.33-0.08-0.49l3.15-3.15c0.07,0.02,0.14,0.04,0.21,0.04c0.07,0,0.14-0.01,0.21-0.04l2,2 c-0.05,0.16-0.08,0.32-0.08,0.49c0,0.83,0.67,1.5,1.5,1.5s1.5-0.67,1.5-1.5c0-0.17-0.03-0.33-0.08-0.49l3.15-3.15 c0.07,0.02,0.14,0.04,0.21,0.04c0.83,0,1.5-0.67,1.5-1.5S21.83,8,21,8z"/>
                                     </svg>
                                 </div>
                             </div>
-                            <div class="batch-item active" title="Batch 3 - Active">
+                            <div class="batch-item active" title="Batch 3 - Active" onclick="showBatchModal(3)" data-batch-id="3">
                                 <div class="sparefroh-icon">
                                     <svg class="piggy-bank" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M21,8c-1.45,0-2.26,1.44-1.93,2.51l-3.55,3.56c-0.3-0.09-0.74-0.09-1.04,0l-2.55-2.55C12.27,10.45,11.46,9,10,9 c-1.45,0-2.27,1.44-1.93,2.52l-4.56,4.55C2.44,15.74,1,16.55,1,18c0,1.1,0.9,2,2,2h10c4.42,0,8-3.58,8-8c0-0.55-0.45-1-1-1h-2 V8h1C20.55,8,21,7.55,21,7C21,6.45,20.55,6,20,6h-3c-0.55,0-1,0.45-1,1v4.51l-2,2l-2-2C12,11.55,12,11,12,11 c-0.35,0-0.68,0.14-0.93,0.39L7.52,14.93C7.18,14.97,6.85,15,6.5,15C5.67,15,5,15.67,5,16.5S5.67,18,6.5,18S8,17.33,8,16.5 c0-0.17-0.03-0.33-0.08-0.49l3.15-3.15c0.07,0.02,0.14,0.04,0.21,0.04c0.07,0,0.14-0.01,0.21-0.04l2,2 c-0.05,0.16-0.08,0.32-0.08,0.49c0,0.83,0.67,1.5,1.5,1.5s1.5-0.67,1.5-1.5c0-0.17-0.03-0.33-0.08-0.49l3.15-3.15 c0.07,0.02,0.14,0.04,0.21,0.04c0.83,0,1.5-0.67,1.5-1.5S21.83,8,21,8z"/>
                                     </svg>
                                 </div>
                             </div>
-                            <div class="batch-item active" title="Batch 4 - Active">
+                            <div class="batch-item active" title="Batch 4 - Active" onclick="showBatchModal(4)" data-batch-id="4">
                                 <div class="sparefroh-icon">
                                     <svg class="piggy-bank" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M21,8c-1.45,0-2.26,1.44-1.93,2.51l-3.55,3.56c-0.3-0.09-0.74-0.09-1.04,0l-2.55-2.55C12.27,10.45,11.46,9,10,9 c-1.45,0-2.27,1.44-1.93,2.52l-4.56,4.55C2.44,15.74,1,16.55,1,18c0,1.1,0.9,2,2,2h10c4.42,0,8-3.58,8-8c0-0.55-0.45-1-1-1h-2 V8h1C20.55,8,21,7.55,21,7C21,6.45,20.55,6,20,6h-3c-0.55,0-1,0.45-1,1v4.51l-2,2l-2-2C12,11.55,12,11,12,11 c-0.35,0-0.68,0.14-0.93,0.39L7.52,14.93C7.18,14.97,6.85,15,6.5,15C5.67,15,5,15.67,5,16.5S5.67,18,6.5,18S8,17.33,8,16.5 c0-0.17-0.03-0.33-0.08-0.49l3.15-3.15c0.07,0.02,0.14,0.04,0.21,0.04c0.07,0,0.14-0.01,0.21-0.04l2,2 c-0.05,0.16-0.08,0.32-0.08,0.49c0,0.83,0.67,1.5,1.5,1.5s1.5-0.67,1.5-1.5c0-0.17-0.03-0.33-0.08-0.49l3.15-3.15 c0.07,0.02,0.14,0.04,0.21,0.04c0.83,0,1.5-0.67,1.5-1.5S21.83,8,21,8z"/>
                                     </svg>
                                 </div>
                             </div>
-                            <div class="batch-item active" title="Batch 5 - Active">
+                            <div class="batch-item active" title="Batch 5 - Active" onclick="showBatchModal(5)" data-batch-id="5">
                                 <div class="sparefroh-icon">
                                     <svg class="piggy-bank" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M21,8c-1.45,0-2.26,1.44-1.93,2.51l-3.55,3.56c-0.3-0.09-0.74-0.09-1.04,0l-2.55-2.55C12.27,10.45,11.46,9,10,9 c-1.45,0-2.27,1.44-1.93,2.52l-4.56,4.55C2.44,15.74,1,16.55,1,18c0,1.1,0.9,2,2,2h10c4.42,0,8-3.58,8-8c0-0.55-0.45-1-1-1h-2 V8h1C20.55,8,21,7.55,21,7C21,6.45,20.55,6,20,6h-3c-0.55,0-1,0.45-1,1v4.51l-2,2l-2-2C12,11.55,12,11,12,11 c-0.35,0-0.68,0.14-0.93,0.39L7.52,14.93C7.18,14.97,6.85,15,6.5,15C5.67,15,5,15.67,5,16.5S5.67,18,6.5,18S8,17.33,8,16.5 c0-0.17-0.03-0.33-0.08-0.49l3.15-3.15c0.07,0.02,0.14,0.04,0.21,0.04c0.07,0,0.14-0.01,0.21-0.04l2,2 c-0.05,0.16-0.08,0.32-0.08,0.49c0,0.83,0.67,1.5,1.5,1.5s1.5-0.67,1.5-1.5c0-0.17-0.03-0.33-0.08-0.49l3.15-3.15 c0.07,0.02,0.14,0.04,0.21,0.04c0.83,0,1.5-0.67,1.5-1.5S21.83,8,21,8z"/>
                                     </svg>
                                 </div>
                             </div>
-                            <div class="batch-item" title="Batch 6 - Inactive">
+                            <div class="batch-item" id="batch-6" title="Batch 6 - Inactive" onclick="showBatchModal(6)" data-batch-id="6">
                                 <div class="sparefroh-icon">
                                     <svg class="piggy-bank" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M21,8c-1.45,0-2.26,1.44-1.93,2.51l-3.55,3.56c-0.3-0.09-0.74-0.09-1.04,0l-2.55-2.55C12.27,10.45,11.46,9,10,9 c-1.45,0-2.27,1.44-1.93,2.52l-4.56,4.55C2.44,15.74,1,16.55,1,18c0,1.1,0.9,2,2,2h10c4.42,0,8-3.58,8-8c0-0.55-0.45-1-1-1h-2 V8h1C20.55,8,21,7.55,21,7C21,6.45,20.55,6,20,6h-3c-0.55,0-1,0.45-1,1v4.51l-2,2l-2-2C12,11.55,12,11,12,11 c-0.35,0-0.68,0.14-0.93,0.39L7.52,14.93C7.18,14.97,6.85,15,6.5,15C5.67,15,5,15.67,5,16.5S5.67,18,6.5,18S8,17.33,8,16.5 c0-0.17-0.03-0.33-0.08-0.49l3.15-3.15c0.07,0.02,0.14,0.04,0.21,0.04c0.07,0,0.14-0.01,0.21-0.04l2,2 c-0.05,0.16-0.08,0.32-0.08,0.49c0,0.83,0.67,1.5,1.5,1.5s1.5-0.67,1.5-1.5c0-0.17-0.03-0.33-0.08-0.49l3.15-3.15 c0.07,0.02,0.14,0.04,0.21,0.04c0.83,0,1.5-0.67,1.5-1.5S21.83,8,21,8z"/>
                                     </svg>
                                 </div>
                             </div>
-                            <div class="batch-item" title="Batch 7 - Inactive">
+                            <div class="batch-item" title="Batch 7 - Inactive" onclick="showBatchModal(7)" data-batch-id="7">
                                 <div class="sparefroh-icon">
                                     <svg class="piggy-bank" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M21,8c-1.45,0-2.26,1.44-1.93,2.51l-3.55,3.56c-0.3-0.09-0.74-0.09-1.04,0l-2.55-2.55C12.27,10.45,11.46,9,10,9 c-1.45,0-2.27,1.44-1.93,2.52l-4.56,4.55C2.44,15.74,1,16.55,1,18c0,1.1,0.9,2,2,2h10c4.42,0,8-3.58,8-8c0-0.55-0.45-1-1-1h-2 V8h1C20.55,8,21,7.55,21,7C21,6.45,20.55,6,20,6h-3c-0.55,0-1,0.45-1,1v4.51l-2,2l-2-2C12,11.55,12,11,12,11 c-0.35,0-0.68,0.14-0.93,0.39L7.52,14.93C7.18,14.97,6.85,15,6.5,15C5.67,15,5,15.67,5,16.5S5.67,18,6.5,18S8,17.33,8,16.5 c0-0.17-0.03-0.33-0.08-0.49l3.15-3.15c0.07,0.02,0.14,0.04,0.21,0.04c0.07,0,0.14-0.01,0.21-0.04l2,2 c-0.05,0.16-0.08,0.32-0.08,0.49c0,0.83,0.67,1.5,1.5,1.5s1.5-0.67,1.5-1.5c0-0.17-0.03-0.33-0.08-0.49l3.15-3.15 c0.07,0.02,0.14,0.04,0.21,0.04c0.83,0,1.5-0.67,1.5-1.5S21.83,8,21,8z"/>
@@ -1211,10 +1564,10 @@
                             Complete 2 more batches to unlock Platinum tier! Set up automatic savings to earn your next batch quickly.
                         </p>
                         <div class="action-buttons">
-                            <button class="action-btn" onclick="scrollToMeasures()">
+                            <button class="action-btn" onclick="openAutoSavingsModal()">
                                 <span>💡</span> <span data-i18n="nextaction.setup">Set Up Auto-Savings</span>
                             </button>
-                            <button class="action-btn secondary" onclick="scrollToMeasures()">
+                            <button class="action-btn secondary" onclick="scrollToMeasuresHighlight()">
                                 <span data-i18n="nextaction.viewall">View All Ways to Earn</span>
                             </button>
                         </div>
@@ -1629,6 +1982,22 @@
         </div>
     </div>
 
+    <!-- Batch Detail Modal -->
+    <div class="modal" id="batchModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeBatchModal()">×</button>
+            <div id="batchModalContent"><!-- populated by JS --></div>
+        </div>
+    </div>
+
+    <!-- Auto-Savings Multi-Step Modal -->
+    <div class="modal" id="autoSavingsModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeAutoSavingsModal()">×</button>
+            <div id="autoSavingsContent"><!-- populated by JS --></div>
+        </div>
+    </div>
+
     <!-- Confirmation Modal -->
     <div class="modal" id="confirmationModal">
         <div class="modal-content">
@@ -2029,12 +2398,587 @@
             }
         });
 
-        // Scroll to measures section
-        function scrollToMeasures() {
+        // ============================
+        // BATCH DATA & STATE
+        // ============================
+        const batchData = [
+            {
+                id: 1,
+                active: true,
+                action: 'savings_account',
+                earnedDate: '2025-12-01',
+                details: { en: 'Opened savings account "Vacation Fund"', de: 'Sparkonto "Urlaubskasse" eröffnet' }
+            },
+            {
+                id: 2,
+                active: true,
+                action: 'auto_savings',
+                earnedDate: '2026-01-15',
+                details: { en: '€50/month to Vacation Fund', de: '€50/Monat auf Urlaubskasse' }
+            },
+            {
+                id: 3,
+                active: true,
+                action: 'mobile_banking',
+                earnedDate: '2026-01-20',
+                details: { en: '15 mobile transactions this month', de: '15 Mobile-Transaktionen diesen Monat' }
+            },
+            {
+                id: 4,
+                active: true,
+                action: 'contactless',
+                earnedDate: '2026-01-22',
+                details: { en: 'Activated Apple Pay', de: 'Apple Pay aktiviert' }
+            },
+            {
+                id: 5,
+                active: true,
+                action: 'positive_balance',
+                earnedDate: '2026-02-01',
+                details: { en: '3 consecutive months positive balance', de: '3 aufeinanderfolgende Monate positiver Kontostand' }
+            },
+            {
+                id: 6,
+                active: false,
+                suggestedAction: 'digital_statements',
+                cta: { en: 'Go Paperless', de: 'Papierlos werden' },
+                description: { en: 'Switch to digital statements to help the environment and earn your next batch.', de: 'Wechseln Sie zu digitalen Kontoauszügen, um der Umwelt zu helfen und Ihren nächsten Batch zu verdienen.' }
+            },
+            {
+                id: 7,
+                active: false,
+                suggestedAction: 'health_check',
+                cta: { en: 'Start Health Check', de: 'Gesundheitscheck starten' },
+                description: { en: 'Complete our personalized financial health assessment to earn this batch.', de: 'Schließen Sie unsere personalisierte finanzielle Gesundheitsbewertung ab, um diesen Batch zu verdienen.' }
+            }
+        ];
+
+        const batchTranslations = {
+            en: {
+                'batch.earned': 'Earned!',
+                'batch.not_earned': 'Not Yet Earned',
+                'batch.earned_on': 'Earned on',
+                'batch.action': 'Action',
+                'batch.details': 'Details',
+                'batch.suggested_action': 'Suggested Action',
+                'batch.start_action': 'Start Now',
+                'batch.maybe_later': 'Maybe Later',
+                'batch.view_settings': 'View Settings',
+                'action.savings_account': 'Open a Savings Account',
+                'action.auto_savings': 'Set Up Automatic Savings',
+                'action.mobile_banking': 'Use Mobile Banking Regularly',
+                'action.contactless': 'Activate Contactless Payments',
+                'action.positive_balance': 'Maintain Positive Balance',
+                'action.digital_statements': 'Switch to Digital Statements',
+                'action.health_check': 'Complete Financial Health Check',
+                'autosave.title': 'Set Up Automatic Savings',
+                'autosave.step1.title': 'Choose Source Account',
+                'autosave.step1.subtitle': 'Select which account to transfer from',
+                'autosave.step2.title': 'Set Amount & Schedule',
+                'autosave.step2.subtitle': 'Configure your automatic savings',
+                'autosave.step3.title': 'Confirm Setup',
+                'autosave.step3.subtitle': 'Review your automatic savings plan',
+                'autosave.amount': 'Amount',
+                'autosave.frequency': 'Frequency',
+                'autosave.day': 'On day',
+                'autosave.target': 'To Account',
+                'autosave.from': 'From',
+                'autosave.to': 'To',
+                'autosave.starting': 'Starting',
+                'autosave.batch_preview': 'This action will earn you 1 Sparefroh Batch!',
+                'autosave.success.title': 'Congratulations!',
+                'autosave.success.text': 'Automatic savings set up successfully!',
+                'autosave.success.batch': 'You earned 1 Sparefroh Batch!',
+                'autosave.success.tier_msg': 'Only 1 more batch to reach Platinum!',
+                'autosave.cancel': 'Cancel',
+                'autosave.back': 'Back',
+                'autosave.next': 'Next',
+                'autosave.confirm': 'Confirm',
+                'autosave.done': 'Done',
+                'freq.weekly': 'weekly',
+                'freq.biweekly': 'bi-weekly',
+                'freq.monthly': 'monthly'
+            },
+            de: {
+                'batch.earned': 'Verdient!',
+                'batch.not_earned': 'Noch nicht verdient',
+                'batch.earned_on': 'Verdient am',
+                'batch.action': 'Aktion',
+                'batch.details': 'Details',
+                'batch.suggested_action': 'Vorgeschlagene Aktion',
+                'batch.start_action': 'Jetzt starten',
+                'batch.maybe_later': 'Vielleicht später',
+                'batch.view_settings': 'Einstellungen anzeigen',
+                'action.savings_account': 'Sparkonto eröffnen',
+                'action.auto_savings': 'Automatisches Sparen einrichten',
+                'action.mobile_banking': 'Mobile Banking regelmäßig nutzen',
+                'action.contactless': 'Kontaktloses Zahlen aktivieren',
+                'action.positive_balance': 'Positiven Kontostand beibehalten',
+                'action.digital_statements': 'Zu digitalen Kontoauszügen wechseln',
+                'action.health_check': 'Finanzielle Gesundheitsprüfung abschließen',
+                'autosave.title': 'Automatisches Sparen einrichten',
+                'autosave.step1.title': 'Quellkonto wählen',
+                'autosave.step1.subtitle': 'Von welchem Konto soll überwiesen werden?',
+                'autosave.step2.title': 'Betrag & Zeitplan',
+                'autosave.step2.subtitle': 'Konfigurieren Sie Ihr automatisches Sparen',
+                'autosave.step3.title': 'Setup bestätigen',
+                'autosave.step3.subtitle': 'Überprüfen Sie Ihren Sparplan',
+                'autosave.amount': 'Betrag',
+                'autosave.frequency': 'Häufigkeit',
+                'autosave.day': 'Am Tag',
+                'autosave.target': 'Zielkonto',
+                'autosave.from': 'Von',
+                'autosave.to': 'Nach',
+                'autosave.starting': 'Ab',
+                'autosave.batch_preview': 'Diese Aktion bringt Ihnen 1 Sparefroh Batch!',
+                'autosave.success.title': 'Herzlichen Glückwunsch!',
+                'autosave.success.text': 'Automatisches Sparen erfolgreich eingerichtet!',
+                'autosave.success.batch': 'Sie haben 1 Sparefroh Batch verdient!',
+                'autosave.success.tier_msg': 'Nur noch 1 Batch bis Platin!',
+                'autosave.cancel': 'Abbrechen',
+                'autosave.back': 'Zurück',
+                'autosave.next': 'Weiter',
+                'autosave.confirm': 'Bestätigen',
+                'autosave.done': 'Fertig',
+                'freq.weekly': 'wöchentlich',
+                'freq.biweekly': 'zweiwöchentlich',
+                'freq.monthly': 'monatlich'
+            }
+        };
+
+        function t(key) {
+            return batchTranslations[currentLang][key] || translations[currentLang][key] || key;
+        }
+
+        // ============================
+        // BATCH MODAL FUNCTIONS
+        // ============================
+        function showBatchModal(batchId) {
+            const batch = batchData.find(b => b.id === batchId);
+            if (!batch) return;
+
+            const modal = document.getElementById('batchModal');
+            const content = document.getElementById('batchModalContent');
+
+            if (batch.active) {
+                content.innerHTML = renderActiveBatchModal(batch);
+            } else {
+                content.innerHTML = renderInactiveBatchModal(batch);
+            }
+
+            modal.classList.add('show');
+        }
+
+        function renderActiveBatchModal(batch) {
+            const actionKey = 'action.' + batch.action;
+            const actionName = t(actionKey);
+            const details = batch.details[currentLang] || batch.details.en;
+            const formattedDate = formatDate(batch.earnedDate);
+
+            return `
+                <div class="batch-modal-header">
+                    <div class="batch-modal-icon">🎉</div>
+                    <div>
+                        <div class="batch-modal-title">Batch ${batch.id} - ${t('batch.earned')}</div>
+                        <div class="batch-modal-subtitle">${t('batch.earned_on')} ${formattedDate}</div>
+                    </div>
+                </div>
+                <div class="batch-detail-row">
+                    <span class="batch-detail-label">${t('batch.action')}:</span>
+                    <span class="batch-detail-value">${actionName}</span>
+                </div>
+                <div class="batch-detail-row">
+                    <span class="batch-detail-label">${t('batch.details')}:</span>
+                    <span class="batch-detail-value">${details}</span>
+                </div>
+                <div class="batch-earned-banner">
+                    ✓ ${currentLang === 'en' ? 'This batch counts toward your Platinum tier progress!' : 'Dieser Batch zählt zu Ihrem Fortschritt zur Platin-Stufe!'}
+                </div>
+                <button class="modal-btn" onclick="closeBatchModal()">${t('modal.ok')}</button>
+            `;
+        }
+
+        function renderInactiveBatchModal(batch) {
+            const actionKey = 'action.' + batch.suggestedAction;
+            const actionName = t(actionKey);
+            const ctaText = batch.cta[currentLang] || batch.cta.en;
+            const description = batch.description[currentLang] || batch.description.en;
+
+            return `
+                <div class="batch-modal-header">
+                    <div class="batch-modal-icon">🔒</div>
+                    <div>
+                        <div class="batch-modal-title">Batch ${batch.id} - ${t('batch.not_earned')}</div>
+                        <div class="batch-modal-subtitle">${t('batch.suggested_action')}</div>
+                    </div>
+                </div>
+                <div class="batch-detail-row">
+                    <span class="batch-detail-label">${t('batch.action')}:</span>
+                    <span class="batch-detail-value">${actionName}</span>
+                </div>
+                <div class="batch-inactive-banner">
+                    ${description}
+                </div>
+                <div class="batch-modal-btns">
+                    <button class="modal-btn" onclick="handleBatchCta('${batch.suggestedAction}')">${ctaText}</button>
+                    <button class="modal-btn secondary" onclick="closeBatchModal()">${t('batch.maybe_later')}</button>
+                </div>
+            `;
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString(currentLang === 'de' ? 'de-DE' : 'en-US', options);
+        }
+
+        function closeBatchModal() {
+            document.getElementById('batchModal').classList.remove('show');
+        }
+
+        function handleBatchCta(action) {
+            closeBatchModal();
+            if (action === 'digital_statements') {
+                showModal(
+                    currentLang === 'en' ? '📧 Go Paperless' : '📧 Papierlos werden',
+                    currentLang === 'en'
+                        ? 'In a real app, this would open your statement settings. For this prototype, imagine you\'ve enabled digital statements!'
+                        : 'In einer echten App würde dies Ihre Kontoauszugseinstellungen öffnen. Für diesen Prototyp stellen Sie sich vor, Sie haben digitale Kontoauszüge aktiviert!'
+                );
+            } else if (action === 'health_check') {
+                showModal(
+                    currentLang === 'en' ? '🎯 Financial Health Check' : '🎯 Finanzielle Gesundheitsprüfung',
+                    currentLang === 'en'
+                        ? 'In a real app, this would start your financial health assessment. For this prototype, imagine completing the questionnaire!'
+                        : 'In einer echten App würde dies Ihre finanzielle Gesundheitsbewertung starten. Für diesen Prototyp stellen Sie sich vor, den Fragebogen auszufüllen!'
+                );
+            }
+        }
+
+        document.getElementById('batchModal').addEventListener('click', function(e) {
+            if (e.target === this) closeBatchModal();
+        });
+
+        // ============================
+        // AUTO-SAVINGS MODAL
+        // ============================
+        let autoSaveStep = 1;
+        let autoSaveData = {
+            sourceAccount: null,
+            amount: 50,
+            frequency: 'monthly',
+            day: 1,
+            targetAccount: 'vacation'
+        };
+
+        const accounts = {
+            checking: {
+                name: { en: 'Checking Account ****1134', de: 'Girokonto ****1134' },
+                balance: '€2,450.00'
+            },
+            salary: {
+                name: { en: 'Salary Account ****5678', de: 'Gehaltskonto ****5678' },
+                balance: '€3,120.00'
+            }
+        };
+
+        const targetAccounts = {
+            vacation: { en: 'Vacation Fund', de: 'Urlaubskasse' },
+            emergency: { en: 'Emergency Fund', de: 'Notgroschen' },
+            savings: { en: 'General Savings', de: 'Allgemeine Ersparnisse' }
+        };
+
+        function openAutoSavingsModal() {
+            autoSaveStep = 1;
+            autoSaveData = { sourceAccount: null, amount: 50, frequency: 'monthly', day: 1, targetAccount: 'vacation' };
+            renderAutoSavingsStep();
+            document.getElementById('autoSavingsModal').classList.add('show');
+        }
+
+        function closeAutoSavingsModal() {
+            document.getElementById('autoSavingsModal').classList.remove('show');
+        }
+
+        function renderAutoSavingsStep() {
+            const content = document.getElementById('autoSavingsContent');
+
+            if (autoSaveStep === 1) {
+                content.innerHTML = renderStep1();
+            } else if (autoSaveStep === 2) {
+                content.innerHTML = renderStep2();
+            } else if (autoSaveStep === 3) {
+                content.innerHTML = renderStep3();
+            } else if (autoSaveStep === 4) {
+                content.innerHTML = renderSuccessStep();
+            }
+        }
+
+        function renderStepIndicator() {
+            return `
+                <div class="autosave-step-indicator">
+                    <div class="step-dot ${autoSaveStep >= 1 ? 'active' : ''} ${autoSaveStep > 1 ? 'done' : ''}">1</div>
+                    <div class="step-line ${autoSaveStep > 1 ? 'done' : ''}"></div>
+                    <div class="step-dot ${autoSaveStep >= 2 ? 'active' : ''} ${autoSaveStep > 2 ? 'done' : ''}">2</div>
+                    <div class="step-line ${autoSaveStep > 2 ? 'done' : ''}"></div>
+                    <div class="step-dot ${autoSaveStep >= 3 ? 'active' : ''} ${autoSaveStep > 3 ? 'done' : ''}">3</div>
+                </div>
+            `;
+        }
+
+        function renderStep1() {
+            const checkingName = accounts.checking.name[currentLang];
+            const salaryName = accounts.salary.name[currentLang];
+
+            return `
+                <div class="modal-icon">💰</div>
+                <h3 class="modal-title">${t('autosave.title')}</h3>
+                ${renderStepIndicator()}
+                <div class="autosave-step-title">${t('autosave.step1.title')}</div>
+                <div class="autosave-step-subtitle">${t('autosave.step1.subtitle')}</div>
+
+                <div class="account-option ${autoSaveData.sourceAccount === 'checking' ? 'selected' : ''}" onclick="selectAccount('checking')">
+                    <input type="radio" name="sourceAccount" ${autoSaveData.sourceAccount === 'checking' ? 'checked' : ''}>
+                    <div class="account-option-info">
+                        <div class="account-option-name">${checkingName}</div>
+                        <div class="account-option-balance">Balance: ${accounts.checking.balance}</div>
+                    </div>
+                </div>
+                <div class="account-option ${autoSaveData.sourceAccount === 'salary' ? 'selected' : ''}" onclick="selectAccount('salary')">
+                    <input type="radio" name="sourceAccount" ${autoSaveData.sourceAccount === 'salary' ? 'checked' : ''}>
+                    <div class="account-option-info">
+                        <div class="account-option-name">${salaryName}</div>
+                        <div class="account-option-balance">Balance: ${accounts.salary.balance}</div>
+                    </div>
+                </div>
+
+                <div class="batch-modal-btns" style="margin-top: 24px;">
+                    <button class="modal-btn secondary" onclick="closeAutoSavingsModal()">${t('autosave.cancel')}</button>
+                    <button class="modal-btn" onclick="nextAutoSaveStep()" ${!autoSaveData.sourceAccount ? 'disabled style="opacity:0.5;cursor:not-allowed"' : ''}>${t('autosave.next')} →</button>
+                </div>
+            `;
+        }
+
+        function renderStep2() {
+            return `
+                <div class="modal-icon">💰</div>
+                <h3 class="modal-title">${t('autosave.title')}</h3>
+                ${renderStepIndicator()}
+                <div class="autosave-step-title">${t('autosave.step2.title')}</div>
+                <div class="autosave-step-subtitle">${t('autosave.step2.subtitle')}</div>
+
+                <div class="autosave-form-group">
+                    <label>${t('autosave.amount')}</label>
+                    <div class="autosave-input-row">
+                        <input type="number" class="autosave-input" value="${autoSaveData.amount}" min="10" step="10"
+                               onchange="autoSaveData.amount = parseInt(this.value)" style="width: 120px;">
+                        <span style="font-size:14px;color:#666;">€ / ${t('freq.' + autoSaveData.frequency)}</span>
+                    </div>
+                </div>
+
+                <div class="autosave-form-group">
+                    <label>${t('autosave.frequency')}</label>
+                    <select class="autosave-select" onchange="autoSaveData.frequency = this.value; renderAutoSavingsStep();">
+                        <option value="weekly" ${autoSaveData.frequency === 'weekly' ? 'selected' : ''}>${t('freq.weekly')}</option>
+                        <option value="biweekly" ${autoSaveData.frequency === 'biweekly' ? 'selected' : ''}>${t('freq.biweekly')}</option>
+                        <option value="monthly" ${autoSaveData.frequency === 'monthly' ? 'selected' : ''}>${t('freq.monthly')}</option>
+                    </select>
+                </div>
+
+                <div class="autosave-form-group">
+                    <label>${t('autosave.day')}</label>
+                    <select class="autosave-select" onchange="autoSaveData.day = parseInt(this.value)">
+                        ${[1, 5, 10, 15, 20, 25].map(d => `<option value="${d}" ${autoSaveData.day === d ? 'selected' : ''}>${d}${currentLang === 'en' ? getOrdinalSuffix(d) : '.'}</option>`).join('')}
+                    </select>
+                </div>
+
+                <div class="autosave-form-group">
+                    <label>${t('autosave.target')}</label>
+                    <select class="autosave-select" onchange="autoSaveData.targetAccount = this.value">
+                        ${Object.entries(targetAccounts).map(([key, val]) =>
+                            `<option value="${key}" ${autoSaveData.targetAccount === key ? 'selected' : ''}>${val[currentLang]}</option>`
+                        ).join('')}
+                    </select>
+                </div>
+
+                <div class="batch-modal-btns" style="margin-top: 24px;">
+                    <button class="modal-btn secondary" onclick="prevAutoSaveStep()">← ${t('autosave.back')}</button>
+                    <button class="modal-btn" onclick="nextAutoSaveStep()">${t('autosave.next')} →</button>
+                </div>
+            `;
+        }
+
+        function renderStep3() {
+            const sourceName = accounts[autoSaveData.sourceAccount].name[currentLang];
+            const targetName = targetAccounts[autoSaveData.targetAccount][currentLang];
+            const startDate = getNextStartDate();
+
+            return `
+                <div class="modal-icon">✅</div>
+                <h3 class="modal-title" style="color:#00916E;">${currentLang === 'en' ? "You're About to Earn a Batch!" : 'Sie verdienen gleich einen Batch!'}</h3>
+                ${renderStepIndicator()}
+                <div class="autosave-step-title">${t('autosave.step3.title')}</div>
+                <div class="autosave-step-subtitle">${t('autosave.step3.subtitle')}</div>
+
+                <div style="background:#F9FAFB; border-radius:8px; padding:16px; margin:16px 0;">
+                    <div class="autosave-confirm-row">
+                        <span class="autosave-confirm-label">${t('autosave.amount')}:</span>
+                        <span class="autosave-confirm-value">€${autoSaveData.amount}.00 ${t('freq.' + autoSaveData.frequency)}</span>
+                    </div>
+                    <div class="autosave-confirm-row">
+                        <span class="autosave-confirm-label">${t('autosave.from')}:</span>
+                        <span class="autosave-confirm-value">${sourceName}</span>
+                    </div>
+                    <div class="autosave-confirm-row">
+                        <span class="autosave-confirm-label">${t('autosave.to')}:</span>
+                        <span class="autosave-confirm-value">${targetName}</span>
+                    </div>
+                    <div class="autosave-confirm-row">
+                        <span class="autosave-confirm-label">${t('autosave.starting')}:</span>
+                        <span class="autosave-confirm-value">${startDate}</span>
+                    </div>
+                </div>
+
+                <div class="autosave-batch-preview">
+                    <div class="autosave-batch-preview-icon">🎯</div>
+                    <div class="autosave-batch-preview-text">${t('autosave.batch_preview')}</div>
+                </div>
+
+                <div class="batch-modal-btns" style="margin-top: 24px;">
+                    <button class="modal-btn secondary" onclick="prevAutoSaveStep()">← ${t('autosave.back')}</button>
+                    <button class="modal-btn" onclick="confirmAutoSave()" style="background:#00916E;">${t('autosave.confirm')} ✓</button>
+                </div>
+            `;
+        }
+
+        function renderSuccessStep() {
+            return `
+                <div class="autosave-success">
+                    <span class="autosave-success-icon">🎉</span>
+                    <div class="autosave-success-title">${t('autosave.success.title')}</div>
+                    <div class="autosave-success-text">${t('autosave.success.text')}</div>
+
+                    <div class="batch-earn-animation">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M21,8c-1.45,0-2.26,1.44-1.93,2.51l-3.55,3.56c-0.3-0.09-0.74-0.09-1.04,0l-2.55-2.55C12.27,10.45,11.46,9,10,9 c-1.45,0-2.27,1.44-1.93,2.52l-4.56,4.55C2.44,15.74,1,16.55,1,18c0,1.1,0.9,2,2,2h10c4.42,0,8-3.58,8-8c0-0.55-0.45-1-1-1h-2 V8h1C20.55,8,21,7.55,21,7C21,6.45,20.55,6,20,6h-3c-0.55,0-1,0.45-1,1v4.51l-2,2l-2-2C12,11.55,12,11,12,11 c-0.35,0-0.68,0.14-0.93,0.39L7.52,14.93C7.18,14.97,6.85,15,6.5,15C5.67,15,5,15.67,5,16.5S5.67,18,6.5,18S8,17.33,8,16.5 c0-0.17-0.03-0.33-0.08-0.49l3.15-3.15c0.07,0.02,0.14,0.04,0.21,0.04c0.07,0,0.14-0.01,0.21-0.04l2,2 c-0.05,0.16-0.08,0.32-0.08,0.49c0,0.83,0.67,1.5,1.5,1.5s1.5-0.67,1.5-1.5c0-0.17-0.03-0.33-0.08-0.49l3.15-3.15 c0.07,0.02,0.14,0.04,0.21,0.04c0.83,0,1.5-0.67,1.5-1.5S21.83,8,21,8z"/>
+                        </svg>
+                    </div>
+
+                    <div style="font-size:16px; font-weight:700; color:#00916E; margin:12px 0;">${t('autosave.success.batch')}</div>
+                    <div class="autosave-success-tier-msg">${t('autosave.success.tier_msg')}</div>
+
+                    <button class="modal-btn" onclick="finishAutoSave()">${t('autosave.done')}</button>
+                </div>
+            `;
+        }
+
+        function selectAccount(accountKey) {
+            autoSaveData.sourceAccount = accountKey;
+            renderAutoSavingsStep();
+        }
+
+        function nextAutoSaveStep() {
+            if (autoSaveStep === 1 && !autoSaveData.sourceAccount) return;
+            autoSaveStep++;
+            renderAutoSavingsStep();
+        }
+
+        function prevAutoSaveStep() {
+            autoSaveStep--;
+            renderAutoSavingsStep();
+        }
+
+        function confirmAutoSave() {
+            autoSaveStep = 4;
+            renderAutoSavingsStep();
+
+            // Update batch 6 to active state
+            setTimeout(() => {
+                activateBatch6();
+            }, 500);
+        }
+
+        function activateBatch6() {
+            const batch6 = document.getElementById('batch-6');
+            if (batch6 && !batch6.classList.contains('active')) {
+                batch6.classList.add('active');
+
+                // Update the active count display
+                const activeCountEl = document.querySelector('.active-count');
+                if (activeCountEl) {
+                    activeCountEl.textContent = '6';
+                }
+
+                // Update tier status text
+                const tierStatusEl = document.querySelector('[data-i18n="dashboard.tier.status"]');
+                if (tierStatusEl) {
+                    tierStatusEl.textContent = currentLang === 'en' ? '(6 of 7 batches complete)' : '(6 von 7 Batches abgeschlossen)';
+                }
+
+                // Update progress bar
+                const progressBar = document.querySelector('.progress-bar-fill');
+                if (progressBar) {
+                    progressBar.style.width = '85.7%';
+                }
+
+                // Update batchData
+                const batch6Data = batchData.find(b => b.id === 6);
+                if (batch6Data) {
+                    batch6Data.active = true;
+                    batch6Data.action = 'auto_savings';
+                    batch6Data.earnedDate = new Date().toISOString().split('T')[0];
+                    batch6Data.details = {
+                        en: `€${autoSaveData.amount}/${autoSaveData.frequency} to ${targetAccounts[autoSaveData.targetAccount].en}`,
+                        de: `€${autoSaveData.amount}/${t('freq.' + autoSaveData.frequency)} auf ${targetAccounts[autoSaveData.targetAccount].de}`
+                    };
+                }
+            }
+        }
+
+        function finishAutoSave() {
+            closeAutoSavingsModal();
+        }
+
+        function getOrdinalSuffix(n) {
+            const s = ['th', 'st', 'nd', 'rd'];
+            const v = n % 100;
+            return s[(v - 20) % 10] || s[v] || s[0];
+        }
+
+        function getNextStartDate() {
+            const now = new Date();
+            let startDate = new Date(now.getFullYear(), now.getMonth() + 1, autoSaveData.day);
+            if (startDate <= now) {
+                startDate.setMonth(startDate.getMonth() + 1);
+            }
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return startDate.toLocaleDateString(currentLang === 'de' ? 'de-DE' : 'en-US', options);
+        }
+
+        document.getElementById('autoSavingsModal').addEventListener('click', function(e) {
+            if (e.target === this) closeAutoSavingsModal();
+        });
+
+        // ============================
+        // SCROLL WITH HIGHLIGHT
+        // ============================
+        function scrollToMeasuresHighlight() {
             const measuresSection = document.getElementById('measuresSection');
             if (measuresSection) {
                 measuresSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                // Add highlight after scroll completes
+                setTimeout(() => {
+                    measuresSection.classList.add('highlight');
+                    setTimeout(() => {
+                        measuresSection.classList.remove('highlight');
+                    }, 2000);
+                }, 600);
             }
+        }
+
+        // Keep the old function for backwards compatibility
+        function scrollToMeasures() {
+            scrollToMeasuresHighlight();
         }
     </script>
 </body>
