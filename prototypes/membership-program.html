@@ -2495,6 +2495,7 @@
                 'autosave.next': 'Next',
                 'autosave.confirm': 'Confirm',
                 'autosave.done': 'Done',
+                'autosave.balance': 'Balance',
                 'freq.weekly': 'weekly',
                 'freq.biweekly': 'bi-weekly',
                 'freq.monthly': 'monthly'
@@ -2540,6 +2541,7 @@
                 'autosave.next': 'Weiter',
                 'autosave.confirm': 'Bestätigen',
                 'autosave.done': 'Fertig',
+                'autosave.balance': 'Kontostand',
                 'freq.weekly': 'wöchentlich',
                 'freq.biweekly': 'zweiwöchentlich',
                 'freq.monthly': 'monatlich'
@@ -2740,14 +2742,14 @@
                     <input type="radio" name="sourceAccount" ${autoSaveData.sourceAccount === 'checking' ? 'checked' : ''}>
                     <div class="account-option-info">
                         <div class="account-option-name">${checkingName}</div>
-                        <div class="account-option-balance">Balance: ${accounts.checking.balance}</div>
+                        <div class="account-option-balance">${t('autosave.balance')}: ${accounts.checking.balance}</div>
                     </div>
                 </div>
                 <div class="account-option ${autoSaveData.sourceAccount === 'salary' ? 'selected' : ''}" onclick="selectAccount('salary')">
                     <input type="radio" name="sourceAccount" ${autoSaveData.sourceAccount === 'salary' ? 'checked' : ''}>
                     <div class="account-option-info">
                         <div class="account-option-name">${salaryName}</div>
-                        <div class="account-option-balance">Balance: ${accounts.salary.balance}</div>
+                        <div class="account-option-balance">${t('autosave.balance')}: ${accounts.salary.balance}</div>
                     </div>
                 </div>
 
@@ -2845,6 +2847,7 @@
 
                 <div class="batch-modal-btns" style="margin-top: 24px;">
                     <button class="modal-btn secondary" onclick="prevAutoSaveStep()">← ${t('autosave.back')}</button>
+                    <button class="modal-btn secondary" onclick="closeAutoSavingsModal()">${t('autosave.cancel')}</button>
                     <button class="modal-btn" onclick="confirmAutoSave()" style="background:#00916E;">${t('autosave.confirm')} ✓</button>
                 </div>
             `;
@@ -2901,6 +2904,7 @@
             const batch6 = document.getElementById('batch-6');
             if (batch6 && !batch6.classList.contains('active')) {
                 batch6.classList.add('active');
+                batch6.title = currentLang === 'en' ? 'Batch 6 - Active' : 'Batch 6 - Aktiv';
 
                 // Update the active count display
                 const activeCountEl = document.querySelector('.active-count');
