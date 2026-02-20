@@ -193,6 +193,21 @@ User taps "Hochladen" button.
 
 **Agent:** "Ausgezeichnet! Dein Pre-Approval über €385.000 ist jetzt aktiv. Viel Erfolg bei der Immobiliensuche! Melde dich einfach, wenn du etwas gefunden hast."
 
+### Step 1.8: Phase 2 Entry Point
+*[After a short pause, show button for demo purposes]*
+
+```
+┌─────────────────────────────────────┐
+│                                     │
+│  Demo: Immobilie gefunden?          │
+│                                     │
+│      [ Phase 2 starten ]            │
+│                                     │
+└─────────────────────────────────────┘
+```
+
+*[User taps "Phase 2 starten" to continue the demo]*
+
 ---
 
 ## PHASE 2: Property Found - Finalizing Mortgage
@@ -376,13 +391,23 @@ User uploads each document. After each upload:
 Since this is a visual prototype without NLP:
 
 ### How User Advances Through Flow
-1. **Tap anywhere on screen** to advance to next message/state (for demo purposes)
-2. **OR tap specific buttons** when they appear (Hochladen, Akzeptieren, etc.)
+1. **Auto-advance** through messages and animations - NO tapping required for normal flow
+2. **Stop and wait for user input ONLY when:**
+   - Upload button needs to be tapped
+   - Parameter adjustment choice (Ja/Nein)
+   - Slider/parameter interactions
+   - Accept/signature buttons
+   - Phase 2 start button
 3. **Slider interactions** work normally in parameter adjustment
-4. **Upload simulation**: File picker opens, any selection triggers "success" and advances
+4. **Upload simulation**: File picker opens, any selection triggers "success" and auto-continues
+
+### Phase Transition
+- After Phase 1 success screen, show **"Phase 2 starten"** button
+- User taps button to begin Phase 2 flow
+- This simulates user returning later after finding a property
 
 ### State Management
-- Prototype can be **linear only** (simplest) or have **branch for parameter adjustment**
+- Auto-advancing flow with pauses only at interaction points
 - Recommended: Linear with optional parameter card (tap "Ja" shows card, tap "Nein" skips)
 - **Reset**: Pull down from top or add hidden "Reset" button in corner
 
