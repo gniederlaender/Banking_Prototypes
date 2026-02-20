@@ -232,29 +232,41 @@ User taps "Hochladen" button.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📍 FINANZIERUNG ABSCHLIESSEN      ← Du bist hier
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ○ Kaufvertrag                    [Hochladen]
-   ○ Energieausweis                 [Hochladen]
-   ○ Grundbuchauszug                [Hochladen]
+   ○ Kaufvertrag                    
+   ○ Energieausweis                 
+   ○ Grundbuchauszug                
+
+        [ Alle Dokumente hochladen ]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-### Step 2.3: Document Uploads (Sequential)
-User uploads each document. After each upload:
+*Note: All 3 missing document items should have identical styling: empty circle with blue border and white fill (○)*
 
-**Agent:** "Kaufvertrag erhalten ✓"
-*(Checklist updates with checkmark)*
+*[Single "Alle Dokumente hochladen" button at the bottom of the checklist]*
 
-**Agent:** "Energieausweis erhalten ✓"
-*(Checklist updates)*
+### Step 2.3: Document Upload Confirmation
+User taps "Alle Dokumente hochladen" → File picker simulation → auto-success
 
-**Agent:** "Grundbuchauszug erhalten ✓"
-*(Checklist updates)*
+**Agent:** "Kaufvertrag erhalten ☑️"
+
+**Agent:** "Energieausweis erhalten ☑️"
+
+**Agent:** "Grundbuchauszug erhalten ☑️"
+
+*(Messages appear sequentially with short delays, ~500ms between each)*
+
+### Step 2.4: Document Verification
+**Agent:** "Prüfe Dokumente"
+
+**Agent:** "..."
+
+*[Show "..." for 3 seconds - animated dots pulsing]*
 
 **Agent:** "Perfekt, ich habe alle Dokumente. Ich prüfe jetzt die Immobilie und erstelle deinen finalen Kreditvertrag..."
 
 *[Processing animation - 3-4 seconds]*
 
-### Step 2.4: Final Mortgage Offer
+### Step 2.5: Final Mortgage Offer
 **Agent:** "Alles geprüft! Deine Finanzierung ist bereit."
 
 *[Final Mortgage Summary Card]*
@@ -282,7 +294,7 @@ User uploads each document. After each upload:
 └─────────────────────────────────────┘
 ```
 
-### Step 2.5: Final Signature
+### Step 2.6: Final Signature
 **Agent:** "Wenn du auf 'Akzeptieren' tippst, wird dein Hypothekenvertrag verbindlich unterschrieben."
 
 *[Action Card]*

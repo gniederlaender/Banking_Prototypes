@@ -334,17 +334,29 @@
     {
       "id": "task-20260220-173331",
       "type": "bug",
-      "status": "open",
+      "status": "done",
       "priority": "high",
       "title": "Mortgage Advisor: Auto-advance + Phase 2 Button",
       "description": "Two improvements needed for the Mortgage Advisor prototype:\n\n1. AUTO-ADVANCE FLOW:\n   - Remove tap-to-advance for every step\n   - Messages and animations should auto-advance\n   - ONLY pause/wait for user input when:\n     \u2022 Upload button needs to be tapped\n     \u2022 Parameter adjustment choice (Ja/Nein buttons)\n     \u2022 Slider interactions\n     \u2022 Accept/signature buttons\n     \u2022 Phase 2 start button\n\n2. PHASE 2 ENTRY:\n   - After Phase 1 success (Pre-Approval confirmed), show a \"Phase 2 starten\" button\n   - This allows the demo to continue to Phase 2\n   - Button appears after the success message with a short delay\n\nSee updated spec: MORTGAGE_ADVISOR_SPEC.md (Step 1.8 and Interaction Model section)",
       "created_at": "2026-02-20T17:33:31.895934",
-      "updated_at": "2026-02-20T17:35:30.524994"
+      "updated_at": "2026-02-20T17:35:30.524994",
+      "completion_notes": "Completed by agent in run 20260220_173622\n\u2717 Verification: FAILED - Unknown\nCommit: a4cecfd",
+      "completed_at": "2026-02-20T17:41:41.518866"
+    },
+    {
+      "id": "task-20260220-180954",
+      "type": "bug",
+      "status": "open",
+      "priority": "high",
+      "title": "Mortgage Advisor: Phase 2 Document Upload Simplification",
+      "description": "Simplify and fix the Phase 2 document upload flow:\n\n1. VISUAL CONSISTENCY:\n   - All 3 missing documents (Kaufvertrag, Energieausweis, Grundbuchauszug) should have IDENTICAL styling\n   - Empty circle with blue border and white fill (\u25cb)\n   - Remove individual [Hochladen] buttons next to each item\n\n2. SINGLE UPLOAD BUTTON:\n   - Add one button at bottom of checklist: \"Alle Dokumente hochladen\"\n   - This replaces the 3 individual upload buttons\n\n3. UPLOAD CONFIRMATION SEQUENCE:\n   After user taps upload button, show these messages sequentially (~500ms apart):\n   - \"Kaufvertrag erhalten \u2611\ufe0f\"\n   - \"Energieausweis erhalten \u2611\ufe0f\"\n   - \"Grundbuchauszug erhalten \u2611\ufe0f\"\n\n4. NEW VERIFICATION STEP:\n   After confirmations, add:\n   - \"Pr\u00fcfe Dokumente\"\n   - \"...\" (animated dots, show for 3 seconds)\n   - Then continue with existing: \"Perfekt, ich habe alle Dokumente...\"\n\nSee updated spec: MORTGAGE_ADVISOR_SPEC.md (Steps 2.2, 2.3, 2.4)",
+      "created_at": "2026-02-20T18:09:54.046602",
+      "updated_at": "2026-02-20T18:12:32.787304"
     }
   ],
   "metadata": {
     "project": "Banking_Prototypes",
     "version": "1.0",
-    "last_updated": "2026-02-20T17:35:30.525006"
+    "last_updated": "2026-02-20T18:12:32.787314"
   }
 }
