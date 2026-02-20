@@ -843,6 +843,8 @@
             { type: 'agent', text: 'Für den Abschluss benötige ich noch die Dokumente zur Immobilie:' },
             { type: 'journey', phase: 2 },
             { type: 'wait' }, // Wait for uploads
+            { type: 'agent', text: 'Prüfe Dokumente' },
+            { type: 'loading', duration: 3000 },
             { type: 'agent', text: 'Perfekt, ich habe alle Dokumente. Ich prüfe jetzt die Immobilie und erstelle deinen finalen Kreditvertrag...' },
             { type: 'loading', duration: 3500 },
             { type: 'agent', text: 'Alles geprüft! Deine Finanzierung ist bereit.' },
@@ -1058,20 +1060,18 @@
                         <span style="font-size: 12px;">${phaseNum === 2 ? '← Du bist hier' : 'Später'}</span>
                     </div>
                     <div class="journey-item ${phaseNum < 2 ? 'future' : ''}">
-                        <div class="journey-item-icon ${phaseNum === 2 ? 'pending' : 'future'}">${phaseNum === 2 && uploadingDoc === 'kaufvertrag' ? '✓' : ''}</div>
+                        <div class="journey-item-icon pending"></div>
                         <div class="journey-item-text">Kaufvertrag</div>
-                        ${phaseNum === 2 && uploadingDoc !== 'kaufvertrag' ? '<button class="upload-btn" onclick="openUploadModal(\'kaufvertrag\')">Hochladen</button>' : ''}
                     </div>
                     <div class="journey-item ${phaseNum < 2 ? 'future' : ''}">
-                        <div class="journey-item-icon ${phaseNum === 2 && uploadingDoc ? 'pending' : 'future'}">${phaseNum === 2 && ['kaufvertrag', 'energieausweis'].includes(uploadingDoc) ? '✓' : ''}</div>
+                        <div class="journey-item-icon pending"></div>
                         <div class="journey-item-text">Energieausweis</div>
-                        ${phaseNum === 2 && uploadingDoc === 'kaufvertrag' ? '<button class="upload-btn" onclick="openUploadModal(\'energieausweis\')">Hochladen</button>' : ''}
                     </div>
                     <div class="journey-item ${phaseNum < 2 ? 'future' : ''}">
-                        <div class="journey-item-icon ${phaseNum === 2 && ['kaufvertrag', 'energieausweis', 'grundbuchauszug'].includes(uploadingDoc) ? 'completed' : 'future'}">${phaseNum === 2 && ['kaufvertrag', 'energieausweis', 'grundbuchauszug'].includes(uploadingDoc) ? '✓' : ''}</div>
+                        <div class="journey-item-icon pending"></div>
                         <div class="journey-item-text">Grundbuchauszug</div>
-                        ${phaseNum === 2 && uploadingDoc === 'energieausweis' ? '<button class="upload-btn" onclick="openUploadModal(\'grundbuchauszug\')">Hochladen</button>' : ''}
                     </div>
+                    ${phaseNum === 2 ? '<div style="margin-top: 16px;"><button class="action-btn" onclick="handleAllDocumentsUpload()">Alle Dokumente hochladen</button></div>' : ''}
                 </div>
             `;
 
@@ -1341,6 +1341,29 @@
                     showNextStep();
                 }
             }, 500);
+        }
+
+        function handleAllDocumentsUpload() {
+            // Sequential upload confirmations for all Phase 2 documents
+            const documents = [
+                { name: 'Kaufvertrag', delay: 500 },
+                { name: 'Energieausweis', delay: 1000 },
+                { name: 'Grundbuchauszug', delay: 1500 }
+            ];
+
+            documents.forEach((doc, index) => {
+                setTimeout(() => {
+                    addAgentMessage(`${doc.name} erhalten ☑️`);
+
+                    // After last document, advance to next step
+                    if (index === documents.length - 1) {
+                        setTimeout(() => {
+                            currentStep++;
+                            showNextStep();
+                        }, 500);
+                    }
+                }, doc.delay);
+            });
         }
 
         function handleAction() {
