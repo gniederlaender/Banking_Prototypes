@@ -18,7 +18,7 @@
       "title": "Transfer button is not displayed properly ",
       "description": "After the last implementation, the transfer button changed the appearance. Now it is not as wide as the others, and also not responsive. Pls fix",
       "created_at": "2026-01-06T16:24:53.146858",
-      "completion_notes": "Completed by agent in run 20260106_162547\n\u2713 Verification: PASSED\nCommit: db3de8b",
+      "completion_notes": "Completed by agent in run 20260106_162547\n✓ Verification: PASSED\nCommit: db3de8b",
       "completed_at": "2026-01-06T16:29:59.918237"
     },
     {
@@ -27,9 +27,9 @@
       "status": "done",
       "priority": "medium",
       "title": "Main Navigation",
-      "description": "Create a main navigation for an innovative retail banking app. Besides the already existing \u201cOverview\u201d the navigation should include the main customer needs structured as following:\n1. Today\n1.1 My Accounts & Cards\n1.2 MY Budget\n2. Rainy Day\n2.1 My Insurance\n2.2 My Overdraft\n3. One Day\n3.1 My Investments\n3.2 My Housing\n\nAlso it should contain the following 4 elements:\n4. Messenger\n5. Language\n6.Privacy \n7. Logout \n\nItems Overview, 1,2 & 3 should be more prominent then the rest. \n\nFor now put a placeholder text upon click on the navigation Item, later we will together develope one section at a time. ",
+      "description": "Create a main navigation for an innovative retail banking app. Besides the already existing “Overview” the navigation should include the main customer needs structured as following:\n1. Today\n1.1 My Accounts & Cards\n1.2 MY Budget\n2. Rainy Day\n2.1 My Insurance\n2.2 My Overdraft\n3. One Day\n3.1 My Investments\n3.2 My Housing\n\nAlso it should contain the following 4 elements:\n4. Messenger\n5. Language\n6.Privacy \n7. Logout \n\nItems Overview, 1,2 & 3 should be more prominent then the rest. \n\nFor now put a placeholder text upon click on the navigation Item, later we will together develope one section at a time. ",
       "created_at": "2026-01-07T08:34:57.550801",
-      "completion_notes": "Completed by agent in run 20260107_092001\n\u2713 Verification: PASSED\nCommit: 2572cb2",
+      "completion_notes": "Completed by agent in run 20260107_092001\n✓ Verification: PASSED\nCommit: 2572cb2",
       "completed_at": "2026-01-07T09:26:00.660365"
     },
     {
@@ -38,9 +38,9 @@
       "status": "done",
       "priority": "medium",
       "title": "Real estate scraper",
-      "description": "Our customers shall have the possibility to send us a link of the real estate, which they want to finance, and we provide them a financing offer, based on the real estate price, mentioned on the platform.\n\nLet us implement a prototype (standalone), which\n-  takes a link to a specific real estste on a 3rd party portal as an input (ask the user).  A link looks like this e.g. (https://immobilien.derstandard.at/detail/15006491)\n- scrapes the most important details of the real estate (the scraping is for real, the functionality shall be implemented)\n- shows the real estate in a nice design to the user and  asks for confirmation \n- if confirmed, a financing offer is presented (with 3,5% fixed interest rate and 30y tenor)\n- the CTA is \u201esend me the offer\u201c (this functionality shall not be implemented)",
+      "description": "Our customers shall have the possibility to send us a link of the real estate, which they want to finance, and we provide them a financing offer, based on the real estate price, mentioned on the platform.\n\nLet us implement a prototype (standalone), which\n-  takes a link to a specific real estste on a 3rd party portal as an input (ask the user).  A link looks like this e.g. (https://immobilien.derstandard.at/detail/15006491)\n- scrapes the most important details of the real estate (the scraping is for real, the functionality shall be implemented)\n- shows the real estate in a nice design to the user and  asks for confirmation \n- if confirmed, a financing offer is presented (with 3,5% fixed interest rate and 30y tenor)\n- the CTA is „send me the offer“ (this functionality shall not be implemented)",
       "created_at": "2026-01-07T22:14:35.403066",
-      "completion_notes": "Completed with CORS proxy fix\nInitial: Commit 8df7128\nFix: Commit eca7b2b - Replaced failing CORS proxy, added demo fallback mode\n\u2713 Multiple CORS proxies with automatic failover\n\u2713 Demo mode when scraping unavailable\n\u2713 User-visible demo notice banner",
+      "completion_notes": "Completed with CORS proxy fix\nInitial: Commit 8df7128\nFix: Commit eca7b2b - Replaced failing CORS proxy, added demo fallback mode\n✓ Multiple CORS proxies with automatic failover\n✓ Demo mode when scraping unavailable\n✓ User-visible demo notice banner",
       "completed_at": "2026-01-08T10:10:00.000000"
     },
     {
@@ -51,7 +51,7 @@
       "title": "Reql Estate scraper",
       "description": "The basic scraping process seems to work, however many imprortant fields are not extracted correctly. Please make sure that 1) main image 2) size 3) nr of rooms are extracted properly. Hint: these labels are in German on the page. Here some test links:\nhttps://immobilien.derstandard.at/detail/14845970\n\nhttps://immobilien.derstandard.at/detail/14845969\n\nhttps://immobilien.derstandard.at/detail/14940098\n\nTest it after implementation. Iterate twice, if necessary.\n\n\n",
       "created_at": "2026-01-08T18:32:28.537552",
-      "completion_notes": "Completed by agent in run 20260109_162458\n\u2717 Verification: FAILED - Unknown\nCommit: ec1478e",
+      "completion_notes": "Completed by agent in run 20260109_162458\n✗ Verification: FAILED - Unknown\nCommit: ec1478e",
       "completed_at": "2026-01-09T16:29:02.662075"
     },
     {
@@ -60,9 +60,9 @@
       "status": "done",
       "priority": "critical",
       "title": "Improve scraping",
-      "description": "We need to scrape the following data explicitely:\n1) Main picture - recognizable with \"sc-image-default\" included in img class.\n\nAll in the section \"heading-section-stats\"\n2) Kaufpreis - recognizable as the value after the label Kaufpreis\n3) Wohnfl\u00e4che - recognizable as the value after the label Wohnfl\u00e4che\n4) Zimmer - recognizable as the value after the label Zimmer\n\nLet's see, if you find them. Try to test, whether the scraped value is not empty. If empty, iterate.",
+      "description": "We need to scrape the following data explicitely:\n1) Main picture - recognizable with \"sc-image-default\" included in img class.\n\nAll in the section \"heading-section-stats\"\n2) Kaufpreis - recognizable as the value after the label Kaufpreis\n3) Wohnfläche - recognizable as the value after the label Wohnfläche\n4) Zimmer - recognizable as the value after the label Zimmer\n\nLet's see, if you find them. Try to test, whether the scraped value is not empty. If empty, iterate.",
       "created_at": "2026-01-09T16:36:44.729300",
-      "completion_notes": "Completed by agent in run 20260109_163723\n\u2713 Verification: PASSED\nCommit: 7e107bd",
+      "completion_notes": "Completed by agent in run 20260109_163723\n✓ Verification: PASSED\nCommit: 7e107bd",
       "completed_at": "2026-01-09T16:44:41.634609"
     },
     {
@@ -73,7 +73,7 @@
       "title": "Create know-how Boerse Prototyp",
       "description": "Please review our discussion with Kurt about the Know-How Boerse:\n\n/var/www/smartprototypes.net/public_html/UI_Prototypes/Banking_Prototypes/Know_how_Boerse.txt\n\nDerive a specification for a Know-How Boerse. Create a phased approach in terms of functionalities.\n\nDevelop a ui click-dummy for Phase 1.\n\nAnd create a fully\n",
       "created_at": "2026-01-13T11:20:24.565275",
-      "completion_notes": "Completed by agent in run 20260113_112057\n\u2717 Verification: FAILED - Unknown\nCommit: da82587",
+      "completion_notes": "Completed by agent in run 20260113_112057\n✗ Verification: FAILED - Unknown\nCommit: da82587",
       "completed_at": "2026-01-13T11:25:59.864296"
     },
     {
@@ -84,7 +84,7 @@
       "title": "Know-how Boerse Phase 2 Prototyp ",
       "description": "Please create a click-dummy prototype for the Phase 2 of the Know-How platform (based on the specification done: KNOW_HOW_BOERSE_SPEC.md).\nPlease leave the version 1 unchanged (know-how-boerse.html), develop a version 2 (know-how-boerse_2.html)",
       "created_at": "2026-01-13T14:02:08.580820",
-      "completion_notes": "Completed by agent in run 20260113_140232\n\u2717 Verification: FAILED - Unknown\nCommit: 9b0544a",
+      "completion_notes": "Completed by agent in run 20260113_140232\n✗ Verification: FAILED - Unknown\nCommit: 9b0544a",
       "completed_at": "2026-01-13T14:06:30.286651"
     },
     {
@@ -93,9 +93,9 @@
       "status": "done",
       "priority": "medium",
       "title": "Know-how Boerse Phase 2 Prototyp - add Data-entry functionality from Phase 1",
-      "description": "Please add the Data entry functionality to the Phase 2 Prototyp. In the active chapter (Dokumentation) - in all 3 subchapters the user shall be able to add new entries (Ihr Beitrag -  Bitte teilen Sie Ihre Erfahrungen: mindestens 3 W\u00f6rter, maximal 3 S\u00e4tze). This should be possible in the click-dummy prototype.",
+      "description": "Please add the Data entry functionality to the Phase 2 Prototyp. In the active chapter (Dokumentation) - in all 3 subchapters the user shall be able to add new entries (Ihr Beitrag -  Bitte teilen Sie Ihre Erfahrungen: mindestens 3 Wörter, maximal 3 Sätze). This should be possible in the click-dummy prototype.",
       "created_at": "2026-01-13T14:18:28.641520",
-      "completion_notes": "Completed by agent in run 20260113_141850\n\u2717 Verification: FAILED - Unknown\nCommit: 6dbd256",
+      "completion_notes": "Completed by agent in run 20260113_141850\n✗ Verification: FAILED - Unknown\nCommit: 6dbd256",
       "completed_at": "2026-01-13T14:22:26.343217"
     },
     {
@@ -106,7 +106,7 @@
       "title": "Know-how Boerse Phase 2 Prototyp - Fix data entry in Search field",
       "description": "Please check the data entry in the search input field (Suchen & Filtern), after every character it is losing focus, so I have to click into it again. Please make sure that the focus remains.\n",
       "created_at": "2026-01-13T14:26:52.065971",
-      "completion_notes": "Completed by agent in run 20260114_082001\n\u2717 Verification: FAILED - Unknown\nCommit: 6821917",
+      "completion_notes": "Completed by agent in run 20260114_082001\n✗ Verification: FAILED - Unknown\nCommit: 6821917",
       "completed_at": "2026-01-14T08:22:03.806436"
     },
     {
@@ -117,7 +117,7 @@
       "title": "Membership Program",
       "description": "Create a own prominent section for the banks membership program where clients based on their product holdings, degree of digital usage and financially healthy behavior are granted points and can progress along 4 tiers. Each tier grants access to certain benefits such as free bank share, better interest rates, erste open tickets. User can choose among those benefits whereas the higher the tier the more attractive it gets. Iterate the concept and design several times with a group of senior consultants and designers bevor implementing a functional html5 prototype. Think hard and long ",
       "created_at": "2026-01-14T22:55:00.607303",
-      "completion_notes": "Completed by agent in run 20260115_082002\n\u2717 Verification: FAILED - Unknown\nCommit: 71455a0",
+      "completion_notes": "Completed by agent in run 20260115_082002\n✗ Verification: FAILED - Unknown\nCommit: 71455a0",
       "completed_at": "2026-01-15T08:24:05.094955"
     },
     {
@@ -128,7 +128,7 @@
       "title": "Know how Boerse phase 2 version 2",
       "description": "We had another discussion with Kurt (transkript: Know-How_Boerse_2nd_round.txt) please consider this inputs and create an updated version. Do not overwrite know-how-boerse_2.html, create a know-how-boerse_3.html",
       "created_at": "2026-01-15T08:01:39.308996",
-      "completion_notes": "Completed by agent in run 20260115_082002\n\u2717 Verification: FAILED - Unknown\nCommit: a3f446f",
+      "completion_notes": "Completed by agent in run 20260115_082002\n✗ Verification: FAILED - Unknown\nCommit: a3f446f",
       "completed_at": "2026-01-15T08:28:57.519287"
     },
     {
@@ -139,7 +139,7 @@
       "title": "George Stylesheets",
       "description": "Here are some stylesheets, used by my favorite application, George:\nExternal Stylesheets (5):\n\njQuery UI CSS - https://george.sparkasse.at/css/ui-1-12/jquery-ui.min.css (media: all)\nBootstrap CSS - https://george.sparkasse.at/css/bootstrap.min.css (media: screen)\njQuery UI Custom Theme - https://george.sparkasse.at/css/uitheme/jquery-ui-1.10.3.custom.css (media: all)\nLoader CSS - https://george.sparkasse.at/styles/loader.css?v=1764320310817 (media: all)\nMain Application Styles - https://george.sparkasse.at/styles.d1cd9d41d7.css (media: all)\n\nPlease add this stylesheets to our Know-how Boerse version 2 (know-how-boerse_2.html)",
       "created_at": "2026-01-15T09:17:14.089157",
-      "completion_notes": "Completed by agent in run 20260115_091804\n\u2717 Verification: FAILED - Unknown\nCommit: ad6de2a",
+      "completion_notes": "Completed by agent in run 20260115_091804\n✗ Verification: FAILED - Unknown\nCommit: ad6de2a",
       "completed_at": "2026-01-15T09:19:02.538713"
     },
     {
@@ -150,7 +150,7 @@
       "title": "Remove George Stylesheets",
       "description": "Please remove the stylesheets, we added within the run before",
       "created_at": "2026-01-15T09:21:22.687401",
-      "completion_notes": "Completed by agent in run 20260115_092137\n\u2717 Verification: FAILED - Unknown\nCommit: 043560d",
+      "completion_notes": "Completed by agent in run 20260115_092137\n✗ Verification: FAILED - Unknown\nCommit: 043560d",
       "completed_at": "2026-01-15T09:22:49.161909"
     },
     {
@@ -161,7 +161,7 @@
       "title": "Know how Boerse phase 2 version 3",
       "description": "Version 3 has nice features. but in this one the user cannot experience all the features of the prototype (i.e. version 2 and version 3 jointly).\nSo please create a version 4 in a two-step process: 1) update our specification with the features we discussed with Kurt. 2) implement the new version into the prototype, including version 2 and version 3 functionalites.",
       "created_at": "2026-01-16T07:17:02.058022",
-      "completion_notes": "Completed by agent in run 20260116_082001\n\u2717 Verification: FAILED - Unknown\nCommit: bb52924",
+      "completion_notes": "Completed by agent in run 20260116_082001\n✗ Verification: FAILED - Unknown\nCommit: bb52924",
       "completed_at": "2026-01-16T08:27:06.039966"
     },
     {
@@ -182,7 +182,7 @@
       ],
       "completed_at": "2026-01-16T08:31:16.083289",
       "implementation": "prototypes/UI_Investkredit.html",
-      "completion_notes": "Completed by agent in run 20260116_082001\n\u2717 Verification: FAILED - Unknown\nCommit: 1954e66",
+      "completion_notes": "Completed by agent in run 20260116_082001\n✗ Verification: FAILED - Unknown\nCommit: 1954e66",
       "updated_at": "2026-01-16T08:30:00.000000"
     },
     {
@@ -190,10 +190,10 @@
       "type": "bug",
       "status": "done",
       "priority": "medium",
-      "title": "Fix bugs Know-How B\u00f6rse",
-      "description": "In https://smartprototypes.net/UI_Prototypes/Banking_Prototypes/prototypes/know-how-boerse_4.html please fix the following bugs:\n- The menu items shall expand and collapse (revealing the sub chapters) (this does not work in _4, but it worked in _2).\n- The sub chapters shall be also clickable revealing the items (this does not work in _4, but it worked in _2)\n- I am missing a link, which is bringing me back to the dashboard\n\nAnd I would like to have a \"change user\" button, which changes \"Gabor Niederl\u00e4nder\" to another random (non-admin) user",
+      "title": "Fix bugs Know-How Börse",
+      "description": "In https://smartprototypes.net/UI_Prototypes/Banking_Prototypes/prototypes/know-how-boerse_4.html please fix the following bugs:\n- The menu items shall expand and collapse (revealing the sub chapters) (this does not work in _4, but it worked in _2).\n- The sub chapters shall be also clickable revealing the items (this does not work in _4, but it worked in _2)\n- I am missing a link, which is bringing me back to the dashboard\n\nAnd I would like to have a \"change user\" button, which changes \"Gabor Niederländer\" to another random (non-admin) user",
       "created_at": "2026-01-16T09:19:14.612275",
-      "completion_notes": "Completed by agent in run 20260116_091942\n\u2717 Verification: FAILED - Unknown\nCommit: eda3962",
+      "completion_notes": "Completed by agent in run 20260116_091942\n✗ Verification: FAILED - Unknown\nCommit: eda3962",
       "completed_at": "2026-01-16T09:23:05.994531"
     },
     {
@@ -205,7 +205,7 @@
       "description": "Please look at all Screenshots about George under /var/www/smartprototypes.net/public_html/UI_Prototypes/Banking_Prototypes/George_screenshots. THere are 5 screenshots about the George Platform (all starting with Screenshot) and 4 screenshots about the Loan application process (all starting with Klick_kredit).\nPlease create a guide called GEORGE_UI.md for all developers working on UI_Prototypes. They should all have the George Look & Feel and consider the GEORGE_UI.md.\n ",
       "created_at": "2026-01-17T15:57:42.553076",
       "updated_at": "2026-01-17T15:57:52.223652",
-      "completion_notes": "Completed by agent in run 20260117_160326\n\u2717 Verification: FAILED - Unknown\nCommit: 60cd681",
+      "completion_notes": "Completed by agent in run 20260117_160326\n✗ Verification: FAILED - Unknown\nCommit: 60cd681",
       "completed_at": "2026-01-17T16:07:40.814643"
     },
     {
@@ -216,7 +216,7 @@
       "title": "Update Investkredit - Step 1",
       "description": "After finishing the GEORGE_UI.md in the previous task, please apply it to investkredit prototype. I want the Investkredit to look and feel like, it was part of George.",
       "created_at": "2026-01-17T15:59:17.904614",
-      "completion_notes": "Completed by agent in run 20260117_164526\n\u2717 Verification: FAILED - Unknown\nCommit: 82f1b3f",
+      "completion_notes": "Completed by agent in run 20260117_164526\n✗ Verification: FAILED - Unknown\nCommit: 82f1b3f",
       "completed_at": "2026-01-17T16:49:20.373141"
     },
     {
@@ -227,7 +227,7 @@
       "title": "Implement Phase 1 changes for Investkredit",
       "description": "Implement Phase 1 changes for Investkredit according to /var/www/smartprototypes.net/public_html/UI_Prototypes/Banking_Prototypes/Investkredit_UI_Developer_Specification_v2.md.\nBut before you start implementing, please review the Investkredit_UI_Developer_Specification_v2.md and update it with GEORGE_UI.md (or simply add a reference into it). Important is that the George_UI is considered. So after you updated the Specification, please implement PHase 1.",
       "created_at": "2026-01-17T16:02:45.044052",
-      "completion_notes": "Completed by agent in run 20260117_164526\n\u2717 Verification: FAILED - Unknown\nCommit: 2cbfcfb",
+      "completion_notes": "Completed by agent in run 20260117_164526\n✗ Verification: FAILED - Unknown\nCommit: 2cbfcfb",
       "completed_at": "2026-01-17T16:54:27.377732"
     },
     {
@@ -238,7 +238,7 @@
       "title": "George UI for membership lrogrsm",
       "description": "Please update the membership program prototype with the GEORGE_UI.md",
       "created_at": "2026-01-19T08:11:39.522802",
-      "completion_notes": "Completed by agent in run 20260119_082001\n\u2717 Verification: FAILED - Unknown\nCommit: 2f98820",
+      "completion_notes": "Completed by agent in run 20260119_082001\n✗ Verification: FAILED - Unknown\nCommit: 2f98820",
       "completed_at": "2026-01-19T08:25:40.685201"
     },
     {
@@ -258,7 +258,7 @@
         }
       ],
       "updated_at": "2026-01-19T12:01:18.546441",
-      "completion_notes": "Completed by agent in run 20260119_130644\n\u2717 Verification: FAILED - Unknown\nCommit: a1f2bf2",
+      "completion_notes": "Completed by agent in run 20260119_130644\n✗ Verification: FAILED - Unknown\nCommit: a1f2bf2",
       "completed_at": "2026-01-19T13:11:52.020568"
     },
     {
@@ -270,7 +270,7 @@
       "description": "The real-estate-financing.html prototype fails to scrape property data from immobilien.derstandard.at. The CSS selectors don't match the actual DOM structure.\n\nREQUIRED FIXES:\n- Address: Use .heading-section-address instead of .object-location\n- Price/Area/Rooms: Use .sc-stat with .sc-stat-label and .sc-stat-value pattern\n- Image: Extract from picture > source srcset attribute (not img src)\n\nSee attached specification (real_estate_scraper_fix.md) for complete implementation details and code examples. Also uploaded to the server at /var/www/smartprototypes.net/public_html/UI_Prototypes/Banking_Prototypes/real_estate_scraper_fix.md\n\nTest URL: https://immobilien.derstandard.at/detail/15006491",
       "created_at": "2026-01-19T13:52:56.356135",
       "updated_at": "2026-01-19T13:57:18.164423",
-      "completion_notes": "Completed by agent in run 20260119_143829\n\u2717 Verification: FAILED - Unknown\nCommit: f878fa1",
+      "completion_notes": "Completed by agent in run 20260119_143829\n✗ Verification: FAILED - Unknown\nCommit: f878fa1",
       "completed_at": "2026-01-19T14:42:27.642546"
     },
     {
@@ -279,9 +279,9 @@
       "status": "done",
       "priority": "medium",
       "title": "Iteration Membership program",
-      "description": "Following up on your previous task, please make following enhancements:\n\n1. please simplify the point system even further. Each tier requires 7 sparefroh batches which are either shown active or inactive\n2. make clear that user needs to do to gain further batches. Highlighting the next best action or viewing all measures to fill batches within the tier \n3. I\u2019m not yet happy with the visual of the batches. I really need a icon showing the \u201esparefroh\u201c which I uploaded you in previous requirement. Find ways to illustrate the sparefroh as icon within the batches. ",
+      "description": "Following up on your previous task, please make following enhancements:\n\n1. please simplify the point system even further. Each tier requires 7 sparefroh batches which are either shown active or inactive\n2. make clear that user needs to do to gain further batches. Highlighting the next best action or viewing all measures to fill batches within the tier \n3. I’m not yet happy with the visual of the batches. I really need a icon showing the „sparefroh“ which I uploaded you in previous requirement. Find ways to illustrate the sparefroh as icon within the batches. ",
       "created_at": "2026-01-19T21:18:51.184067",
-      "completion_notes": "Completed by agent in run 20260120_082001\n\u2717 Verification: FAILED - Unknown\nCommit: 1b60afa",
+      "completion_notes": "Completed by agent in run 20260120_082001\n✗ Verification: FAILED - Unknown\nCommit: 1b60afa",
       "completed_at": "2026-01-20T08:25:11.744043"
     },
     {
@@ -292,7 +292,7 @@
       "title": "Kick and save ",
       "description": "Create this money automation feature which automates savings based on your favorite national team shooting a goal. Let me choose competition FIFA World Cup 2026 and later I would like to choose Austria as my Favorite Club. Later you choose how much you want to save when your club scores a goal. And which target account the amount should be deposited on. Finally you get a confirmation screen summarising the rule and then if the club scores you get a emotional push notification. Iterate this with your senior designers and come up with a functional html prototype ",
       "created_at": "2026-01-28T20:25:49.803841",
-      "completion_notes": "Completed by agent in run 20260129_082002\n\u2717 Verification: FAILED - Unknown\nCommit: 244e083",
+      "completion_notes": "Completed by agent in run 20260129_082002\n✗ Verification: FAILED - Unknown\nCommit: 244e083",
       "completed_at": "2026-01-29T08:22:27.277159"
     },
     {
@@ -303,24 +303,36 @@
       "title": "special financing application ",
       "description": "Build a loan agent to help the customer finding the correct loan product and prepare the approval documents for the bank. The customer should describe to this agent what he wants to have financed, how he wants to repay and if there are special features necessary. The agent should then create the creditcase  with all the relevant data he has from internal systems and add the new information the customer gave. The main relevant information is: investment purpose, business/investment concept (optional), loan amount, tenor, planned repayments, collateral (optional), current outstandings, changes that are expected due the investment, information about the industry of the customer (optional). Provide all this information in a well structured summary that the client can confirm and send to the bank for further checking and approval. Show the customer understandable if something is missing and what the next steps will be.",
       "created_at": "2026-01-29T15:19:56.690107",
-      "completion_notes": "Completed by agent in run 20260130_082001\n\u2717 Verification: FAILED - Unknown\nCommit: 7256a69",
+      "completion_notes": "Completed by agent in run 20260130_082001\n✗ Verification: FAILED - Unknown\nCommit: 7256a69",
       "completed_at": "2026-01-30T08:22:51.954122"
     },
     {
       "id": "task-20260216-130301",
       "type": "feature",
-      "status": "open",
+      "status": "done",
       "priority": "critical",
       "title": "Membership Program: Interactive Sparefroh Batches & Functional CTAs",
       "description": "Based on UI/UX analysis (MEMBERSHIP_PROGRAM_UX_ANALYSIS.md):\n\n1. Make Sparefroh batch icons interactive:\n   - Clicking active batches shows modal with earned details (action, date, description)\n   - Clicking inactive batches shows suggestion modal with actionable CTA\n\n2. Implement functional \"Set Up Auto-Savings\" multi-step flow:\n   - Step 1: Select source account\n   - Step 2: Set amount, frequency, target account  \n   - Step 3: Confirmation with batch earning preview\n   - Success: Animation showing new batch earned\n\n3. Enhance \"View All Ways to Earn\" with smooth scroll + highlight animation\n\nFull specification: MEMBERSHIP_PROGRAM_SPEC_P1.md\n\nEstimated effort: 12-15 hours\nWorks in both EN and DE languages.",
       "created_at": "2026-02-16T13:03:01.574614",
       "specification": "MEMBERSHIP_PROGRAM_SPEC_P1.md",
-      "updated_at": "2026-02-17T08:23:15.594783"
+      "updated_at": "2026-02-17T08:23:15.594783",
+      "completion_notes": "Completed by agent in run 20260218_081001\n✓ Verification: PASSED\nCommit: 6049937",
+      "completed_at": "2026-02-18T08:17:13.950151"
+    },
+    {
+      "id": "task-20260220-165621",
+      "type": "feature",
+      "status": "open",
+      "priority": "high",
+      "title": "Conversational Mortgage Advisor Agent",
+      "description": "Create a new prototype: Conversational Mortgage Advisor.\n\nFULL SPECIFICATION: /root/clawd/specs/conversational-mortgage-advisor.md\n\nKEY CONCEPT: Flip traditional mortgage flow - leverage existing customer data, show what's already available vs still needed. Pre-approval BEFORE property search.\n\nTWO PHASES:\n1. Pre-Approval: Check existing data → show document journey → user uploads Lohnzettel only → reveal limit → adjust parameters → FaceID signature\n2. Property Found: Upload Kaufvertrag, Energieausweis, Grundbuchauszug → limit becomes real mortgage → FaceID signature\n\nDESIGN:\n- Mobile-first, George-style UI\n- Pure conversational (no side panels, no chrome)\n- Professional & explanatory tone, no avatar\n- Key moment: Limit reveal with celebration animation\n- Two FaceID signatures (pre-approval + final)\n\nTECH:\n- HTML5 + CSS3 + Vanilla JS\n- Visual prototype only (no backend, hardcoded values)\n- Tap to advance + interactive elements (upload, sliders)\n\nRead the full spec file for detailed flow, copy, animations, and component specs.",
+      "created_at": "2026-02-20T16:56:21.022042",
+      "updated_at": "2026-02-20T16:59:20.042129"
     }
   ],
   "metadata": {
     "project": "Banking_Prototypes",
     "version": "1.0",
-    "last_updated": "2026-02-17T08:23:15.594794"
+    "last_updated": "2026-02-20T16:59:20.042141"
   }
 }
