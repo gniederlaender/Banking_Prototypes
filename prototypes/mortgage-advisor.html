@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mortgage Advisor - George</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #0066B3;
+            --primary-blue-dark: #004C8C;
+            --success-green: #00A86B;
+            --bg-light: #F5F5F5;
+            --bg-white: #FFFFFF;
+            --text-dark: #333333;
+            --text-medium: #666666;
+            --text-light: #999999;
+            --border-color: #E0E0E0;
+            --celebration-yellow: #FFD700;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-white);
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Mobile-first: Chat container */
+        .chat-container {
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 16px 80px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Message bubbles */
+        .message {
+            margin-bottom: 16px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            text-align: right;
+        }
+
+        .message-bubble {
+            display: inline-block;
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.5;
+        }
+
+        .message.agent .message-bubble {
+            background: #F0F4F8;
+            color: var(--text-dark);
+            border-bottom-left-radius: 4px;
+            text-align: left;
+        }
+
+        .message.user .message-bubble {
+            background: var(--primary-blue);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        /* Loading animation */
+        .loading {
+            display: flex;
+            gap: 6px;
+            padding: 12px 16px;
+            background: #F0F4F8;
+            border-radius: 18px;
+            max-width: fit-content;
+        }
+
+        .loading-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--text-light);
+            border-radius: 50%;
+            animation: pulse 1.4s infinite;
+        }
+
+        .loading-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes pulse {
+            0%, 60%, 100% {
+                opacity: 0.3;
+            }
+            30% {
+                opacity: 1;
+            }
+        }
+
+        /* Document Journey Component */
+        .document-journey {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+
+        .journey-section {
+            margin-bottom: 16px;
+        }
+
+        .journey-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .journey-header {
+            font-weight: 600;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .journey-header.active {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .journey-header.completed {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .journey-header.future {
+            background: #F0F4F8;
+            color: var(--text-medium);
+        }
+
+        .journey-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            gap: 12px;
+        }
+
+        .journey-item-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 12px;
+        }
+
+        .journey-item-icon.completed {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .journey-item-icon.pending {
+            background: white;
+            border: 2px solid var(--primary-blue);
+        }
+
+        .journey-item-icon.future {
+            background: white;
+            border: 2px solid var(--border-color);
+        }
+
+        .journey-item-text {
+            flex: 1;
+        }
+
+        .journey-item.future .journey-item-text {
+            color: var(--text-light);
+        }
+
+        /* Upload button */
+        .upload-btn {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .upload-btn:hover {
+            background: var(--primary-blue-dark);
+        }
+
+        /* Quick Reply Buttons */
+        .quick-replies {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .quick-reply-btn {
+            background: white;
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+            padding: 12px 20px;
+            border-radius: 24px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            min-height: 44px;
+        }
+
+        .quick-reply-btn:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Limit Reveal Card */
+        .limit-reveal {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #0088CC 100%);
+            color: white;
+            padding: 32px 24px;
+            border-radius: 16px;
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        .limit-reveal-title {
+            font-size: 16px;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+
+        .limit-amount {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            animation: scaleIn 0.8s ease-out;
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .limit-progress {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+
+        .limit-progress-bar {
+            height: 100%;
+            background: white;
+            width: 0;
+            animation: fillProgress 1s ease-out 0.5s forwards;
+        }
+
+        @keyframes fillProgress {
+            to {
+                width: 100%;
+            }
+        }
+
+        .limit-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 12px;
+        }
+
+        /* Parameter Adjustment Card */
+        .parameter-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .parameter-card h3 {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .parameter-group {
+            margin-bottom: 24px;
+        }
+
+        .parameter-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            flex: 1;
+            min-width: 60px;
+            padding: 8px 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .radio-option.selected {
+            border-color: var(--primary-blue);
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .slider-container {
+            margin: 16px 0;
+        }
+
+        .slider-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-blue);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border-color);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary-blue);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary-blue);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            border: none;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-medium);
+            margin-top: 8px;
+        }
+
+        .parameter-result {
+            background: #F0F4F8;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .result-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-label {
+            color: var(--text-medium);
+        }
+
+        .result-value {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .result-value.large {
+            font-size: 20px;
+            color: var(--primary-blue);
+        }
+
+        /* Summary Card */
+        .summary-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .summary-card h3 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: var(--text-medium);
+        }
+
+        .summary-value {
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: right;
+        }
+
+        /* Action Card */
+        .action-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            text-align: center;
+        }
+
+        .action-card p {
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .action-btn {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 48px;
+            width: 100%;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-blue-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 102, 179, 0.3);
+        }
+
+        /* Face ID Modal */
+        .face-id-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .face-id-modal.show {
+            display: flex;
+        }
+
+        .face-id-content {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            max-width: 320px;
+            animation: modalSlideUp 0.3s ease-out;
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .face-id-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .face-id-text {
+            font-size: 16px;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+        }
+
+        /* Success Animation */
+        .success-check {
+            font-size: 80px;
+            color: var(--success-green);
+            animation: checkIn 0.5s ease-out;
+        }
+
+        @keyframes checkIn {
+            0% {
+                transform: scale(0) rotate(-45deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2) rotate(0deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        /* Upload Modal */
+        .upload-modal {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 16px 16px 0 0;
+            padding: 24px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+            box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+        }
+
+        .upload-modal.show {
+            transform: translateY(0);
+        }
+
+        .upload-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 998;
+        }
+
+        .upload-overlay.show {
+            display: block;
+        }
+
+        .upload-option {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 60px;
+        }
+
+        .upload-option:hover {
+            background: #F0F4F8;
+            border-color: var(--primary-blue);
+        }
+
+        .upload-option-icon {
+            font-size: 32px;
+        }
+
+        .upload-option-text {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--celebration-yellow);
+            position: absolute;
+            animation: confettiFall 2s ease-out forwards;
+        }
+
+        @keyframes confettiFall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Tap indicator */
+        .tap-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            animation: fadeInOut 2s infinite;
+            z-index: 100;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Property Details Card */
+        .property-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .property-card h3 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .property-address {
+            font-size: 14px;
+            color: var(--text-medium);
+            margin-bottom: 16px;
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Celebration effect */
+        .celebration {
+            position: relative;
+        }
+
+        .celebration::before {
+            content: '🎉';
+            position: absolute;
+            font-size: 48px;
+            animation: celebrate 1s ease-out;
+        }
+
+        @keyframes celebrate {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="messages" id="messages">
+            <!-- Messages will be added here dynamically -->
+        </div>
+
+        <div class="tap-indicator" id="tapIndicator">
+            Tippe um fortzufahren
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="upload-overlay" id="uploadOverlay"></div>
+    <div class="upload-modal" id="uploadModal">
+        <div class="upload-option" data-upload="camera">
+            <div class="upload-option-icon">📷</div>
+            <div class="upload-option-text">Foto aufnehmen</div>
+        </div>
+        <div class="upload-option" data-upload="gallery">
+            <div class="upload-option-icon">🖼️</div>
+            <div class="upload-option-text">Aus Galerie wählen</div>
+        </div>
+        <div class="upload-option" data-upload="file">
+            <div class="upload-option-icon">📄</div>
+            <div class="upload-option-text">Datei hochladen</div>
+        </div>
+    </div>
+
+    <!-- Face ID Modal -->
+    <div class="face-id-modal" id="faceIdModal">
+        <div class="face-id-content">
+            <div class="face-id-icon" id="faceIdIcon">🔐</div>
+            <div class="face-id-text" id="faceIdText">Mit Face ID bestätigen</div>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        let currentStep = 0;
+        let phase = 1; // 1 = Pre-Approval, 2 = Property Found
+        let parameters = {
+            tenor: 20,
+            monthlyRate: 1542,
+            limit: 385000,
+            interestRate: 3.75
+        };
+        let uploadingDoc = null;
+
+        // Flow definition
+        const flow = [
+            // Phase 1: Pre-Approval
+            { type: 'user', text: 'Ich möchte ein Haus kaufen, kannst du mir bei der Finanzierung helfen?' },
+            { type: 'agent', text: 'Natürlich! Ich helfe dir gerne bei deiner Immobilienfinanzierung. Lass mich kurz prüfen, welche Informationen wir bereits haben...' },
+            { type: 'loading', duration: 2500 },
+            { type: 'agent', text: 'Gute Nachrichten! Wir haben bereits einiges von dir:' },
+            { type: 'journey', phase: 1 },
+            { type: 'agent', text: 'Für dein Pre-Approval Limit brauche ich nur noch deinen aktuellen Lohnzettel. Die restlichen Dokumente werden erst relevant, wenn du eine Immobilie gefunden hast.' },
+            { type: 'wait' }, // Wait for upload
+            { type: 'agent', text: 'Perfekt, ich habe deinen Lohnzettel erhalten. Ich berechne jetzt dein persönliches Finanzierungslimit...' },
+            { type: 'loading', duration: 3500 },
+            { type: 'agent', text: 'Herzlichen Glückwunsch!' },
+            { type: 'limitReveal' },
+            { type: 'agent', text: 'Mit deinem Einkommen und deiner ausgezeichneten Bonität kannst du eine Immobilie bis zu €385.000 finanzieren.' },
+            { type: 'agent', text: 'Möchtest du die Finanzierungsparameter anpassen?',
+              quickReplies: ['Ja, Parameter anpassen', 'Nein, passt so'] },
+            { type: 'wait' }, // Wait for choice
+            { type: 'agent', text: 'Perfekt! Hier ist die Zusammenfassung deines Pre-Approvals:' },
+            { type: 'summary' },
+            { type: 'agent', text: 'Dieses Limit ist 90 Tage gültig. Sobald du eine Immobilie gefunden hast, können wir die Finanzierung abschließen.' },
+            { type: 'agent', text: 'Wenn du auf \'Akzeptieren\' tippst, wird dein Pre-Approval Limit verbindlich gesichert.' },
+            { type: 'actionCard', actionText: 'Akzeptieren',
+              message: 'Mit deiner Bestätigung sicherst du dir dieses Limit für 90 Tage.\n\nKeine Verpflichtung zum Kauf.\nKeine Gebühren.' },
+            { type: 'wait' }, // Wait for accept
+            { type: 'faceId' },
+            { type: 'success', message: 'Pre-Approval gesichert!' },
+            { type: 'agent', text: 'Ausgezeichnet! Dein Pre-Approval über €385.000 ist jetzt aktiv. Viel Erfolg bei der Immobiliensuche! Melde dich einfach, wenn du etwas gefunden hast.' },
+
+            // Phase 2: Property Found
+            { type: 'wait', longWait: true },
+            { type: 'user', text: 'Ich habe ein Haus gefunden!' },
+            { type: 'agent', text: 'Das freut mich! Dann lass uns deine Finanzierung abschließen. Dein Pre-Approval über €385.000 ist noch aktiv.' },
+            { type: 'agent', text: 'Für den Abschluss benötige ich noch die Dokumente zur Immobilie:' },
+            { type: 'journey', phase: 2 },
+            { type: 'wait' }, // Wait for uploads
+            { type: 'agent', text: 'Perfekt, ich habe alle Dokumente. Ich prüfe jetzt die Immobilie und erstelle deinen finalen Kreditvertrag...' },
+            { type: 'loading', duration: 3500 },
+            { type: 'agent', text: 'Alles geprüft! Deine Finanzierung ist bereit.' },
+            { type: 'propertyMortgage' },
+            { type: 'agent', text: 'Wenn du auf \'Akzeptieren\' tippst, wird dein Hypothekenvertrag verbindlich unterschrieben.' },
+            { type: 'actionCard', actionText: 'Akzeptieren',
+              message: 'Mit deiner Bestätigung unterzeichnest du den Hypothekenvertrag über €315.000.\n\nDer Betrag wird bei Übergabe an den Verkäufer überwiesen.' },
+            { type: 'wait' },
+            { type: 'faceId' },
+            { type: 'success', message: 'Hypothekenvertrag unterschrieben!', celebration: true },
+            { type: 'agent', text: 'Herzlichen Glückwunsch zu deinem neuen Zuhause! 🏠 Der Kaufbetrag wird zum vereinbarten Übergabetermin überwiesen. Bei Fragen bin ich jederzeit für dich da.' }
+        ];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            showNextStep();
+
+            // Click to advance
+            document.getElementById('messages').addEventListener('click', (e) => {
+                if (!e.target.closest('.quick-reply-btn') &&
+                    !e.target.closest('.upload-btn') &&
+                    !e.target.closest('.action-btn') &&
+                    !e.target.closest('.radio-option') &&
+                    !e.target.closest('.slider') &&
+                    !isWaiting()) {
+                    showNextStep();
+                }
+            });
+
+            // Upload modal
+            document.getElementById('uploadOverlay').addEventListener('click', closeUploadModal);
+            document.querySelectorAll('.upload-option').forEach(option => {
+                option.addEventListener('click', handleUpload);
+            });
+        });
+
+        function showNextStep() {
+            if (currentStep >= flow.length) return;
+
+            const step = flow[currentStep];
+
+            if (step.type === 'wait') {
+                // Don't advance automatically
+                return;
+            }
+
+            currentStep++;
+            renderStep(step);
+
+            // Auto-advance for certain steps
+            if (step.type === 'loading') {
+                setTimeout(() => showNextStep(), step.duration);
+            }
+        }
+
+        function renderStep(step) {
+            const container = document.getElementById('messages');
+
+            switch(step.type) {
+                case 'user':
+                    addUserMessage(step.text);
+                    break;
+
+                case 'agent':
+                    addAgentMessage(step.text, step.quickReplies);
+                    break;
+
+                case 'loading':
+                    addLoadingIndicator();
+                    break;
+
+                case 'journey':
+                    addDocumentJourney(step.phase);
+                    break;
+
+                case 'limitReveal':
+                    addLimitReveal();
+                    break;
+
+                case 'summary':
+                    addSummary();
+                    break;
+
+                case 'actionCard':
+                    addActionCard(step.message, step.actionText);
+                    break;
+
+                case 'faceId':
+                    showFaceId();
+                    break;
+
+                case 'success':
+                    showSuccess(step.message, step.celebration);
+                    break;
+
+                case 'propertyMortgage':
+                    addPropertyMortgage();
+                    break;
+            }
+
+            scrollToBottom();
+        }
+
+        function addUserMessage(text) {
+            const container = document.getElementById('messages');
+            const msg = document.createElement('div');
+            msg.className = 'message user';
+            msg.innerHTML = `<div class="message-bubble">${text}</div>`;
+            container.appendChild(msg);
+        }
+
+        function addAgentMessage(text, quickReplies = null) {
+            const container = document.getElementById('messages');
+            const msg = document.createElement('div');
+            msg.className = 'message agent';
+
+            let html = `<div class="message-bubble">${text}`;
+
+            if (quickReplies) {
+                html += '<div class="quick-replies">';
+                quickReplies.forEach(reply => {
+                    html += `<button class="quick-reply-btn" onclick="handleQuickReply('${reply}')">${reply}</button>`;
+                });
+                html += '</div>';
+            }
+
+            html += '</div>';
+            msg.innerHTML = html;
+            container.appendChild(msg);
+        }
+
+        function addLoadingIndicator() {
+            const container = document.getElementById('messages');
+            const loading = document.createElement('div');
+            loading.className = 'message agent';
+            loading.innerHTML = `
+                <div class="loading">
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+            `;
+            container.appendChild(loading);
+
+            // Remove loading indicator when done
+            setTimeout(() => {
+                loading.remove();
+            }, flow[currentStep]?.duration || 2000);
+        }
+
+        function addDocumentJourney(phaseNum) {
+            const container = document.getElementById('messages');
+            const journey = document.createElement('div');
+            journey.className = 'message agent';
+
+            let html = '<div class="document-journey">';
+
+            // Phase 1: Pre-Approval
+            html += `
+                <div class="journey-section">
+                    <div class="journey-header ${phaseNum === 1 ? 'active' : 'completed'}">
+                        <span>${phaseNum === 1 ? '📍' : '✓'} PRE-APPROVAL</span>
+                        <span style="font-size: 12px;">${phaseNum === 1 ? '← Du bist hier' : 'Abgeschlossen'}</span>
+                    </div>
+                    <div class="journey-item">
+                        <div class="journey-item-icon completed">✓</div>
+                        <div class="journey-item-text">Identität verifiziert</div>
+                    </div>
+                    <div class="journey-item">
+                        <div class="journey-item-icon completed">✓</div>
+                        <div class="journey-item-text">Einkommensnachweise (letzte 3 Monate)</div>
+                    </div>
+                    <div class="journey-item">
+                        <div class="journey-item-icon ${phaseNum === 1 ? 'pending' : 'completed'}">${phaseNum === 1 ? '' : '✓'}</div>
+                        <div class="journey-item-text">Lohnzettel hochladen</div>
+                        ${phaseNum === 1 ? '<button class="upload-btn" onclick="openUploadModal(\'lohnzettel\')">Hochladen</button>' : ''}
+                    </div>
+                </div>
+            `;
+
+            // Phase 2: Finalization
+            html += `
+                <div class="journey-section">
+                    <div class="journey-header ${phaseNum === 2 ? 'active' : 'future'}">
+                        <span>${phaseNum === 2 ? '📍' : '○'} FINANZIERUNG ABSCHLIESSEN</span>
+                        <span style="font-size: 12px;">${phaseNum === 2 ? '← Du bist hier' : 'Später'}</span>
+                    </div>
+                    <div class="journey-item ${phaseNum < 2 ? 'future' : ''}">
+                        <div class="journey-item-icon ${phaseNum === 2 ? 'pending' : 'future'}">${phaseNum === 2 && uploadingDoc === 'kaufvertrag' ? '✓' : ''}</div>
+                        <div class="journey-item-text">Kaufvertrag</div>
+                        ${phaseNum === 2 && uploadingDoc !== 'kaufvertrag' ? '<button class="upload-btn" onclick="openUploadModal(\'kaufvertrag\')">Hochladen</button>' : ''}
+                    </div>
+                    <div class="journey-item ${phaseNum < 2 ? 'future' : ''}">
+                        <div class="journey-item-icon ${phaseNum === 2 && uploadingDoc ? 'pending' : 'future'}">${phaseNum === 2 && ['kaufvertrag', 'energieausweis'].includes(uploadingDoc) ? '✓' : ''}</div>
+                        <div class="journey-item-text">Energieausweis</div>
+                        ${phaseNum === 2 && uploadingDoc === 'kaufvertrag' ? '<button class="upload-btn" onclick="openUploadModal(\'energieausweis\')">Hochladen</button>' : ''}
+                    </div>
+                    <div class="journey-item ${phaseNum < 2 ? 'future' : ''}">
+                        <div class="journey-item-icon ${phaseNum === 2 && ['kaufvertrag', 'energieausweis', 'grundbuchauszug'].includes(uploadingDoc) ? 'completed' : 'future'}">${phaseNum === 2 && ['kaufvertrag', 'energieausweis', 'grundbuchauszug'].includes(uploadingDoc) ? '✓' : ''}</div>
+                        <div class="journey-item-text">Grundbuchauszug</div>
+                        ${phaseNum === 2 && uploadingDoc === 'energieausweis' ? '<button class="upload-btn" onclick="openUploadModal(\'grundbuchauszug\')">Hochladen</button>' : ''}
+                    </div>
+                </div>
+            `;
+
+            html += '</div>';
+            journey.innerHTML = html;
+            container.appendChild(journey);
+        }
+
+        function addLimitReveal() {
+            const container = document.getElementById('messages');
+            const reveal = document.createElement('div');
+            reveal.className = 'message agent';
+            reveal.innerHTML = `
+                <div class="limit-reveal">
+                    <div class="limit-reveal-title">Dein Pre-Approval Limit</div>
+                    <div class="limit-amount">€ 385.000</div>
+                    <div class="limit-progress">
+                        <div class="limit-progress-bar"></div>
+                    </div>
+                    <div class="limit-subtitle">Basierend auf deinem Einkommen und deiner Bonität</div>
+                </div>
+            `;
+            container.appendChild(reveal);
+        }
+
+        function addSummary() {
+            const container = document.getElementById('messages');
+            const summary = document.createElement('div');
+            summary.className = 'message agent';
+            summary.innerHTML = `
+                <div class="summary-card">
+                    <h3>📋 Dein Pre-Approval</h3>
+                    <div class="summary-row">
+                        <span class="summary-label">Finanzierungslimit</span>
+                        <span class="summary-value">€ ${parameters.limit.toLocaleString('de-DE')}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Laufzeit</span>
+                        <span class="summary-value">${parameters.tenor} Jahre</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Monatliche Rate</span>
+                        <span class="summary-value">€ ${parameters.monthlyRate.toLocaleString('de-DE')}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Effektiver Jahreszins</span>
+                        <span class="summary-value">${parameters.interestRate}%</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Sollzinssatz</span>
+                        <span class="summary-value">3,45%</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Gültig bis</span>
+                        <span class="summary-value">20.05.2026</span>
+                    </div>
+                </div>
+            `;
+            container.appendChild(summary);
+        }
+
+        function addActionCard(message, actionText) {
+            const container = document.getElementById('messages');
+            const card = document.createElement('div');
+            card.className = 'message agent';
+            card.innerHTML = `
+                <div class="action-card">
+                    <p>${message.replace(/\n/g, '<br>')}</p>
+                    <button class="action-btn" onclick="handleAction()">${actionText}</button>
+                </div>
+            `;
+            container.appendChild(card);
+        }
+
+        function addPropertyMortgage() {
+            const container = document.getElementById('messages');
+            const card = document.createElement('div');
+            card.className = 'message agent';
+            card.innerHTML = `
+                <div class="property-card">
+                    <h3>🏠 Dein Hypothekenvertrag</h3>
+                    <div class="property-address" style="margin-bottom: 20px;">
+                        <strong>Immobilie</strong><br>
+                        Musterstraße 42, 1010 Wien
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Kaufpreis</span>
+                        <span class="summary-value">€ 350.000</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Finanzierungssumme</span>
+                        <span class="summary-value">€ 315.000</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Eigenkapital</span>
+                        <span class="summary-value">€ 35.000</span>
+                    </div>
+                    <div style="height: 1px; background: var(--border-color); margin: 16px 0;"></div>
+                    <div class="summary-row">
+                        <span class="summary-label">Laufzeit</span>
+                        <span class="summary-value">20 Jahre</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Monatliche Rate</span>
+                        <span class="summary-value">€ 1.542</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Effektiver Jahreszins</span>
+                        <span class="summary-value">3,75%</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Sollzinssatz</span>
+                        <span class="summary-value">3,45%</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Erste Rate</span>
+                        <span class="summary-value">01.04.2026</span>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        }
+
+        function handleQuickReply(reply) {
+            addUserMessage(reply);
+
+            if (reply === 'Ja, Parameter anpassen') {
+                showParameterCard();
+            } else {
+                // Skip parameter adjustment
+                currentStep++;
+                showNextStep();
+            }
+        }
+
+        function showParameterCard() {
+            const container = document.getElementById('messages');
+            const card = document.createElement('div');
+            card.className = 'message agent';
+            card.innerHTML = `
+                <div class="parameter-card">
+                    <h3>Finanzierungsparameter anpassen</h3>
+
+                    <div class="parameter-group">
+                        <label class="parameter-label">Laufzeit</label>
+                        <div class="radio-group">
+                            <div class="radio-option" onclick="setTenor(10)">10 J</div>
+                            <div class="radio-option" onclick="setTenor(15)">15 J</div>
+                            <div class="radio-option selected" onclick="setTenor(20)">20 J</div>
+                            <div class="radio-option" onclick="setTenor(25)">25 J</div>
+                            <div class="radio-option" onclick="setTenor(30)">30 J</div>
+                        </div>
+                    </div>
+
+                    <div class="parameter-group">
+                        <label class="parameter-label">Gewünschte monatliche Rate</label>
+                        <div class="slider-value" id="rateValue">€ 1.542</div>
+                        <input type="range" class="slider" id="rateSlider"
+                               min="800" max="2100" value="1542"
+                               oninput="updateRate(this.value)">
+                        <div class="slider-labels">
+                            <span>min €800</span>
+                            <span>max €2.100</span>
+                        </div>
+                    </div>
+
+                    <div class="parameter-result">
+                        <div class="result-row">
+                            <span class="result-label">Resultierendes Limit</span>
+                            <span class="result-value large" id="resultLimit">€ 385.000</span>
+                        </div>
+                        <div class="result-row">
+                            <span class="result-label">Effektiver Jahreszins</span>
+                            <span class="result-value">3,75%</span>
+                        </div>
+                    </div>
+
+                    <button class="action-btn" onclick="applyParameters()" style="margin-top: 16px;">Übernehmen</button>
+                </div>
+            `;
+            container.appendChild(card);
+            scrollToBottom();
+        }
+
+        function setTenor(years) {
+            parameters.tenor = years;
+            document.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
+            event.target.classList.add('selected');
+            recalculateLimit();
+        }
+
+        function updateRate(value) {
+            parameters.monthlyRate = parseInt(value);
+            document.getElementById('rateValue').textContent = `€ ${parseInt(value).toLocaleString('de-DE')}`;
+            recalculateLimit();
+        }
+
+        function recalculateLimit() {
+            // Simplified calculation for demo
+            const limit = parameters.monthlyRate * parameters.tenor * 12 / 1.2;
+            parameters.limit = Math.round(limit / 1000) * 1000;
+            document.getElementById('resultLimit').textContent = `€ ${parameters.limit.toLocaleString('de-DE')}`;
+        }
+
+        function applyParameters() {
+            addUserMessage('Parameter übernommen');
+            currentStep++;
+            showNextStep();
+        }
+
+        function openUploadModal(docType) {
+            uploadingDoc = docType;
+            document.getElementById('uploadModal').classList.add('show');
+            document.getElementById('uploadOverlay').classList.add('show');
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModal').classList.remove('show');
+            document.getElementById('uploadOverlay').classList.remove('show');
+        }
+
+        function handleUpload() {
+            closeUploadModal();
+
+            // Show upload confirmation
+            const docNames = {
+                'lohnzettel': 'Lohnzettel',
+                'kaufvertrag': 'Kaufvertrag',
+                'energieausweis': 'Energieausweis',
+                'grundbuchauszug': 'Grundbuchauszug'
+            };
+
+            setTimeout(() => {
+                addAgentMessage(`${docNames[uploadingDoc]} erhalten ✓`);
+
+                if (uploadingDoc === 'lohnzettel') {
+                    currentStep++;
+                    showNextStep();
+                } else if (uploadingDoc === 'kaufvertrag') {
+                    // Continue to next document
+                    addDocumentJourney(2);
+                } else if (uploadingDoc === 'energieausweis') {
+                    // Continue to last document
+                    addDocumentJourney(2);
+                } else if (uploadingDoc === 'grundbuchauszug') {
+                    // All documents uploaded
+                    uploadingDoc = null;
+                    currentStep++;
+                    showNextStep();
+                }
+            }, 500);
+        }
+
+        function handleAction() {
+            addUserMessage('Akzeptiert');
+            currentStep++;
+            showNextStep();
+        }
+
+        function showFaceId() {
+            const modal = document.getElementById('faceIdModal');
+            modal.classList.add('show');
+
+            // Simulate Face ID authentication
+            setTimeout(() => {
+                document.getElementById('faceIdIcon').textContent = '✓';
+                document.getElementById('faceIdIcon').style.color = 'var(--success-green)';
+                document.getElementById('faceIdText').textContent = 'Authentifizierung erfolgreich';
+
+                setTimeout(() => {
+                    modal.classList.remove('show');
+                    currentStep++;
+                    showNextStep();
+                }, 1000);
+            }, 1500);
+        }
+
+        function showSuccess(message, celebration = false) {
+            const container = document.getElementById('messages');
+            const success = document.createElement('div');
+            success.className = 'message agent';
+            success.innerHTML = `
+                <div class="action-card ${celebration ? 'celebration' : ''}">
+                    <div class="success-check">✓</div>
+                    <p style="font-size: 18px; font-weight: 600;">${message}</p>
+                    ${celebration ? '<p style="font-size: 14px; margin-top: 8px;">Willkommen im neuen Zuhause!</p>' : ''}
+                </div>
+            `;
+            container.appendChild(success);
+            scrollToBottom();
+
+            if (celebration) {
+                createConfetti();
+            }
+
+            setTimeout(() => {
+                currentStep++;
+                showNextStep();
+            }, 2000);
+        }
+
+        function createConfetti() {
+            const colors = ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A'];
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 2000);
+                }, i * 50);
+            }
+        }
+
+        function scrollToBottom() {
+            const container = document.getElementById('messages');
+            setTimeout(() => {
+                container.scrollTop = container.scrollHeight;
+            }, 100);
+        }
+
+        function isWaiting() {
+            return currentStep < flow.length && flow[currentStep].type === 'wait';
+        }
+
+        // Hide tap indicator when at wait states
+        setInterval(() => {
+            const indicator = document.getElementById('tapIndicator');
+            if (isWaiting() || currentStep >= flow.length) {
+                indicator.style.display = 'none';
+            } else {
+                indicator.style.display = 'block';
+            }
+        }, 100);
+    </script>
+</body>
+</html>
