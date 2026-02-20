@@ -834,9 +834,10 @@
             { type: 'faceId' },
             { type: 'success', message: 'Pre-Approval gesichert!' },
             { type: 'agent', text: 'Ausgezeichnet! Dein Pre-Approval über €385.000 ist jetzt aktiv. Viel Erfolg bei der Immobiliensuche! Melde dich einfach, wenn du etwas gefunden hast.' },
+            { type: 'phase2Button' },  // Show Phase 2 demo button
 
             // Phase 2: Property Found
-            { type: 'wait', longWait: true },
+            { type: 'wait' },  // Wait for Phase 2 button
             { type: 'user', text: 'Ich habe ein Haus gefunden!' },
             { type: 'agent', text: 'Das freut mich! Dann lass uns deine Finanzierung abschließen. Dein Pre-Approval über €385.000 ist noch aktiv.' },
             { type: 'agent', text: 'Für den Abschluss benötige ich noch die Dokumente zur Immobilie:' },
@@ -859,18 +860,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             showNextStep();
 
-            // Click to advance
-            document.getElementById('messages').addEventListener('click', (e) => {
-                if (!e.target.closest('.quick-reply-btn') &&
-                    !e.target.closest('.upload-btn') &&
-                    !e.target.closest('.action-btn') &&
-                    !e.target.closest('.radio-option') &&
-                    !e.target.closest('.slider') &&
-                    !isWaiting()) {
-                    showNextStep();
-                }
-            });
-
             // Upload modal
             document.getElementById('uploadOverlay').addEventListener('click', closeUploadModal);
             document.querySelectorAll('.upload-option').forEach(option => {
@@ -884,16 +873,51 @@
             const step = flow[currentStep];
 
             if (step.type === 'wait') {
-                // Don't advance automatically
+                // Don't advance automatically - wait for user interaction
                 return;
             }
 
             currentStep++;
             renderStep(step);
 
-            // Auto-advance for certain steps
-            if (step.type === 'loading') {
-                setTimeout(() => showNextStep(), step.duration);
+            // Auto-advance for all non-wait steps with appropriate timing
+            let delay = 0;
+
+            switch(step.type) {
+                case 'loading':
+                    delay = step.duration;
+                    break;
+                case 'user':
+                    delay = 800;  // Brief pause after user message
+                    break;
+                case 'agent':
+                    // Pause based on message length for natural flow
+                    delay = step.quickReplies ? 0 : Math.min(1500, step.text.length * 30);
+                    break;
+                case 'journey':
+                case 'limitReveal':
+                case 'summary':
+                case 'propertyMortgage':
+                    delay = 1200;  // Pause to let user see the card
+                    break;
+                case 'phase2Button':
+                    delay = 1500;  // Brief pause before showing Phase 2 button
+                    break;
+                case 'success':
+                    delay = 2000;  // Already handled in showSuccess function
+                    return;  // Don't auto-advance from showSuccess
+                case 'faceId':
+                    // Already handled in showFaceId function
+                    return;  // Don't auto-advance from showFaceId
+                default:
+                    delay = 600;
+            }
+
+            if (delay > 0) {
+                setTimeout(() => showNextStep(), delay);
+            } else {
+                // Immediate advance for quick replies or special cases
+                showNextStep();
             }
         }
 
@@ -939,6 +963,10 @@
 
                 case 'propertyMortgage':
                     addPropertyMortgage();
+                    break;
+
+                case 'phase2Button':
+                    addPhase2Button();
                     break;
             }
 
@@ -1116,6 +1144,24 @@
                 </div>
             `;
             container.appendChild(card);
+        }
+
+        function addPhase2Button() {
+            const container = document.getElementById('messages');
+            const card = document.createElement('div');
+            card.className = 'message agent';
+            card.innerHTML = `
+                <div class="action-card" style="background: #F0F4F8; border: 1px solid var(--border-color);">
+                    <p style="font-size: 14px; color: var(--text-medium); margin-bottom: 12px;">Demo: Immobilie gefunden?</p>
+                    <button class="action-btn" onclick="startPhase2()">Phase 2 starten</button>
+                </div>
+            `;
+            container.appendChild(card);
+        }
+
+        function startPhase2() {
+            currentStep++;
+            showNextStep();
         }
 
         function addPropertyMortgage() {
@@ -1371,15 +1417,13 @@
             return currentStep < flow.length && flow[currentStep].type === 'wait';
         }
 
-        // Hide tap indicator when at wait states
-        setInterval(() => {
+        // Hide tap indicator since we removed tap-to-advance
+        document.addEventListener('DOMContentLoaded', () => {
             const indicator = document.getElementById('tapIndicator');
-            if (isWaiting() || currentStep >= flow.length) {
+            if (indicator) {
                 indicator.style.display = 'none';
-            } else {
-                indicator.style.display = 'block';
             }
-        }, 100);
+        });
     </script>
 </body>
 </html>
